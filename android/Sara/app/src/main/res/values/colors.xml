@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="sara_blue">#007BED</color>
+    <color name="sara_blue_transparent">#1A007BED</color>
+    <color name="sara_gray">#999999</color>
+    <color name="sara_gray_transparent">#4D999999</color>
+    <color name="sara_lightGray">#F4F4F4</color>
 </resources>

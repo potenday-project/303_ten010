@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Sara</string>
+
+    <string name="menu_home_name">홈</string>
+    <string name="menu_gallery_name">갤러리</string>
+    <string name="menu_my_name">마이</string>
+
 </resources>
