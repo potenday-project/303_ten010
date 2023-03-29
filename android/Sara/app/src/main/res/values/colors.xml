@@ -13,4 +13,7 @@
     <color name="sara_gray">#999999</color>
     <color name="sara_gray_transparent">#4D999999</color>
     <color name="sara_lightGray">#F4F4F4</color>
+    <color name="sara_red">#FF334B</color>
+    <color name="sara_unable">#dadada</color>
+    <color name="sara_black">#333333</color>
 </resources>
