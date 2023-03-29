@@ -16,7 +16,13 @@ router.post('/', validateJwt, async (req, res) => {
 })
 
 router.get('/', validateJwt, async (req, res) => {
-    const result = await Gallery.find()
+    let query
+    if(req.query.type==="user"){
+        query = {email: req.user.email}
+    } else {
+        query = {}
+    }
+    const result = await Gallery.find(query)
     res.json({result, count: result.length})
 })
 
