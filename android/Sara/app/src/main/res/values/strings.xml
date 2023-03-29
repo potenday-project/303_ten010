@@ -5,6 +5,11 @@
     <string name="menu_gallery_name">갤러리</string>
     <string name="menu_my_name">마이</string>
 
+    <string name="sara_copyright">Copyright 2023. X-Ten. All rights reserved.</string>
+
+    <!-- Login -->
+    <string name="google_login_desc">Google계정으로 3초만에 시작하기</string>
+    <string name="auto_login_desc">자동 로그인</string>
 
     <!-- Home -->
     <string name="text_button_upload">이미지 업로드</string>
@@ -24,5 +29,6 @@
     <string name="text_button_save">컬렉션에 저장하기</string>
     <string name="text_button_recall">다시 쓰기</string>
     <string name="text_button_share">공유하기</string>
+
 
 </resources>

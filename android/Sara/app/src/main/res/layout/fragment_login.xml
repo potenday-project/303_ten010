@@ -1,14 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.login.LoginFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.xten.sara.ui.login.LoginViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="login" />
+        android:orientation="vertical"
+        tools:context=".ui.login.LoginFragment">
 
-</FrameLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_bubble_type3" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/default_margin"
+            android:src="@drawable/ic_sara_study" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="@dimen/logo_width"
+            android:layout_height="@dimen/logo_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/content_margin"
+            android:src="@drawable/ic_logo" />
+
+        <Button
+            android:id="@+id/btn_login"
+            style="@style/SaraButtonStyleSecond"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/top_bar_height"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/wide_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/ic_google"
+            android:text="@string/google_login_desc"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_button_medium_size"
+            app:cornerRadius="@dimen/corner_radius_2"
+            app:iconPadding="@dimen/default_margin"
+            app:strokeColor="@color/sara_gray_copy"
+            app:strokeWidth="1dp" />
+
+        <RadioButton
+            android:id="@+id/btn_auto_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/gap_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:buttonTint="@color/radio_btn_color"
+            android:checked="@={viewModel.autoLogin}"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:text="@string/auto_login_desc"
+            android:textColor="@color/radio_btn_color" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/sara_copyright"
+            android:textAlignment="center"
+            android:textColor="@color/sara_gray_copy"
+            android:textSize="@dimen/text_content_small_size" />
+
+    </LinearLayout>
+</layout>

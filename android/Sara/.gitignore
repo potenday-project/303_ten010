@@ -19,4 +19,5 @@ app/libs/
 build
 app/build/
 
-app/src/main/java/com/xten/sara/util/API_KEY.kt
+app/src/main/java/com/xten/sara/util/constants/API_KEY.kt
+app/client_secret.json

@@ -8,14 +8,13 @@ import android.view.MotionEvent
 import android.view.View.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
 import com.xten.sara.databinding.ActivityMainBinding
-import com.xten.sara.util.LABEL_IMAGE_RESULT_
-import com.xten.sara.util.LABEL_IMAGE_UPLOAD_
-import com.xten.sara.util.TAG
+import com.xten.sara.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,12 +37,14 @@ class MainActivity : AppCompatActivity() {
     private fun getNavController() = run {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navHostFragment.navController.apply {
-            graph.setStartDestination(R.id.homeFragment)
             addOnDestinationChangedListener { _, destination, _ ->
-                setWindowTransparent(destination.label)
-                controlBottomNavVisibility(destination.label)
+                setNavigateDestinationChangeAction(destination.label)
             }
         }
+    }
+    private fun setNavigateDestinationChangeAction(label: CharSequence?) {
+        setWindowTransparent(label)
+        controlBottomNavVisibility(label)
     }
 
     @Suppress("DEPRECATION")
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun controlBottomNavVisibility(label: CharSequence?) = label?.let {
         binding.navBottom.visibility = when(label) {
-            LABEL_IMAGE_UPLOAD_, LABEL_IMAGE_RESULT_ -> GONE
+            LABEL_IMAGE_UPLOAD_, LABEL_IMAGE_RESULT_, LABEL_SPLASH_, LABEL_LOGIN_ -> GONE
             else -> VISIBLE
         }
     }

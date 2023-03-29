@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -23,7 +24,7 @@ import com.xten.sara.util.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment() : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        registerOnBackPressedDispatcher()
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_home, container, false)
         with(binding) {
             lifecycleOwner = viewLifecycleOwner
@@ -117,6 +119,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToBrowser() = Intent(Intent.ACTION_VIEW, Uri.parse(SEARCH_URL)).run(::startActivity)
+
+    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
+        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+    )
 
     companion object {
         private const val SEARCH_URL = "https://www.pinterest.co.kr"

@@ -16,4 +16,5 @@
     <color name="sara_red">#FF334B</color>
     <color name="sara_unable">#dadada</color>
     <color name="sara_black">#333333</color>
+    <color name="sara_gray_copy">#CCCCCC</color>
 </resources>

@@ -1,7 +1,9 @@
 package com.xten.sara.util.di
 
 import android.content.Context
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
 import com.xten.sara.data.ImageTaggingServiceAPI
 import com.xten.sara.data.SaraServiceAPI
@@ -13,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.nio.charset.StandardCharsets
@@ -30,6 +33,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModules {
+
+    @Singleton
+    @Provides
+    fun provideAppPreferences(@ApplicationContext app: Context) = app.getSharedPreferences(
+        SARA_PREFS, Context.MODE_PRIVATE
+    )
+
+    @Singleton
+    @Provides
+    fun provideGoogleSignInOptions() = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build()
 
     @Singleton
     @Provides
@@ -77,12 +92,16 @@ object AppModules {
                 .build()
             val request = it.request()
                 .newBuilder()
+                .header(CONTENT_TYPE, "application/json")
                 .url(url)
                 .build()
             return@Interceptor it.proceed(request)
         }
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(requestInterceptor)
+            .addInterceptor(HttpLoggingInterceptor{
+                Log.e(TAG, "provideSaraAPIService: $it", )
+            }.setLevel(HttpLoggingInterceptor.Level.BASIC))
             .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
             .build()
         val gson = GsonBuilder()
