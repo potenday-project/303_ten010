@@ -1,6 +1,7 @@
 package com.xten.sara.util
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RadioButton

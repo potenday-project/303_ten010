@@ -104,6 +104,17 @@ class SaraServiceRepository @Inject constructor(
         }
     }
 
+    suspend fun getMyCollection() = withContext(Dispatchers.IO) {
+        try {
+            val auth = LoginUtils.getToken(prefs)!!
+            api.getMyCollection(
+                header = auth
+            ).body()?.result
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 
     companion object {
         const val PARAM_PHOTO = "photo"

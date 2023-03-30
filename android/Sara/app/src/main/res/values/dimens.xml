@@ -34,11 +34,14 @@
     <dimen name="text_content_title_size">26sp</dimen>
 
     <dimen name="basic_button_height">51dp</dimen>
+    <dimen name="list_button_height">64dp</dimen>
 
     <dimen name="stroke_width">1dp</dimen>
 
     <dimen name="item_card_height">182dp</dimen>
 
     <dimen name="top_elevation">1dp</dimen>
+    
+    <dimen name="profile_height">96dp</dimen>
 
 </resources>

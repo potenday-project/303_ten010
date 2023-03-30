@@ -12,6 +12,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * @author SANDY
@@ -54,6 +55,13 @@ interface SaraServiceAPI {
         @Header(AUTHORIZATION) header: String,
         @Path("id") id: String
     )
+
+    @GET("gallery")
+    suspend fun getMyCollection(
+        @Header(AUTHORIZATION) header: String,
+        @Query("type") type: String = "user"
+    ) : Response<GalleryResponse>
+
 
 }
 

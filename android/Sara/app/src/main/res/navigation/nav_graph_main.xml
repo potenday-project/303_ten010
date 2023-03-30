@@ -56,7 +56,16 @@
         android:id="@+id/myFragment"
         android:name="com.xten.sara.ui.my.MyFragment"
         android:label="fragment_my"
-        tools:layout="@layout/fragment_my" />
+        tools:layout="@layout/fragment_my" >
+        <action
+            android:id="@+id/action_myFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_myFragment_to_myGalleryFragment"
+            app:destination="@id/myGalleryFragment" />
+    </fragment>
     <fragment
         android:id="@+id/imageUploadFragment"
         android:name="com.xten.sara.ui.home.ImageUploadFragment"
@@ -88,5 +97,18 @@
             app:argType="com.xten.sara.data.Gallery"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/myGalleryFragment"
+        android:name="com.xten.sara.ui.my.MyGalleryFragment"
+        android:label="fragment_my_gallery"
+        tools:layout="@layout/fragment_my_gallery" >
+        <action
+            android:id="@+id/action_myGalleryFragment_to_galleryDetailsFragment"
+            app:destination="@id/galleryDetailsFragment" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

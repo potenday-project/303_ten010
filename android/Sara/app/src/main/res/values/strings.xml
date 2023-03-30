@@ -4,6 +4,7 @@
     <string name="menu_home_name">홈</string>
     <string name="menu_gallery_name">컬렉션</string>
     <string name="menu_my_name">마이</string>
+    <string name="menu_my_name_title">프로필</string>
 
     <string name="sara_copyright">Copyright 2023. X-Ten. All rights reserved.</string>
 
@@ -35,6 +36,15 @@
     <!-- gallery -->
     <string name="text_search_hint">키워드로 검색하기</string>
     <string name="text_button_remove">삭제하기</string>
+
+    <!-- my -->
+    <string name="text_menu_collection">내 보관함</string>
+    <string name="text_menu_survey">유저설문</string>
+    <string name="text_text_ver">앱 버전 1.0.1</string>
+    <string name="text_text_ver_desc">최신버전이에요!</string>
+    <string name="text_button_logout">로그아웃</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
