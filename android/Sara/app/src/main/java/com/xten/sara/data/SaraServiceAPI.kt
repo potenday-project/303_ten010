@@ -71,7 +71,8 @@ data class LoginRequestBody(
 
 data class ChatGPTRequestBody(
     val photoUrl: String,
-    val type: Int
+    val type: Int,
+    val text: String? = null
 )
 
 data class SaveRequestBody(

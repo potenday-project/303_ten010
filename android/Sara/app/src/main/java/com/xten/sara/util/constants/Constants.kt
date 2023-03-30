@@ -17,7 +17,7 @@ const val MESSAGE_PERMISSION_ACCESS_FILE = "파일 접근 권한을 허용해 �
 const val MESSAGE_WARNING_EDIT = "텍스트를 입력해주세요."
 const val MESSAGE_WARNING_ERROR = "로그인을 할 수 없습니다."
 
-const val MESSAGE_RESULT_SAVE_SUCCESS = "컬렉션에 저장 성공하였습니다."
+const val MESSAGE_RESULT_SAVE_SUCCESS = "컬렉션에 공유하였습니다."
 const val MESSAGE_RESULT_SAVE_FAIL= "저장 할 수 없습니다."
 
 const val MESSAGE_RESULT_DELETE_SUCCESS = "컬렉션에서 삭제되었습니다."

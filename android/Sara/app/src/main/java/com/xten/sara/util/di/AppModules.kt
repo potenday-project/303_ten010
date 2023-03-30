@@ -1,6 +1,7 @@
 package com.xten.sara.util.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
 import com.xten.sara.data.SaraServiceAPI
+import com.xten.sara.data.SaraServiceDataSource
 import com.xten.sara.util.*
 import dagger.Module
 import dagger.Provides
@@ -86,5 +88,10 @@ object AppModules {
             .build()
             .create(SaraServiceAPI::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideSaraServiceDataSource(api: SaraServiceAPI, pref: SharedPreferences) =
+        SaraServiceDataSource(api, pref)
 
 }

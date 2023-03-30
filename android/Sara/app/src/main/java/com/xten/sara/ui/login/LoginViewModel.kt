@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
     fun requestLogin(email: String?) {
         email?.let {
             viewModelScope.launch {
-                val token = saraServiceRepository.getToken(it)
+                val token = saraServiceRepository.downloadToken(email)
                 handleLoginResult(token)
             }
         }

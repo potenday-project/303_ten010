@@ -23,28 +23,29 @@ class ImageUploadViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _imageUri = MutableLiveData<Uri?>()
-    val imageUri : LiveData<Uri?> = _imageUri
+    val imageUri: LiveData<Uri?> = _imageUri
     fun setImageUri(uri: Uri?) {
         _imageUri.value = uri
     }
 
     private val _queryType = MutableLiveData(QueryType.ESSAY)
-    val queryType : LiveData<QueryType> = _queryType
+    val queryType: LiveData<QueryType> = _queryType
 
     val freeText = MutableLiveData("")
 
     fun setQueryType(num: Int) {
-        _queryType.value = when(num) {
+        _queryType.value = when (num) {
             TYPE_1 -> QueryType.ESSAY
             TYPE_2 -> QueryType.POEM
             TYPE_3 -> QueryType.EVALUATION
             else -> QueryType.FREE
         }
     }
+
     private fun getCurQueryType() = queryType.value!!.type()
 
     private val _state = MutableLiveData(State.NONE)
-    val state : LiveData<State> = _state
+    val state: LiveData<State> = _state
 
     fun setState(state: State) {
         _state.value = state
@@ -52,11 +53,11 @@ class ImageUploadViewModel @Inject constructor(
 
     fun requestImageAnalysis(uri: String) = viewModelScope.launch {
         val image = File(uri)
-        val result = saraServiceRepository.getImageUrl(image)
+        val result = saraServiceRepository.downloadImageUrl(image)
         handleRequestGetImageUrlResult(result)
     }
 
-    private var photoUrl : String? = null
+    private var photoUrl: String? = null
     private fun handleRequestGetImageUrlResult(result: Image?) = result?.let {
         viewModelScope.launch {
             photoUrl = it.photoUrl
@@ -66,16 +67,17 @@ class ImageUploadViewModel @Inject constructor(
 
     fun requestChatGPT() = photoUrl?.let {
         viewModelScope.launch {
-            val result = saraServiceRepository.requestChatGPT(
+            val result = saraServiceRepository.downloadResultChatGPT(
                 it,
-                getCurQueryType()
+                getCurQueryType(),
+                if(queryType.value == QueryType.FREE) freeText.value else null
             )
             handleRequestChatGPTResult(result)
         }
     } ?: _state.postValue(State.FAIL)
 
     private val _resultAnalysis = MutableLiveData<ChatGPT>()
-    val resultAnalysis : LiveData<ChatGPT> = _resultAnalysis
+    val resultAnalysis: LiveData<ChatGPT> = _resultAnalysis
     private fun handleRequestChatGPTResult(result: ChatGPT?) = result?.let {
         _resultAnalysis.postValue(it)
         _state.postValue(State.SUCCESS)
@@ -83,12 +85,12 @@ class ImageUploadViewModel @Inject constructor(
 
 
     private val _saveResult = MutableLiveData<String>()
-    val saveResult : LiveData<String> = _saveResult
+    val saveResult: LiveData<String> = _saveResult
     fun saveContent() = viewModelScope.launch {
         resultAnalysis.value?.run {
-            val result = saraServiceRepository.saveContent(
-                photoUrl!!,
-                text
+            val result = saraServiceRepository.requestSaveContent(
+                url = photoUrl!!,
+                text = text
             )
             _saveResult.postValue(result)
         }

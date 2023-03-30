@@ -29,7 +29,7 @@ class GalleryViewModel @Inject constructor(
     fun updateGallery(email: String? = null) = viewModelScope.launch {
         saraServiceRepository.run {
             _galleryList.postValue(
-                email?.run { getMyCollection() } ?: getCollection()
+                email?.run { downloadMyCollection() } ?: downloadCollection()
             )
         }
     }
@@ -37,7 +37,7 @@ class GalleryViewModel @Inject constructor(
     private val _deleteResult = MutableLiveData<String>()
     val deleteResult: LiveData<String> = _deleteResult
     fun deleteContent(id: String) = viewModelScope.launch {
-        val result = saraServiceRepository.deleteContent(id)
+        val result = saraServiceRepository.requestDeleteContent(id)
         _deleteResult.postValue(result)
     }
 
