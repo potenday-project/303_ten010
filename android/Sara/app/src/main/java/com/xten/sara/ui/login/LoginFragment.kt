@@ -1,13 +1,13 @@
 package com.xten.sara.ui.login
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -17,8 +17,9 @@ import com.google.android.gms.common.api.ApiException
 import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentLoginBinding
+import com.xten.sara.util.LoginUtils
 import com.xten.sara.util.MESSAGE_WARNING_ERROR
-import com.xten.sara.util.TAG
+import com.xten.sara.util.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -73,7 +74,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleSignInOnClientTask(result: GoogleSignInAccount) {
-        Log.e(TAG, "handleSignInOnClientTask: $result", )
         loginViewModel.requestLogin(result.email)
     }
 
@@ -85,7 +85,11 @@ class LoginFragment : Fragment() {
         }
     }
 
+    @Inject
+    lateinit var prefs : SharedPreferences
     private fun navigateToHome() {
+        val isChecked = binding.btnAutoLogin.isChecked
+        LoginUtils.setLoginState(prefs, isChecked)
         findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
     }
 

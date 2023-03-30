@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
-import com.xten.sara.data.ImageTaggingServiceAPI
 import com.xten.sara.data.SaraServiceAPI
 import com.xten.sara.util.*
 import dagger.Module
@@ -53,37 +52,6 @@ object AppModules {
 
     @Singleton
     @Provides
-    fun provideImageTaggingAPIService() = run {
-        val requestInterceptor = Interceptor {
-            val url = it.request()
-                .url
-                .newBuilder()
-                .build()
-            val auth = Base64.getEncoder().encodeToString("$API_KEY:$API_SECRET".toByteArray(StandardCharsets.UTF_8))
-            val request = it.request()
-                .newBuilder()
-                .header(AUTHORIZATION, "Basic $auth")
-                .url(url)
-                .build()
-            return@Interceptor it.proceed(request)
-        }
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(requestInterceptor)
-            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-            .build()
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-        Retrofit.Builder()
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(IMAGE_TAGGING_SERVICE_BASE_URL)
-            .build()
-            .create(ImageTaggingServiceAPI::class.java)
-    }
-
-    @Singleton
-    @Provides
     fun provideSaraAPIService() = run {
         val requestInterceptor = Interceptor {
             val url = it.request()
@@ -102,6 +70,8 @@ object AppModules {
             .addInterceptor(HttpLoggingInterceptor{
                 Log.e(TAG, "provideSaraAPIService: $it", )
             }.setLevel(HttpLoggingInterceptor.Level.BASIC))
+            .callTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
             .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
             .build()
         val gson = GsonBuilder()

@@ -13,3 +13,13 @@ data class LoginResponse(
     @SerializedName("token")
     val token: String
 )
+
+data class ImageResponse(
+    @SerializedName("photoUrl")
+    val photoUrl: String
+)
+
+data class ChatGPTResponse(
+    @SerializedName("text")
+    val text: String
+)

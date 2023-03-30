@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_homeFragment_to_imageUploadFragment"
             app:destination="@id/imageUploadFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_imageResultFragment"
+            app:destination="@id/imageResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"

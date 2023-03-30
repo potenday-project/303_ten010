@@ -25,6 +25,8 @@
     <string name="title_chip3">평가</string>
 
     <!-- image result -->
+    <string name="text_progress_warning">이 화면을 벗어나면 요청이 취소돼요! \n잠시만 기다려주세요.</string>
+    <string name="text_progress_desc">잠시만 기다려주세요.</string>
     <string name="text_title_result">Sara가 보낸 답장</string>
     <string name="text_button_save">컬렉션에 저장하기</string>
     <string name="text_button_recall">다시 쓰기</string>

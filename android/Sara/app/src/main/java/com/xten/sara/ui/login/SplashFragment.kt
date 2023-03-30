@@ -5,6 +5,7 @@ import android.os.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.FrameMetricsAggregator.DELAY_DURATION
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -37,9 +38,9 @@ class SplashFragment : Fragment() {
 
     private fun navigationToDestination() = findNavController().apply{
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
-        val token = LoginUtils.getToken(prefs)
+        val loginState = LoginUtils.getLoginState(prefs)
         navigate(
-            resId = token?.run { R.id.action_splashFragment_to_homeFragment } ?: R.id.action_splashFragment_to_loginFragment,
+            resId = if(loginState) R.id.action_splashFragment_to_homeFragment  else R.id.action_splashFragment_to_loginFragment,
             args = null,
             navOptions = options
         )

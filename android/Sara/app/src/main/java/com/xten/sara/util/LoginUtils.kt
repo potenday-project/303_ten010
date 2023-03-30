@@ -10,6 +10,11 @@ import android.content.SharedPreferences
  */
 object LoginUtils {
 
+    fun setLoginState(prefs: SharedPreferences, isChecked: Boolean) = prefs.edit()
+        .putBoolean(LOGIN_STATE, isChecked)
+        .apply()
+    fun getLoginState(prefs: SharedPreferences) = prefs.getBoolean(LOGIN_STATE, false)
+
     fun saveToken(prefs: SharedPreferences, token: String) = prefs.edit()
         .putString(TOKEN, token)
         .apply()
@@ -21,3 +26,4 @@ object LoginUtils {
 }
 
 private const val TOKEN = "token"
+private const val LOGIN_STATE = "login_state"
