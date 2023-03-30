@@ -10,7 +10,7 @@ const router = asyncify(Router())
 const type = {
     1: "로 3줄 이내 글을 써줘",
     2: "로 3줄 이내 시를 써줘",
-    3: "로 3줄 이내 감상평을 써줘",
+    3: "로 감상평을 써줘",
 }
 
 router.post('/', validateJwt, async (req, res) => {
@@ -31,7 +31,7 @@ router.post('/', validateJwt, async (req, res) => {
     const result = await openai.createChatCompletion({
         "model": "gpt-3.5-turbo",
         // "messages": [{"role": "user", "content": `write a poem with ${JSON.stringify(tags)}`}],
-        "messages": [{"role": "user", "content": `${JSON.stringify(tags)} ${type[req.body.type]}`}],
+        "messages": [{"role": "user", "content": `${JSON.stringify(tags)} ${req.body.text} ${type[req.body.type]}`}],
         // "max_tokens": 80,
     }, undefined)
     res.json({text: result.data.choices[0].message.content} )
