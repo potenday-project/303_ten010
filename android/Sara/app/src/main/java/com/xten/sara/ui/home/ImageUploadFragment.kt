@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
 import com.xten.sara.databinding.FragmentImageUploadBinding
 import com.xten.sara.util.ImageFileUtils
 import com.xten.sara.util.MESSAGE_WARNING_EDIT
+import com.xten.sara.util.TAG
 import com.xten.sara.util.TYPE_4
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -82,10 +84,10 @@ class ImageUploadFragment : Fragment() {
         requestBringImageUriLauncher.launch(ImageFileUtils.createChooserIntent(cameraIntent))
     }
 
-    private fun setImageUri() = run {
-        ImageFileUtils.getTempFileUri(requireContext())
-    }.also {
-        imageUri = it
+    private fun setImageUri() : Uri? {
+        Log.e(TAG, "setImageUri: ", )
+        imageUri = ImageFileUtils.getTempFileUri(requireContext())
+        return imageUri
     }
 
     private val requestBringImageUriLauncher = registerForActivityResult(
@@ -144,11 +146,13 @@ class ImageUploadFragment : Fragment() {
     }
 
     private fun requestImageAnalysis() = imageUri?.let {
+        val path = ImageFileUtils.getAbsolutePath(
+            requireContext(),
+            it
+        )
+        Log.e(TAG, "requestImageAnalysis: $path", )
         imageUploadViewModel.requestImageAnalysis(
-            ImageFileUtils.getAbsolutePath(
-                requireContext(),
-                it
-            )
+            path
         )
         navigateToImageResult()
     }

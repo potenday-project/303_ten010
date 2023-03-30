@@ -1,18 +1,14 @@
 package com.xten.sara.util
 
-import android.content.ContentValues.TAG
 import android.net.Uri
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.xten.sara.R
-import com.xten.sara.ui.home.QueryType
-import kotlin.random.Random
 
 /**
  * @author SANDY
@@ -71,6 +67,17 @@ object BindingAdapter {
     fun setQueryText(button: Button, type: QueryType?) {
         type?.let {
             button.text = "${type.desc()}"
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("ImageLoad")
+    fun setImage(imageView: ImageView, url: String?) {
+        url?.let {
+            Glide.with(imageView)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView)
         }
     }
 

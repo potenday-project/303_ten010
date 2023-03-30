@@ -3,6 +3,8 @@ package com.xten.sara.util.di
 import android.content.Context
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
 import com.xten.sara.data.SaraServiceAPI

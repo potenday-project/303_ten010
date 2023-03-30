@@ -2,7 +2,7 @@
     <string name="app_name">Sara</string>
 
     <string name="menu_home_name">홈</string>
-    <string name="menu_gallery_name">갤러리</string>
+    <string name="menu_gallery_name">컬렉션</string>
     <string name="menu_my_name">마이</string>
 
     <string name="sara_copyright">Copyright 2023. X-Ten. All rights reserved.</string>
@@ -31,6 +31,10 @@
     <string name="text_button_save">컬렉션에 저장하기</string>
     <string name="text_button_recall">다시 쓰기</string>
     <string name="text_button_share">공유하기</string>
+
+    <!-- gallery -->
+    <string name="text_search_hint">키워드로 검색하기</string>
+    <string name="text_button_remove">삭제하기</string>
 
 
 </resources>

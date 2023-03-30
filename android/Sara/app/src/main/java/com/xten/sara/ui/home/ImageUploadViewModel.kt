@@ -1,15 +1,13 @@
 package com.xten.sara.ui.home
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.*
 import com.xten.sara.data.SaraServiceRepository
-import com.xten.sara.data.response.ChatGPTResponse
-import com.xten.sara.data.response.ImageResponse
+import com.xten.sara.data.ChatGPT
+import com.xten.sara.data.Image
 import com.xten.sara.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.NonCancellable.cancel
 import java.io.File
 import javax.inject.Inject
 
@@ -59,7 +57,7 @@ class ImageUploadViewModel @Inject constructor(
     }
 
     private var photoUrl : String? = null
-    private fun handleRequestGetImageUrlResult(result: ImageResponse?) = result?.let {
+    private fun handleRequestGetImageUrlResult(result: Image?) = result?.let {
         viewModelScope.launch {
             photoUrl = it.photoUrl
             requestChatGPT()
@@ -76,9 +74,9 @@ class ImageUploadViewModel @Inject constructor(
         }
     } ?: _state.postValue(State.FAIL)
 
-    private val _resultAnalysis = MutableLiveData<ChatGPTResponse>()
-    val resultAnalysis : LiveData<ChatGPTResponse> = _resultAnalysis
-    private fun handleRequestChatGPTResult(result: ChatGPTResponse?) = result?.let {
+    private val _resultAnalysis = MutableLiveData<ChatGPT>()
+    val resultAnalysis : LiveData<ChatGPT> = _resultAnalysis
+    private fun handleRequestChatGPTResult(result: ChatGPT?) = result?.let {
         _resultAnalysis.postValue(it)
         _state.postValue(State.SUCCESS)
     } ?: _state.postValue(State.FAIL)
@@ -98,23 +96,3 @@ class ImageUploadViewModel @Inject constructor(
 
 }
 
-enum class QueryType {
-    ESSAY {
-        override fun desc(): String ="이 사진으로 줄글 생성하기"
-        override fun type(): Int = 1
-    },
-    POEM {
-        override fun desc(): String ="이 사진으로 시 생성하기"
-        override fun type(): Int = 2
-    },
-    EVALUATION {
-        override fun desc(): String ="이 사진으로 평가받기"
-        override fun type(): Int = 3
-    },
-    FREE {
-        override fun desc(): String ="이 사진으로 요청하기"
-        override fun type(): Int = 4
-    };
-    abstract fun desc() : String
-    abstract fun type() : Int
-}

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import com.xten.sara.ui.home.HomeFragment
@@ -26,12 +27,11 @@ object ImageFileUtils {
         TEMP_FILE_SUFFIX,
         context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     )
-    fun getTempFileUri(context: Context): Uri? =
-        FileProvider.getUriForFile(
-            context,
-            context.packageName,
-            createTempFile(context)
-        )
+    fun getTempFileUri(context: Context): Uri? = FileProvider.getUriForFile(
+        context,
+        context.packageName,
+        createTempFile(context)
+    )
 
     fun createFileAccessSettingsIntent (context: Context) : Intent =
         Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {

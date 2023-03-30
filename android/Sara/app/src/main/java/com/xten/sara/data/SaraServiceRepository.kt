@@ -1,8 +1,11 @@
 package com.xten.sara.data
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.xten.sara.util.LoginUtils
 import com.xten.sara.util.State
+import com.xten.sara.util.TAG
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -24,9 +27,9 @@ class SaraServiceRepository @Inject constructor(
 
     suspend fun getToken(email: String) = withContext(Dispatchers.IO) {
         try {
-            return@withContext api.login(LoginRequestBody(email)).body()?.token
+            api.login(LoginRequestBody(email)).body()?.token
         } catch (e: Exception) {
-            return@withContext null
+            null
         }
     }
 
@@ -35,12 +38,12 @@ class SaraServiceRepository @Inject constructor(
             val auth = LoginUtils.getToken(prefs)!!
             val image = createMutipartBody(file)
 
-            return@withContext api.getImageUrl(
+            api.getImageUrl(
                 header = auth,
                 image = image
             ).body()
         } catch (e: Exception){
-            return@withContext null
+            null
         }
     }
     private fun createMutipartBody(file: File) = MultipartBody.Part.createFormData(
@@ -60,7 +63,7 @@ class SaraServiceRepository @Inject constructor(
                     return@withContext it
                 } ?: null
             } catch (e: Exception) {
-                return@withContext null
+                null
             }
         }
 
@@ -71,9 +74,33 @@ class SaraServiceRepository @Inject constructor(
                 header = auth,
                 requestBody = SaveRequestBody(url, text)
             )
-            return@withContext State.SUCCESS.name
+            State.SUCCESS.name
         } catch (e: Exception) {
-            return@withContext State.FAIL.name
+            State.FAIL.name
+        }
+    }
+
+    suspend fun getCollection() = withContext(Dispatchers.IO) {
+        try {
+            val auth = LoginUtils.getToken(prefs)!!
+            api.getCollection(
+                header = auth
+            ).body()?.result
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun deleteContent(id: String) = withContext(Dispatchers.IO) {
+        try {
+            val auth = LoginUtils.getToken(prefs)!!
+            api.deleteContent(
+                header = auth,
+                id = id
+            )
+            State.SUCCESS.name
+        } catch (e: Exception) {
+            State.FAIL.name
         }
     }
 

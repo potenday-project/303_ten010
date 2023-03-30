@@ -1,6 +1,7 @@
-package com.xten.sara.data.response
+package com.xten.sara.data
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * @author SANDY
@@ -9,17 +10,37 @@ import com.google.gson.annotations.SerializedName
  * @desc
  */
 
-data class LoginResponse(
+data class Login(
     @SerializedName("token")
     val token: String
 )
 
-data class ImageResponse(
+data class Image(
     @SerializedName("photoUrl")
     val photoUrl: String
 )
 
-data class ChatGPTResponse(
+data class ChatGPT(
     @SerializedName("text")
     val text: String
 )
+
+data class GalleryResponse(
+    @SerializedName("result")
+    val result: List<Gallery>,
+    @SerializedName("count")
+    val cont: Int
+)
+
+data class Gallery (
+    @SerializedName("_id")
+    val _id: String,
+    @SerializedName("email")
+    val email: String,
+    @SerializedName("photoUrl")
+    val photoUrl: String,
+    @SerializedName("text")
+    val text: String,
+    @SerializedName("createdAt")
+    val createdAt: String
+) : Serializable
