@@ -28,10 +28,21 @@ router.post('/', validateJwt, async (req, res) => {
     })
     tags = tags.result.tags.map(t => t.tag.ko)
 
+    let text
+    switch (req.body.type) {
+        case 1:
+        case 2:
+        case 3:
+            text = type[req.body.type]
+            break
+        case 4:
+            text = req.body.text
+    }
+
     const result = await openai.createChatCompletion({
         "model": "gpt-3.5-turbo",
         // "messages": [{"role": "user", "content": `write a poem with ${JSON.stringify(tags)}`}],
-        "messages": [{"role": "user", "content": `${JSON.stringify(tags)} ${req.body.text} ${type[req.body.type]}`}],
+        "messages": [{"role": "user", "content": `${JSON.stringify(tags)} ${text}`}],
         // "max_tokens": 80,
     }, undefined)
     res.json({text: result.data.choices[0].message.content} )
