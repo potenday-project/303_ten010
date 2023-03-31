@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun controlBottomNavVisibility(label: CharSequence?) = label?.let {
         binding.navBottom.visibility = when(label) {
-            LABEL_IMAGE_UPLOAD_, LABEL_IMAGE_RESULT_, LABEL_SPLASH_, LABEL_LOGIN_, LABEL_GALLERY_DETAILS_ -> GONE
-            else -> VISIBLE
+            LABEL_HOME_, LABEL_GALLERY_, LABEL_MY_ -> VISIBLE
+            else -> GONE
         }
     }
 

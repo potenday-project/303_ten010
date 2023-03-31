@@ -70,7 +70,7 @@ class SaraServiceDataSource @Inject constructor(
                 ).body()
                 result?.let {
                     return@withContext it
-                } ?: null
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "requestChatGPT: $e", )
                 null

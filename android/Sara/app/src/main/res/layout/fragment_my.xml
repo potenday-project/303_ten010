@@ -98,7 +98,9 @@
                     android:onClick="@{()->fragent.setCollectionButtonAction(account.email)}"
                     android:text="@string/text_menu_collection"
                     android:textAlignment="viewStart"
-                    android:textSize="@dimen/text_button_medium_size" />
+                    android:textSize="@dimen/text_button_medium_size"
+                    app:icon="@drawable/ic_store"
+                    app:iconTint="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -46,11 +46,10 @@ enum class State {
     NONE, SUCCESS, FAIL, ING
 }
 
-const val LABEL_SPLASH_ = "fragment_splash"
-const val LABEL_LOGIN_ = "fragment_login"
-const val LABEL_IMAGE_UPLOAD_ = "fragment_image_upload"
+const val LABEL_HOME_ = "fragment_home"
+const val LABEL_GALLERY_ = "fragment_gallery"
+const val LABEL_MY_ = "fragment_my"
 const val LABEL_IMAGE_RESULT_ = "fragment_image_result"
-const val LABEL_GALLERY_DETAILS_ = "fragment_gallery_details"
 
 const val GRID_COL_TYPE_1 = 2
 
