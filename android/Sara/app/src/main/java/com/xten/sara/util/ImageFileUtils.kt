@@ -3,13 +3,11 @@ package com.xten.sara.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
-import com.xten.sara.ui.home.HomeFragment
+import com.xten.sara.util.constants.TAG
 import java.io.File
 
 /**
@@ -22,16 +20,18 @@ import java.io.File
 
 object ImageFileUtils {
 
-    private fun createTempFile(context: Context) = File.createTempFile (
+    fun createTempFile(context: Context) = File.createTempFile (
         TEMP_FILE_PREFIX,
         TEMP_FILE_SUFFIX,
-        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        context.cacheDir
     )
-    fun getTempFileUri(context: Context): Uri? = FileProvider.getUriForFile(
+    fun getTempFileUri(context: Context, file: File): Uri = FileProvider.getUriForFile(
         context,
         context.packageName,
-        createTempFile(context)
-    )
+        file
+    ).also { Log.e(TAG, "getTempFileUri: $it", ) }
+
+    //캐시파일 지우는 함수 만들기
 
     fun createFileAccessSettingsIntent (context: Context) : Intent =
         Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
@@ -48,18 +48,36 @@ object ImageFileUtils {
         }
     }
 
-    fun getAbsolutePath(context: Context, uri: Uri) = context.contentResolver.query(
-        uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null
-    )?.run {
-        val index = getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        moveToFirst()
-        getString(index)
-    } ?: ""
+    //디버깅 해야할 함수 -> try catch로 바꾸기
+    fun getAbsolutePath(context: Context, uri: Uri) : String {
+        var path = uri.toString()
+        try {
+            context.contentResolver.query(
+                uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null
+            )?.let {
+                val index = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                it.moveToFirst()
+                path = it.getString(index)
+            }
+        } catch (e: Exception) {
+            path = getTempFileAbsolutePath(context, path)
+        }
+        return path
+    }
 
+    private fun getTempFileAbsolutePath(context: Context, uri: String): String {
+        val split = uri.replace("content://${context.packageName}/images/", "")
+        return "/data/data/${context.packageName}/cache/$split"
+    }
+
+    fun deleteTempFile(file: File) {
+        file.deleteOnExit()
+    }
 
 
 }
 
+private const val DIRECTORY_TEMP = "Temp"
 private const val TEMP_FILE_PREFIX = "temp"
 private const val TEMP_FILE_SUFFIX = ".jpg"
 private const val CHOOSER_TITLE = "사진을 가져올 방법을 선택하세요."

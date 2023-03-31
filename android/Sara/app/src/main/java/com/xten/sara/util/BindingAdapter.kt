@@ -1,7 +1,6 @@
 package com.xten.sara.util
 
 import android.net.Uri
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RadioButton
@@ -10,6 +9,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.xten.sara.R
+import com.xten.sara.util.constants.QueryType
 
 /**
  * @author SANDY
@@ -42,24 +42,6 @@ object BindingAdapter {
     fun setImage(imageView: ImageView, uri: Uri?) {
         uri?.let {
             imageView.setImageURI(it)
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("ChipColorState")
-    fun setChipColorState(button: RadioButton, state: Boolean?)  {
-        state?.let {
-            with(button) {
-                backgroundTintList = resources.getColorStateList(
-                    if(state) R.color.chip_bg_color else R.color.sara_unable,
-                    null)
-                setTextColor(
-                    resources.getColorStateList(
-                        if(state) R.color.chip_text_color else R.color.sara_gray,
-                        null
-                    )
-                )
-            }
         }
     }
 

@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
 import com.xten.sara.data.SaraServiceAPI
 import com.xten.sara.data.SaraServiceDataSource
 import com.xten.sara.util.*
+import com.xten.sara.util.constants.SARA_PREFS
+import com.xten.sara.util.constants.TAG
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +21,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton

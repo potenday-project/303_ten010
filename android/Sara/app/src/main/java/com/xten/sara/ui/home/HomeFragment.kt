@@ -7,27 +7,29 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentHomeBinding
 import com.xten.sara.util.*
+import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class HomeFragment() : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-
-    private val imageUploadViewModel : ImageUploadViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,11 +37,20 @@ class HomeFragment() : Fragment() {
     ): View? {
         registerOnBackPressedDispatcher()
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_home, container, false)
-        with(binding) {
-            lifecycleOwner = viewLifecycleOwner
-            num = (DEFAULT_ until RANDOM_SIZE).random()
-            return root
-        }
+        return setBinding().root
+    }
+
+    //!-- register back press : 현재 화면에서 백버튼 동작시 앱 종료
+    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
+        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
+
+    private fun setBinding() = binding.apply {
+        lifecycleOwner = viewLifecycleOwner
+        num = (DEFAULT_ until RANDOM_SIZE).random()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,83 +60,96 @@ class HomeFragment() : Fragment() {
 
     private fun initView() = binding.apply {
         btnUpload.setOnClickListener {
-            requestPermissionForImageUpload()
+            setUploadButtonAction()
         }
         btnSearch.setOnClickListener {
-            navigateToBrowser()
+            setSearchButtonAction()
         }
     }
 
 
     // !-- request permission
-    private fun requestPermissionForImageUpload() = when {
-        Environment.isExternalStorageManager() -> requestCameraPermission(true)
-        else -> {
-            showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
-            requestFileAccessStoragePermission.launch(ImageFileUtils.createFileAccessSettingsIntent(requireContext()))
-        }
+    private fun setUploadButtonAction() {
+        val fileAccessPermissionGranted = Environment.isExternalStorageManager()
+        requestPermissions(fileAccessPermissionGranted)
     }
-    private fun requestCameraPermission(isGranted: Boolean) = when {
-        isGranted -> requestCameraPermission.launch(Manifest.permission.CAMERA)
-        else -> showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
+    private fun requestPermissions(isGranted: Boolean) {
+        if(isGranted) asGrantedFileAccessPermission()
+        else asNotGrantedFileAccessPermission()
     }
-    private val requestCameraPermission = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        when {
-            isGranted -> createChooser()
-            else -> showToast(requireContext(), MESSAGE_PERMISSION_CAMERA)
-        }
+    private fun asGrantedFileAccessPermission() {
+        requestCameraPermission.launch(Manifest.permission.CAMERA)
+    }
+    private fun asNotGrantedFileAccessPermission() {
+        showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
+        requestFileAccessStoragePermission.launch(ImageFileUtils.createFileAccessSettingsIntent(requireContext()))
     }
     private val requestFileAccessStoragePermission = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        requestCameraPermission(Environment.isExternalStorageManager())
+        if(Environment.isExternalStorageManager()) asGrantedFileAccessPermission()
+        else asAgainNotGrantedFileAccessPermission()
+    }
+    private val requestCameraPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted -> when {
+            isGranted -> asGrantedCameraPermission()
+            else -> asNotGrantedCameraPermission()
+        }
+    }
+    private fun asAgainNotGrantedFileAccessPermission() {
+        showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
+    }
+    private fun asNotGrantedCameraPermission() {
+        showToast(requireContext(), MESSAGE_PERMISSION_CAMERA)
     }
 
     // !-- request image uri
     private var imageUri: Uri? = null
-    private fun createChooser() {
+    private lateinit var cache: File
+    private fun asGrantedCameraPermission() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
             resolveActivity(requireContext().packageManager)?.let {
-                setImageUri()
+                createCacheFile()
                 putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
             }
         }
         requestBringImageUriLauncher.launch(ImageFileUtils.createChooserIntent(cameraIntent))
     }
 
-    private fun setImageUri() = run {
-        ImageFileUtils.getTempFileUri(requireContext())
-    }.also { imageUri = it }
+    private fun createCacheFile() {
+        cache = ImageFileUtils.createTempFile(requireContext())
+        imageUri = ImageFileUtils.getTempFileUri(requireContext(), cache)
+    }
 
     // !-- send image uri
     private val requestBringImageUriLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        if(it.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+        if(it.resultCode != Activity.RESULT_OK) {
+            ImageFileUtils.deleteTempFile(cache)
+            return@registerForActivityResult
+        }
+
         val uri = it.data?.data
         uri?.let { uri->
             imageUri = uri
+            ImageFileUtils.deleteTempFile(cache)
         }
 
         navigateToImageUpload()
     }
 
     private fun navigateToImageUpload() = imageUri?.let {
-        imageUploadViewModel.setImageUri(imageUri)
-        findNavController().navigate(R.id.action_homeFragment_to_imageUploadFragment)
+        val action = HomeFragmentDirections.actionHomeFragmentToImageUploadFragment(
+            imageUri = it
+        )
+        findNavController().navigate(action)
+    } ?: showToast(requireContext(), MESSAGE_RESULT_UPLOAD_FAIL)
+
+    private fun setSearchButtonAction() {
+        Intent(Intent.ACTION_VIEW, Uri.parse(SEARCH_URL)).run(::startActivity)
     }
-
-    private fun navigateToBrowser() = Intent(Intent.ACTION_VIEW, Uri.parse(SEARCH_URL)).run(::startActivity)
-
-    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
-        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-        }
-    )
 
     companion object {
         private const val SEARCH_URL = "https://www.pinterest.co.kr"

@@ -21,9 +21,11 @@
     <string name="text_title_upload">Sara에게 요청하기</string>
     <string name="text_upload_desc">텍스트 입력, 글 종류 선택 둘중 하나만 가능해요</string>
     <string name="text_upload_hint">텍스트로 직접 요청하기</string>
+    <string name="text_save_hint">제목을 입력해주세요</string>
     <string name="title_chip1">작문</string>
     <string name="title_chip2">시</string>
     <string name="title_chip3">평가</string>
+    <string name="title_chip4">직접 요청</string>
 
     <!-- image result -->
     <string name="text_progress_warning">이 화면을 벗어나면 요청이 취소돼요! \n잠시만 기다려주세요.</string>

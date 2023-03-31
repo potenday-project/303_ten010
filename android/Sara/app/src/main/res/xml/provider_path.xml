@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path name="Temp" path="Android/data/com.xten.sara/files/Pictures" />
+    <cache-path name="images" path="."/>
 </paths>

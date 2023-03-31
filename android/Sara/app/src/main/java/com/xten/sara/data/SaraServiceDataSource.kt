@@ -3,8 +3,8 @@ package com.xten.sara.data
 import android.content.SharedPreferences
 import android.util.Log
 import com.xten.sara.util.LoginUtils
-import com.xten.sara.util.State
-import com.xten.sara.util.TAG
+import com.xten.sara.util.constants.State
+import com.xten.sara.util.constants.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -23,24 +23,29 @@ class SaraServiceDataSource @Inject constructor(
     private val api: SaraServiceAPI,
     private val prefs: SharedPreferences
 ) {
-    suspend fun getToken(email: String) = withContext(Dispatchers.IO) {
+    suspend fun getToken(
+        email: String,
+        nickName: String
+    ) = withContext(Dispatchers.IO) {
         try {
-            api.login(LoginRequestBody(email)).body()?.token
+            api.login(LoginRequestBody(email, nickName)).body()?.token
         } catch (e: Exception) {
+            Log.e(TAG, "getToken: $e", )
             null
         }
     }
 
     suspend fun getImageUrl(file: File) = withContext(Dispatchers.IO) {
         try {
-            val auth = LoginUtils.getToken(prefs)!!
+            val auth = LoginUtils.getToken(prefs)
             val image = createMutipartBody(file)
 
             api.getImageUrl(
-                header = auth,
+                header = auth!!,
                 image = image
             ).body()
         } catch (e: Exception){
+            Log.e(TAG, "getImageUrl: $e", )
             null
         }
     }
@@ -50,31 +55,41 @@ class SaraServiceDataSource @Inject constructor(
         file.asRequestBody(CONTENT_TYPE_IMAGE.toMediaTypeOrNull())
     )
 
-    suspend fun requestChatGPT(url: String, type: Int, text: String?=null) =
-        withContext(Dispatchers.IO) {
+    suspend fun requestChatGPT(
+        url: String,
+        type: Int,
+        text: String?=null
+    ) = withContext(Dispatchers.IO) {
             val auth = LoginUtils.getToken(prefs)!!
             try {
                 val result = api.requestChatGPT(
                     header = auth,
-                    requestBody = ChatGPTRequestBody(url, type)
+                    requestBody = ChatGPTRequestBody(url, type, text)
                 ).body()
                 result?.let {
                     return@withContext it
                 } ?: null
             } catch (e: Exception) {
+                Log.e(TAG, "requestChatGPT: $e", )
                 null
             }
         }
 
-    suspend fun saveContent(url: String, text: String) = withContext(Dispatchers.IO) {
+    suspend fun saveContent(
+        photoUrl: String,
+        title: String,
+        text: String,
+        type: Int
+    ) = withContext(Dispatchers.IO) {
         try {
             val auth = LoginUtils.getToken(prefs)!!
             api.saveContent(
                 header = auth,
-                requestBody = SaveRequestBody(url, text)
+                requestBody = SaveRequestBody(photoUrl, title, text, type)
             )
             State.SUCCESS.name
         } catch (e: Exception) {
+            Log.e(TAG, "saveContent: $e", )
             State.FAIL.name
         }
     }
@@ -86,6 +101,7 @@ class SaraServiceDataSource @Inject constructor(
                 header = auth
             ).body()?.result
         } catch (e: Exception) {
+            Log.e(TAG, "getCollection: $e", )
             null
         }
     }
@@ -99,6 +115,7 @@ class SaraServiceDataSource @Inject constructor(
             )
             State.SUCCESS.name
         } catch (e: Exception) {
+            Log.e(TAG, "deleteContent: $e", )
             State.FAIL.name
         }
     }
@@ -110,6 +127,7 @@ class SaraServiceDataSource @Inject constructor(
                 header = auth
             ).body()?.result
         } catch (e: Exception) {
+            Log.e(TAG, "getMyCollection: $e", )
             null
         }
     }

@@ -2,6 +2,7 @@ package com.xten.sara.ui.login
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,9 @@ import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentLoginBinding
 import com.xten.sara.util.LoginUtils
-import com.xten.sara.util.MESSAGE_WARNING_ERROR
-import com.xten.sara.util.State
+import com.xten.sara.util.constants.MESSAGE_WARNING_ERROR
+import com.xten.sara.util.constants.State
+import com.xten.sara.util.constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -74,15 +76,23 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleSignInOnClientTask(result: GoogleSignInAccount) {
-        loginViewModel.requestLogin(result.email)
+        loginViewModel.requestLogin(result.email, result.displayName)
     }
 
     private fun subscribeToObserver() = loginViewModel.state.observe(viewLifecycleOwner) {
+        Log.e(TAG, "subscribeToObserver: $it", )
         when(it) {
-            State.SUCCESS -> navigateToHome()
-            State.FAIL -> showToast(requireContext(), MESSAGE_WARNING_ERROR)
-            State.NONE -> return@observe
+            State.SUCCESS -> handleResultSuccess()
+            State.FAIL -> handleResultFail()
+            else -> return@observe
         }
+    }
+
+    private fun handleResultSuccess() {
+        navigateToHome()
+    }
+    private fun handleResultFail() {
+        showToast(requireContext(), MESSAGE_WARNING_ERROR)
     }
 
     @Inject

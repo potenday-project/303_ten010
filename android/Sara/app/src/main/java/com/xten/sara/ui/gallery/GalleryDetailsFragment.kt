@@ -14,9 +14,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentGalleryDetailsBinding
-import com.xten.sara.util.MESSAGE_RESULT_DELETE_FAIL
-import com.xten.sara.util.MESSAGE_RESULT_DELETE_SUCCESS
-import com.xten.sara.util.State
+import com.xten.sara.util.constants.MESSAGE_RESULT_DELETE_FAIL
+import com.xten.sara.util.constants.MESSAGE_RESULT_DELETE_SUCCESS
+import com.xten.sara.util.constants.State
 import dagger.hilt.android.AndroidEntryPoint
 
 

@@ -3,18 +3,21 @@ package com.xten.sara.ui
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
 import com.xten.sara.databinding.ActivityMainBinding
 import com.xten.sara.util.*
+import com.xten.sara.util.constants.LABEL_IMAGE_RESULT_
+import com.xten.sara.util.constants.LABEL_IMAGE_UPLOAD_
+import com.xten.sara.util.constants.LABEL_LOGIN_
+import com.xten.sara.util.constants.LABEL_SPLASH_
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private fun getNavController() = run {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navHostFragment.navController.apply {
+            graph.setStartDestination(R.id.homeFragment)
             addOnDestinationChangedListener { _, destination, _ ->
                 setNavigateDestinationChangeAction(destination.label)
             }

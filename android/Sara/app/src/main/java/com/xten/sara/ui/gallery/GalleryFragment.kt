@@ -8,13 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.xten.sara.R
 import com.xten.sara.data.Gallery
 import com.xten.sara.databinding.FragmentGalleryBinding
-import com.xten.sara.ui.home.HomeFragmentDirections
-import com.xten.sara.util.GRID_COL_TYPE_1
+import com.xten.sara.util.constants.GRID_COL_TYPE_1
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {

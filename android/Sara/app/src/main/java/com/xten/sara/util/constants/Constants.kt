@@ -1,4 +1,4 @@
-package com.xten.sara.util
+package com.xten.sara.util.constants
 
 /**
  * @author SANDY
@@ -11,11 +11,17 @@ const val TAG = "[확인]"
 
 const val SARA_PREFS = "sara_prefs"
 
+const val TEMP_FILE_NAME = "temp.png"
+
 const val MESSAGE_PERMISSION_CAMERA = "카메라 권한을 허용해 주세요"
 const val MESSAGE_PERMISSION_ACCESS_FILE = "파일 접근 권한을 허용해 주세요"
 
 const val MESSAGE_WARNING_EDIT = "텍스트를 입력해주세요."
 const val MESSAGE_WARNING_ERROR = "로그인을 할 수 없습니다."
+
+const val MESSAGE_RESULT_UPLOAD_FAIL = "사진을 업로드 할 수 없습니다."
+const val MESSAGE_RESULT_AI_FAIL = "요청에 실패하였습니다."
+const val MESSAGE_CANCEL = "요청을 취소했습니다."
 
 const val MESSAGE_RESULT_SAVE_SUCCESS = "컬렉션에 공유하였습니다."
 const val MESSAGE_RESULT_SAVE_FAIL= "저장 할 수 없습니다."
@@ -29,13 +35,13 @@ const val MESSAGE_RESULT_LOGOUT_FAIL = "로그아웃 할 수 없습니다."
 const val DEFAULT_ = 0
 const val RANDOM_SIZE = 2
 
-const val TYPE_1 = 0
-const val TYPE_2 = 1
-const val TYPE_3 = 2
-const val TYPE_4 = 3
+const val TYPE_1 = 1
+const val TYPE_2 = 2
+const val TYPE_3 = 3
+const val TYPE_4 = 4
 
 enum class State {
-    NONE, SUCCESS, FAIL
+    NONE, SUCCESS, FAIL, ING
 }
 
 const val LABEL_SPLASH_ = "fragment_splash"
@@ -50,20 +56,23 @@ const val GALLERY = "gallery"
 enum class QueryType {
     ESSAY {
         override fun desc(): String ="이 사진으로 줄글 생성하기"
-        override fun type(): Int = 1
+        override fun type(): Int = TYPE_1
     },
     POEM {
         override fun desc(): String ="이 사진으로 시 생성하기"
-        override fun type(): Int = 2
+        override fun type(): Int = TYPE_2
     },
     EVALUATION {
         override fun desc(): String ="이 사진으로 평가받기"
-        override fun type(): Int = 3
+        override fun type(): Int = TYPE_3
     },
     FREE {
         override fun desc(): String ="텍스트 요청이 포함된 글 생성하기"
-        override fun type(): Int = 4
+        override fun type(): Int = TYPE_4
     };
     abstract fun desc() : String
     abstract fun type() : Int
 }
+
+const val TEXT_FIELD_ERROR_MESSAGE = "최대 30글자를 넘을 수 없습니다."
+const val MAX_TEXT_LENGTH = 30
