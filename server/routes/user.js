@@ -9,6 +9,7 @@ router.post('/', (req, res) => {
     }
     const payload = { // access token에 들어갈 payload
         email: req.body.email,
+        nickname: req.body.nickname,
     };
     const secret = process.env.JWT_SECRET
     const token = jwt.sign(payload, secret);

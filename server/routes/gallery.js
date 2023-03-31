@@ -9,8 +9,11 @@ const router = asyncify(Router())
 router.post('/', validateJwt, async (req, res) => {
     let gallery = new Gallery()
     gallery.email = req.user.email
+    gallery.nickname = req.user.nickname
+    gallery.title = req.body.title
     gallery.photoUrl = req.body.photoUrl
     gallery.text = req.body.text
+    gallery.type = req.body.type
     await gallery.save()
     res.json({success: true})
 })
