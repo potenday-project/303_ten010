@@ -21,6 +21,7 @@
     <dimen name="corner_radius_2">16dp</dimen>
     <dimen name="corner_radius_3">8dp</dimen>
     <dimen name="corner_radius_4">24dp</dimen>
+    <dimen name="corner_radius_5">6dp</dimen>
 
     <dimen name="text_menu_title_size">26sp</dimen>
     <dimen name="text_title_size">24sp</dimen>
@@ -39,9 +40,11 @@
     <dimen name="stroke_width">1dp</dimen>
 
     <dimen name="item_card_height">182dp</dimen>
+    <dimen name="item_card_big_height">240dp</dimen>
 
     <dimen name="top_elevation">1dp</dimen>
     
     <dimen name="profile_height">96dp</dimen>
+    <dimen name="profile_mini_height">40dp</dimen>
 
 </resources>

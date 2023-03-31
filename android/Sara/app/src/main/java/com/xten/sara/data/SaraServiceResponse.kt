@@ -2,6 +2,7 @@ package com.xten.sara.data
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+import java.util.*
 
 /**
  * @author SANDY
@@ -34,13 +35,20 @@ data class GalleryResponse(
 
 data class Gallery (
     @SerializedName("_id")
-    val _id: String,
+    val _id: String?,
     @SerializedName("email")
-    val email: String,
+    val email: String?,
+    @SerializedName("nickname")
+    val nickname: String?,
     @SerializedName("photoUrl")
-    val photoUrl: String,
+    val photoUrl: String?,
+    @SerializedName("title")
+    val title: String?,
     @SerializedName("text")
-    val text: String,
+    val text: String?,
+    @SerializedName("type")
+    val type: Int?,
     @SerializedName("createdAt")
-    val createdAt: String
+    val createdAt: Date?
 ) : Serializable
+

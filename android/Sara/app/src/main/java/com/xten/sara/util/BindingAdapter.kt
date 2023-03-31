@@ -10,6 +10,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.xten.sara.R
 import com.xten.sara.util.constants.QueryType
+import com.xten.sara.util.constants.TYPE_1
+import com.xten.sara.util.constants.TYPE_2
+import com.xten.sara.util.constants.TYPE_3
 
 /**
  * @author SANDY
@@ -61,6 +64,19 @@ object BindingAdapter {
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Type")
+    fun convertType(textView: TextView, type: Int?) {
+        type?.let {
+            textView.text = when(type) {
+                TYPE_1 -> QueryType.ESSAY.str()
+                TYPE_2 -> QueryType.POEM.str()
+                TYPE_3 -> QueryType.EVALUATION.str()
+                else -> QueryType.FREE.str()
+            }
         }
     }
 

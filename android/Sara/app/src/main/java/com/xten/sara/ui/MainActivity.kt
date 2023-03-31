@@ -14,10 +14,7 @@ import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
 import com.xten.sara.databinding.ActivityMainBinding
 import com.xten.sara.util.*
-import com.xten.sara.util.constants.LABEL_IMAGE_RESULT_
-import com.xten.sara.util.constants.LABEL_IMAGE_UPLOAD_
-import com.xten.sara.util.constants.LABEL_LOGIN_
-import com.xten.sara.util.constants.LABEL_SPLASH_
+import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -68,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun controlBottomNavVisibility(label: CharSequence?) = label?.let {
         binding.navBottom.visibility = when(label) {
-            LABEL_IMAGE_UPLOAD_, LABEL_IMAGE_RESULT_, LABEL_SPLASH_, LABEL_LOGIN_ -> GONE
+            LABEL_IMAGE_UPLOAD_, LABEL_IMAGE_RESULT_, LABEL_SPLASH_, LABEL_LOGIN_, LABEL_GALLERY_DETAILS_ -> GONE
             else -> VISIBLE
         }
     }

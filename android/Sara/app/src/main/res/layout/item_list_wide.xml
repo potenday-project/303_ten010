@@ -11,50 +11,45 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
 
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
-            android:layout_height="@dimen/item_card_height"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="@dimen/gap_minus_margin"
+            android:layout_height="wrap_content"
             android:backgroundTint="@color/sara_lightGray"
             app:cardCornerRadius="@dimen/corner_radius_2"
             app:cardElevation="0dp"
             app:cardMaxElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/textView11"
+                    Type="@{gallery.type}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/gap_margin"
-                    android:background="@drawable/bg_round_type_card"
-                    android:padding="4dp"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_round_small_card"
+                    android:backgroundTint="@color/sara_blue"
+                    android:padding="@dimen/gap_margin"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_content_small_size"
                     android:textStyle="bold"
-                    Type="@{gallery.type}"
-                    app:layout_constraintBottom_toBottomOf="@+id/content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/content" />
+                    app:layout_constraintTop_toBottomOf="@+id/image" />
 
                 <ImageView
                     android:id="@+id/image"
                     ImageLoad="@{gallery.photoUrl}"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_height="@dimen/item_card_big_height"
                     android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toTopOf="@+id/content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -65,24 +60,45 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/gap_margin"
-                    android:layout_marginEnd="@dimen/gap_margin"
-                    android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@{gallery.title}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_title_big_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView11"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView11"
+                    app:layout_constraintTop_toTopOf="@+id/textView11" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginBottom="24dp"
+                    android:maxLines="4"
+                    android:text="@{gallery.text}"
                     android:textColor="@color/sara_gray"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/textView11" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="?attr/selectableItemBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackground" />
-
         </androidx.cardview.widget.CardView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,11 +1,13 @@
 package com.xten.sara.ui.gallery
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xten.sara.data.SaraServiceRepository
 import com.xten.sara.data.Gallery
+import com.xten.sara.util.constants.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,22 +23,61 @@ class GalleryViewModel @Inject constructor(
     private val saraServiceRepository: SaraServiceRepository
 ) : ViewModel() {
 
-    private val _galleryList = MutableLiveData<List<Gallery>>()
-    val galleryList: LiveData<List<Gallery>> = _galleryList
+    private val _galleryList = MutableLiveData<List<Gallery>?>()
+    val galleryList: LiveData<List<Gallery>?> = _galleryList
+
+    private var defaultList: List<Gallery>? = listOf()
 
     fun updateGallery(email: String? = null) = viewModelScope.launch {
         saraServiceRepository.run {
-            _galleryList.postValue(
-                email?.run { downloadMyCollection() } ?: downloadCollection()
-            )
+            email?.let {
+                defaultList = downloadMyCollection()
+                _galleryList.postValue(defaultList)
+            } ?: let {
+                defaultList = downloadCollection()
+                _galleryList.postValue(defaultList)
+            }
         }
     }
 
     private val _deleteResult = MutableLiveData<String>()
     val deleteResult: LiveData<String> = _deleteResult
+
+    val input = MutableLiveData<String?>()
+    fun getCurInput() = input.value ?: ""
+    fun requestSearch() = defaultList?.let {
+        val param = input.value!!.trim()
+        _galleryList.value = it.filter { gallery ->
+            gallery.title?.let { title ->
+                if(title.contains(param)) return@filter true
+            }
+            gallery.text?.let { text ->
+                if(text.contains(param)) return@filter true
+            }
+            gallery.type?.let { type ->
+                val name = when(type) {
+                    TYPE_1 -> QueryType.ESSAY.str()
+                    TYPE_2 -> QueryType.POEM.str()
+                    TYPE_3 -> QueryType.EVALUATION.str()
+                    else -> QueryType.FREE.str()
+                }
+                if(param == name) return@filter true
+            }
+            false
+        }
+    }
+
+    fun resetGallery() {
+        _galleryList.value = defaultList
+    }
+
     fun deleteContent(id: String) = viewModelScope.launch {
         val result = saraServiceRepository.requestDeleteContent(id)
         _deleteResult.postValue(result)
+    }
+    
+    fun initViewModel() {
+        input.value = null
     }
 
 }

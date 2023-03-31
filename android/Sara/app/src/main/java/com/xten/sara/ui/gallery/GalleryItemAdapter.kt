@@ -7,42 +7,56 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.xten.sara.data.Gallery
 import com.xten.sara.databinding.ItemListMiniBinding
+import com.xten.sara.databinding.ItemListWideBinding
 
-/**
- * @author SANDY
- * @email nnal0256@naver.com
- * @created 2023-03-30
- * @desc
- */
-class GalleryItemAdapter: RecyclerView.Adapter<GalleryItemAdapter.MyViewHolder>() {
+class GalleryItemAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class MyViewHolder(val binding: ItemListMiniBinding): RecyclerView.ViewHolder(binding.root)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val binding = ItemListMiniBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MyViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : RecyclerView.ViewHolder {
+        return when(viewType) {
+            0 -> {
+                val binding = ItemListMiniBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return AlbumTypeViewHolder(binding)
+            }
+            else -> {
+                val binding = ItemListWideBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return ListTypeViewHolder(binding)
+            }
+        }
     }
-
-    private val differ = AsyncListDiffer(this, DIFF_UTIL)
     override fun getItemCount(): Int = differ.currentList.size
-
-    fun submitData(list: List<Gallery>) {
-        differ.submitList(list)
+    override fun getItemViewType(position: Int): Int {
+        return type
     }
 
     private var onItemClick: ((Gallery) -> Unit)? = null
     fun setOnItemClickListener(onItemClick: (Gallery) -> Unit) {
         this.onItemClick = onItemClick
     }
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = differ.currentList[position]
-        holder.binding.apply {
-            gallery = item
-            view.setOnClickListener {
-                onItemClick?.let { it(item) }
+        when(holder) {
+            is AlbumTypeViewHolder -> holder.binding.apply{
+                gallery = item
+                view.setOnClickListener {
+                    onItemClick?.let { it(item) }
+                }
+            }
+            is ListTypeViewHolder -> holder.binding.apply{
+                gallery = item
+                view.setOnClickListener {
+                    onItemClick?.let { it(item) }
+                }
             }
         }
     }
 
+    inner class AlbumTypeViewHolder(val binding: ItemListMiniBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ListTypeViewHolder(val binding: ItemListWideBinding) : RecyclerView.ViewHolder(binding.root)
+
+    private val differ = AsyncListDiffer(this, DIFF_UTIL)
+    fun submitData(list: List<Gallery>) {
+        differ.submitList(list)
+    }
     companion object {
         val DIFF_UTIL = object : DiffUtil.ItemCallback<Gallery>() {
             override fun areItemsTheSame(oldItem: Gallery, newItem: Gallery)= oldItem._id == newItem._id

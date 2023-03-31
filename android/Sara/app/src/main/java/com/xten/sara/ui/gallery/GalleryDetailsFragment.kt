@@ -75,7 +75,7 @@ class GalleryDetailsFragment : Fragment() {
     }
 
     private fun setRemoveButtonAction() {
-        galleryViewModel.deleteContent(args.gallery!!._id)
+        galleryViewModel.deleteContent(args.gallery!!._id!!)
     }
 
     private fun subscribeToObserver() = galleryViewModel.deleteResult.observe(viewLifecycleOwner) {

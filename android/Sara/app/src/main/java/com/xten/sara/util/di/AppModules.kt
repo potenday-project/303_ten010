@@ -78,6 +78,7 @@ object AppModules {
             .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
             .build()
         val gson = GsonBuilder()
+            .setDateFormat("MMMM yyyy HH:mm:ss X")
             .setLenient()
             .create()
         Retrofit.Builder()
