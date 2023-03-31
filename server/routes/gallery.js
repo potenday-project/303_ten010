@@ -10,6 +10,7 @@ router.post('/', validateJwt, async (req, res) => {
     let gallery = new Gallery()
     gallery.email = req.user.email
     gallery.nickname = req.user.nickname
+    gallery.profile = req.user.profile
     gallery.title = req.body.title
     gallery.photoUrl = req.body.photoUrl
     gallery.text = req.body.text

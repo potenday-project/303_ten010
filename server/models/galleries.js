@@ -5,6 +5,7 @@ const gallerySchema = new mongoose.Schema({
     email: { type: String, required: true },
     nickname: { type: String },
     title: { type: String },
+    profile: { type: String },
     photoUrl: { type: String, required: true },
     text: { type: String, required: true },
     type: { type: Number }
