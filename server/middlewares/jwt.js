@@ -6,6 +6,8 @@ export default (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = {
             email: decoded.email,
+            profile: decoded.profile,
+            nickname: decoded.nickname,
         }
         next()
     } catch (err) {
