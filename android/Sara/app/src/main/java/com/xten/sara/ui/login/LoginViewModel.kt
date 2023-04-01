@@ -1,13 +1,15 @@
 package com.xten.sara.ui.login
 
 import android.content.SharedPreferences
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.xten.sara.data.SaraServiceRepository
 import com.xten.sara.util.LoginUtils
 import com.xten.sara.util.constants.State
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -36,10 +38,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun handleLoginResult(token: String?) = token?.let {
+    private fun handleLoginResult(token: String?) {
+        if(token == null) {
+            _state.postValue(State.FAIL)
+            return
+        }
         LoginUtils.setLoginState(prefs, autoLogin.value!!)
-        LoginUtils.saveToken(prefs, it)
+        LoginUtils.saveToken(prefs, token)
         _state.postValue(State.SUCCESS)
-    } ?: _state.postValue(State.FAIL)
+    }
 
 }

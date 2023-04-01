@@ -2,7 +2,6 @@ package com.xten.sara.ui.login
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import com.xten.sara.databinding.FragmentLoginBinding
 import com.xten.sara.util.LoginUtils
 import com.xten.sara.util.constants.MESSAGE_WARNING_ERROR
 import com.xten.sara.util.constants.State
-import com.xten.sara.util.constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

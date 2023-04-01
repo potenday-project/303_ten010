@@ -2,19 +2,13 @@ package com.xten.sara.ui.gallery
 
 import android.content.ClipboardManager
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -24,14 +18,11 @@ import com.xten.sara.SaraApplication.Companion.copyToClipboard
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.data.Gallery
 import com.xten.sara.databinding.FragmentGalleryDetailsBinding
-import com.xten.sara.util.ImageFileUtils
-import com.xten.sara.util.constants.*
+import com.xten.sara.util.constants.MESSAGE_RESULT_DELETE_FAIL
+import com.xten.sara.util.constants.MESSAGE_RESULT_DELETE_SUCCESS
+import com.xten.sara.util.constants.SHARE_TITLE_TEXT
+import com.xten.sara.util.constants.State
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
 import javax.inject.Inject
 
 

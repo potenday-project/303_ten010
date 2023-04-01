@@ -96,7 +96,6 @@
         motion:constraintSetStart="@+id/step2_start"
         motion:constraintSetEnd="@+id/step3_start"
         motion:autoTransition="animateToEnd"
-        motion:duration="1000"/>
-
+        motion:duration="500"/>
 
 </MotionScene>

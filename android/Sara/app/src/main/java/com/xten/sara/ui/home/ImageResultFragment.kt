@@ -2,30 +2,27 @@ package com.xten.sara.ui.home
 
 import android.content.ClipboardManager
 import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
+import android.os.*
 import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.view.textclassifier.TextClassifier.NO_OP
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.xten.sara.R
 import com.xten.sara.SaraApplication
-import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
+import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentImageResultBinding
-import com.xten.sara.util.ImageFileUtils
 import com.xten.sara.util.constants.*
+import com.xten.sara.util.view.KeyboardVisibilityUtils
+import com.xten.sara.util.view.SoftInputAssist
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,9 +36,11 @@ class ImageResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        registerOnBackPressedDispatcher()
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_image_result, container, false)
         return setBinding().root
     }
+
 
     private fun setBinding() = binding.apply {
         lifecycleOwner = viewLifecycleOwner
@@ -52,7 +51,29 @@ class ImageResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         subscribeToObserver()
+        setKeyboardState()
     }
+
+    private lateinit var softInputAssist: SoftInputAssist
+    private fun setKeyboardState() {
+        softInputAssist = SoftInputAssist(requireActivity())
+
+        setKeyboardVisibilityUtils()
+    }
+
+     private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
+     private fun setKeyboardVisibilityUtils() {
+        keyboardVisibilityUtils = KeyboardVisibilityUtils(requireActivity().window,
+             onShowKeyboard = { keyboardHeight ->
+                 binding.scrollView.run {
+                     Handler(Looper.getMainLooper()).postDelayed(
+                         {
+                             smoothScrollTo(scrollX, scrollY + keyboardHeight)
+                         }, 200L
+                     )
+                 }
+             })
+     }
 
     private fun initView() = binding.apply {
         imageUploadViewModel.initFreeText()
@@ -107,7 +128,7 @@ class ImageResultFragment : Fragment() {
                 requestFocus()
             }
             else -> {
-                dropdownSoftKeyboard(requireActivity(), inputManager)
+                dropDownSoftKeyboard(requireActivity(), inputManager)
                 verifyRequestState()
             }
         }
@@ -142,13 +163,15 @@ class ImageResultFragment : Fragment() {
         imageUploadViewModel.saveContent()
     }
 
+    private var isRecalled = false
     private fun setRecallButtonAction()  = imageUploadViewModel.apply {
+        isRecalled = true
         setState(State.ING)
         controlProgress(false)
         requestChatGPT()
     }
 
-    private fun setShareButtonAction(text: String) = text?.let {
+    private fun setShareButtonAction(text: String) {
         val share = Intent.createChooser(Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/*"
@@ -185,12 +208,17 @@ class ImageResultFragment : Fragment() {
         findNavController().popBackStack()
         showToast(requireContext(), MESSAGE_RESULT_AI_FAIL)
     }
-    private fun controlProgress(end: Boolean) = binding.progressView.motionLayout.apply {
-        if(end) setTransition(NO_OP, NO_OP)
-        else {
-            setTransition(NO_OP, NO_OP)
-            setTransition(R.id.rotation)
-            transitionToEnd()
+    private fun controlProgress(end: Boolean) = binding.progressView.apply {
+        if(end) {
+            motionLayout.setTransition(NO_OP, NO_OP)
+            animationView.pauseAnimation()
+        } else {
+            with(motionLayout) {
+                setTransition(NO_OP, NO_OP)
+                setTransition(R.id.rotation)
+                transitionToEnd()
+            }
+            animationView.playAnimation()
         }
     }
 
@@ -206,14 +234,49 @@ class ImageResultFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        keyboardVisibilityUtils.detachKeyboardListeners()
         with(imageUploadViewModel) {
-            if(getCurState() == State.ING) {
-                showToast(requireContext(), MESSAGE_CANCEL) //취소 로직 추가
-            }
+            if(getCurState() == State.ING) return
             initViewModel()
         }
     }
 
+    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
+        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                when(binding.progressView.motionLayout.visibility) {
+                    View.VISIBLE -> cancelRequest()
+                    else -> setBackButtonAction()
+                }
+            }
+        })
+
+    private fun cancelRequest() {
+        imageUploadViewModel.cancelRequest()
+        showToast(requireContext(), MESSAGE_CANCEL)
+
+        if(isRecalled) {
+            controlProgress(true)
+            return
+        }
+       findNavController().popBackStack()
+    }
+
+    override fun onResume() {
+        softInputAssist.onResume()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        softInputAssist.onPause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        softInputAssist.onDestroy()
+        keyboardVisibilityUtils.detachKeyboardListeners()
+        super.onDestroy()
+    }
 
     companion object {
         private const val NO_OP = -1

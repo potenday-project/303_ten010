@@ -52,24 +52,27 @@ class ImageUploadViewModel @Inject constructor(
         _state.postValue(state)
     }
     fun getCurState() = state.value!!
-
-    fun requestImageAnalysis(path: String) = viewModelScope.launch {
-        setState(State.ING)
-        val image = File(path)
-        val result = saraServiceRepository.downloadImageUrl(image)
-        handleRequestGetImageUrlResult(result)
+    
+    private var requestGetImageUrlCoroutine: Job? = null
+    fun requestImageAnalysis(path: String) {
+        requestGetImageUrlCoroutine = viewModelScope.launch {
+            Log.e(TAG, "requestImageAnalysis: ", )
+            setState(State.ING)
+            val image = File(path)
+            val result = saraServiceRepository.downloadImageUrl(image)
+            handleRequestGetImageUrlResult(result)
+        }
     }
 
     private var photoUrl: String? = null
     private fun handleRequestGetImageUrlResult(result: Image?) = result?.let {
-        viewModelScope.launch {
-            photoUrl = it.photoUrl
-            requestChatGPT()
-        }
+        photoUrl = it.photoUrl
+        requestChatGPT()
     } ?: setState(State.FAIL)
 
+    private var requestChatGPTCoroutine: Job? = null
     fun requestChatGPT() = photoUrl?.let {
-        viewModelScope.launch {
+        requestChatGPTCoroutine = viewModelScope.launch {
             val result = saraServiceRepository.downloadResultChatGPT(
                 it,
                 getCurQueryType(),
@@ -102,6 +105,11 @@ class ImageUploadViewModel @Inject constructor(
             )
             _saveResult.value = result
         }
+    }
+
+    fun cancelRequest() {
+        requestGetImageUrlCoroutine?.cancel()
+        requestChatGPTCoroutine?.cancel()
     }
 
     fun initFreeText() {

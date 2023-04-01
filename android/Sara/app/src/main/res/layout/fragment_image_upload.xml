@@ -18,9 +18,11 @@
         android:layout_height="match_parent"
         tools:context=".ui.home.ImageUploadActivity">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,9 +45,9 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/default_margin"
                         android:layout_weight="1"
+                        android:fontFamily="@font/pretendard_bold"
                         android:text="@string/text_title_upload"
-                        android:textSize="@dimen/text_top_title_size"
-                        android:fontFamily="@font/pretendard_bold" />
+                        android:textSize="@dimen/text_top_title_size" />
 
                     <ImageView
                         android:id="@+id/btn_close"
@@ -81,7 +83,7 @@
                 <RadioGroup
                     android:id="@+id/radio_group"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_margin"
                     android:layout_marginTop="@dimen/gap_margin"
                     android:orientation="horizontal">
@@ -93,9 +95,9 @@
                         android:layout_marginEnd="@dimen/gap_margin"
                         android:background="@drawable/bg_round_small_card"
                         android:backgroundTint="@color/chip_bg_color"
-                        android:textColor="@color/chip_text_color"
                         android:button="@null"
                         android:checked="true"
+                        android:fontFamily="@font/pretendard_bold"
                         android:gravity="center"
                         android:includeFontPadding="true"
                         android:minWidth="0dp"
@@ -103,7 +105,7 @@
                         android:onClick="@{()->fragment.activeRadioButton(1)}"
                         android:padding="@dimen/gap_margin"
                         android:text="@string/title_chip1"
-                        android:fontFamily="@font/pretendard_bold" />
+                        android:textColor="@color/chip_text_color" />
 
                     <RadioButton
                         android:id="@+id/radio_2"
@@ -112,15 +114,15 @@
                         android:layout_marginEnd="@dimen/gap_margin"
                         android:background="@drawable/bg_round_small_card"
                         android:backgroundTint="@color/chip_bg_color"
-                        android:textColor="@color/chip_text_color"
                         android:button="@null"
+                        android:fontFamily="@font/pretendard_bold"
                         android:gravity="center"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
+                        android:onClick="@{()->fragment.activeRadioButton(2)}"
                         android:padding="@dimen/gap_margin"
                         android:text="@string/title_chip2"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:onClick="@{()->fragment.activeRadioButton(2)}" />
+                        android:textColor="@color/chip_text_color" />
 
                     <RadioButton
                         android:id="@+id/radio_3"
@@ -128,15 +130,15 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_round_small_card"
                         android:backgroundTint="@color/chip_bg_color"
-                        android:textColor="@color/chip_text_color"
                         android:button="@null"
+                        android:fontFamily="@font/pretendard_bold"
                         android:gravity="center"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
+                        android:onClick="@{()->fragment.activeRadioButton(3)}"
                         android:padding="@dimen/gap_margin"
                         android:text="@string/title_chip3"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:onClick="@{()->fragment.activeRadioButton(3)}" />
+                        android:textColor="@color/chip_text_color" />
 
                     <RadioButton
                         android:id="@+id/radio_4"
@@ -149,14 +151,14 @@
                         android:drawableLeft="@drawable/ic_text"
                         android:drawablePadding="@dimen/gap_margin"
                         android:drawableTint="@color/chip_text_color"
+                        android:fontFamily="@font/pretendard_bold"
                         android:gravity="center"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
                         android:onClick="@{()->fragment.activeRadioButton(4)}"
                         android:padding="@dimen/gap_margin"
                         android:text="@string/title_chip4"
-                        android:textColor="@color/chip_text_color"
-                        android:fontFamily="@font/pretendard_bold" />
+                        android:textColor="@color/chip_text_color" />
 
                 </RadioGroup>
 
@@ -166,37 +168,37 @@
                     android:layout_marginStart="@dimen/default_margin"
                     android:layout_marginTop="@dimen/gap_margin"
                     android:layout_marginEnd="@dimen/default_margin"
-                    android:animateLayoutChanges="true" >
+                    android:animateLayoutChanges="true">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_field"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"
-                    app:boxBackgroundColor="@color/sara_lightGray"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    app:boxStrokeColor="@color/text_field_stroke_color"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="30"
-                    app:endIconMode="clear_text"
-                    app:errorEnabled="true"
-                    app:errorIconTint="@color/sara_red">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_request"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_field"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/text_upload_hint"
-                        android:imeOptions="actionGo"
-                        android:inputType="textMultiLine"
-                        android:maxLength="30"
-                        android:text="@={viewModel.freeText}"
-                        android:textColor="@color/sara_gray" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        app:boxBackgroundColor="@color/sara_lightGray"
+                        app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusBottomStart="@dimen/corner_radius"
+                        app:boxCornerRadiusTopEnd="@dimen/corner_radius"
+                        app:boxCornerRadiusTopStart="@dimen/corner_radius"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="30"
+                        app:endIconMode="clear_text"
+                        app:errorEnabled="true"
+                        app:errorIconTint="@color/sara_red">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_request"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/text_upload_hint"
+                            android:imeOptions="actionGo"
+                            android:inputType="textMultiLine"
+                            android:maxLength="30"
+                            android:text="@={viewModel.freeText}"
+                            android:textColor="@color/sara_gray" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </FrameLayout>
 
                 <Button
@@ -212,6 +214,6 @@
 
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

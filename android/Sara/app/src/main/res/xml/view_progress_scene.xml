@@ -8,7 +8,7 @@
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
         motion:autoTransition="animateToEnd"
-        motion:duration="3000">
+        motion:duration="2500">
         <KeyFrameSet >
             <KeyAttribute
                 motion:motionTarget="@+id/sara"
@@ -22,7 +22,7 @@
         motion:constraintSetEnd="@+id/start"
         motion:constraintSetStart="@id/end"
         motion:autoTransition="animateToEnd"
-        motion:duration="3000">
+        motion:duration="2500">
         <KeyFrameSet >
             <KeyAttribute
                 motion:motionTarget="@+id/sara"

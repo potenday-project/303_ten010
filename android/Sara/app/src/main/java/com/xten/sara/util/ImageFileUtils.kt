@@ -2,14 +2,10 @@ package com.xten.sara.util
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Log
 import androidx.core.content.FileProvider
-import com.xten.sara.util.constants.TAG
-import java.io.ByteArrayOutputStream
 import java.io.File
 
 /**
@@ -31,9 +27,7 @@ object ImageFileUtils {
         context,
         context.packageName,
         file
-    ).also { Log.e(TAG, "getTempFileUri: $it", ) }
-
-    //캐시파일 지우는 함수 만들기
+    )
 
     fun createFileAccessSettingsIntent (context: Context) : Intent =
         Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
@@ -50,7 +44,6 @@ object ImageFileUtils {
         }
     }
 
-    //디버깅 해야할 함수 -> try catch로 바꾸기
     fun getAbsolutePath(context: Context, uri: Uri) : String {
         var path = uri.toString()
         try {
@@ -73,7 +66,7 @@ object ImageFileUtils {
     }
 
     fun deleteTempFile(file: File) {
-        file.deleteOnExit()
+        file.delete()
     }
 
 

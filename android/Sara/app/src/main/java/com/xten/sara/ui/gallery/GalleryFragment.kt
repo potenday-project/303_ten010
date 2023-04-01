@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
+import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.data.Gallery
 import com.xten.sara.databinding.FragmentGalleryBinding
@@ -45,7 +45,6 @@ class GalleryFragment : Fragment() {
         subscribeToObservers()
     }
 
-
     private val albumTypeItemAdapter by lazy {
         GalleryItemAdapter(TYPE_ALBUM).apply {
             setOnItemClickListener {
@@ -56,11 +55,12 @@ class GalleryFragment : Fragment() {
     private val listTypeItemAdapter by lazy {
         GalleryItemAdapter(TYPE_LIST).apply {
             setOnItemClickListener {
-                Log.e(TAG, "$it: ", )
+                Log.e(TAG, "$it: ",)
                 navigateToGalleryDetails(it)
             }
         }
     }
+
     private fun initView() = binding.apply {
         setRecyclerViewItemType(TYPE_ALBUM)
 
@@ -68,8 +68,8 @@ class GalleryFragment : Fragment() {
             setTypeButtonAction(isChecked)
         }
 
-        editSearch.setOnKeyListener { _, keyCode, event ->
-            when(keyCode) {
+        editSearch.setOnKeyListener { _, keyCode, _ ->
+            when (keyCode) {
                 KeyEvent.KEYCODE_ENTER -> handleEnterKeyEvent()
                 else -> return@setOnKeyListener false
             }
@@ -84,21 +84,20 @@ class GalleryFragment : Fragment() {
     @Inject
     lateinit var inputManager: InputMethodManager
     private fun handleEnterKeyEvent(): Boolean = binding.editSearch.run {
-        dropdownSoftKeyboard(requireActivity(), inputManager)
+        dropDownSoftKeyboard(requireActivity(), inputManager)
         galleryViewModel.apply {
             val input = getCurInput()
-            if(input.isNotBlank()) {
+            if (input.isNotBlank()) {
                 requestSearch()
                 binding.recyclerView.scrollToPosition(DEFAULT_POSITION)
-            }
-            else showToast(requireContext(), MESSAGE_WARNING_EDIT)
+            } else showToast(requireContext(), MESSAGE_WARNING_EDIT)
         }
 
         true
     }
 
     private fun setRecyclerViewItemType(type: Int) = binding.recyclerView.apply {
-        when(type) {
+        when (type) {
             TYPE_ALBUM -> {
                 val gridLayoutManager = GridLayoutManager(requireContext(), GRID_COL_TYPE_1)
                 layoutManager = gridLayoutManager
@@ -110,7 +109,6 @@ class GalleryFragment : Fragment() {
                 adapter = listTypeItemAdapter
             }
         }
-        scrollToPosition(DEFAULT_POSITION)
     }
 
     private fun setTypeButtonAction(isChecked: Boolean) = when {
@@ -121,13 +119,14 @@ class GalleryFragment : Fragment() {
     private fun setResetButtonAction() = binding.apply {
         editSearch.text?.clear()
         galleryViewModel.resetGallery()
-        dropdownSoftKeyboard(requireActivity(), inputManager)
+        dropDownSoftKeyboard(requireActivity(), inputManager)
         recyclerView.smoothScrollToPosition(DEFAULT_POSITION)
     }
 
     private fun subscribeToObservers() = binding.apply {
         with(galleryViewModel) {
             galleryList.observe(viewLifecycleOwner) {
+                if(!saved) binding.recyclerView.scrollToPosition(DEFAULT_POSITION)
                 it?.let {
                     val list = it.sortedByDescending { image ->
                         image.createdAt
@@ -135,20 +134,30 @@ class GalleryFragment : Fragment() {
                     albumTypeItemAdapter.submitData(list)
                     listTypeItemAdapter.submitData(list)
 
-                    binding.recyclerView.smoothScrollToPosition(DEFAULT_POSITION)
-                    if(getCurInput().isBlank()) return@let
-                    if(list.isEmpty()) showToast(requireContext(), MESSAGE_RESULT_SEARCH_FAIL)
+                    if (getCurInput().isBlank()) return@let
+                    if (list.isEmpty()) showToast(requireContext(), MESSAGE_RESULT_SEARCH_FAIL)
                 }
             }
         }
     }
 
+    private var saved = false
     private fun navigateToGalleryDetails(gallery: Gallery) {
+        saved = true
         val action = GalleryFragmentDirections.actionGalleryFragmentToGalleryDetailsFragment(
             gallery
         )
         findNavController().navigate(action)
     }
 
+    override fun onStop() {
+        if(!saved) {
+            binding.apply {
+                editSearch.text?.clear()
+                btnAlbum.isChecked = true
+            }
+        }
+        super.onStop()
+    }
 
 }

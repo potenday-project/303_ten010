@@ -2,12 +2,10 @@ package com.xten.sara.ui.home
 
 import android.app.Activity
 import android.content.Intent
-import android.content.Intent.createChooser
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +15,17 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.xten.sara.R
-import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
+import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentImageUploadBinding
 import com.xten.sara.util.ImageFileUtils
-import com.xten.sara.util.constants.*
+import com.xten.sara.util.view.KeyboardVisibilityUtils
+import com.xten.sara.util.constants.MAX_TEXT_LENGTH
+import com.xten.sara.util.constants.MESSAGE_WARNING_EDIT
+import com.xten.sara.util.constants.TEXT_FIELD_ERROR_MESSAGE
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import javax.inject.Inject
@@ -64,6 +62,17 @@ class ImageUploadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        setKeyboardVisibilityUtils()
+    }
+
+    private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
+    private fun setKeyboardVisibilityUtils() {
+        keyboardVisibilityUtils = KeyboardVisibilityUtils(requireActivity().window,
+            onShowKeyboard = { keyboardHeight ->
+                binding.scrollView.run {
+                    smoothScrollTo(scrollX, scrollY + keyboardHeight)
+                }
+            })
     }
 
     private fun initView() = binding.apply {
@@ -92,15 +101,14 @@ class ImageUploadFragment : Fragment() {
     }
 
     private fun setImageClickAction()  {
+        binding.editRequest.clearFocus()
         createChooser()
     }
 
     private fun setRadioButtonCheckedChangeAction(isChecked: Boolean) = binding.apply {
+        dropDownSoftKeyboard(requireActivity(), inputManager)
         with(textField) {
-            if(isChecked) {
-                visibility = View.VISIBLE
-                //포커스 관련 추가하기
-            } else visibility = View.GONE
+            visibility = if(isChecked) View.VISIBLE else View.GONE
         }
     }
 
@@ -151,10 +159,8 @@ class ImageUploadFragment : Fragment() {
             }
         }
     }
+
     private fun setFocusChangeAction(hasFocus: Boolean) = binding.apply {
-        if (hasFocus) {
-            imageUploadViewModel.setQueryType(TYPE_4)
-        }
         textField.isHintEnabled = hasFocus
     }
     private fun setTextFieldError(input: Editable?) = input?.let {
@@ -164,13 +170,13 @@ class ImageUploadFragment : Fragment() {
 
     @Inject
     lateinit var inputManager: InputMethodManager
-    fun activeRadioButton(num: Int) = binding.apply {
+    fun activeRadioButton(num: Int) {
         imageUploadViewModel.setQueryType(num)
     }
 
     // !--request
     private fun setupRequestButtonAction() {
-        dropdownSoftKeyboard(requireActivity(), inputManager)
+        dropDownSoftKeyboard(requireActivity(), inputManager)
         verifyRequestState()
     }
 
@@ -191,13 +197,20 @@ class ImageUploadFragment : Fragment() {
         navigateToImageResult()
     }
 
+    private var isSaved = false
     private fun navigateToImageResult() = imageUri.let {
-        val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
-        findNavController().navigate(R.id.action_imageUploadFragment_to_imageResultFragment, null, options)
+        isSaved = true
+        findNavController().navigate(R.id.action_imageUploadFragment_to_imageResultFragment)
     }
 
     private fun setCloseButtonAction() {
         findNavController().popBackStack()
+    }
+
+    override fun onDestroyView() {
+        keyboardVisibilityUtils.detachKeyboardListeners()
+        if(isSaved) imageUploadViewModel.initViewModel()
+        super.onDestroyView()
     }
 
 }

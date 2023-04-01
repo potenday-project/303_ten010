@@ -1,13 +1,12 @@
 package com.xten.sara.ui.gallery
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.xten.sara.data.SaraServiceRepository
+import androidx.lifecycle.*
 import com.xten.sara.data.Gallery
-import com.xten.sara.util.constants.*
+import com.xten.sara.data.SaraServiceRepository
+import com.xten.sara.util.constants.QueryType
+import com.xten.sara.util.constants.TYPE_1
+import com.xten.sara.util.constants.TYPE_2
+import com.xten.sara.util.constants.TYPE_3
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -74,10 +73,6 @@ class GalleryViewModel @Inject constructor(
     fun deleteContent(id: String) = viewModelScope.launch {
         val result = saraServiceRepository.requestDeleteContent(id)
         _deleteResult.postValue(result)
-    }
-    
-    fun initViewModel() {
-        input.value = null
     }
 
 }

@@ -1,12 +1,13 @@
 package com.xten.sara.ui.login
 
 import android.content.SharedPreferences
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.app.FrameMetricsAggregator.DELAY_DURATION
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController

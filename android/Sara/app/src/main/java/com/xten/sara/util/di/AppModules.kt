@@ -78,9 +78,6 @@ object AppModules {
         }
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(requestInterceptor)
-            .addInterceptor(HttpLoggingInterceptor{
-                Log.e(TAG, "provideSaraAPIService: $it", )
-            }.setLevel(HttpLoggingInterceptor.Level.BASIC))
             .callTimeout(TIME_OUT, TimeUnit.SECONDS)
             .readTimeout(TIME_OUT, TimeUnit.SECONDS)
             .connectTimeout(TIME_OUT, TimeUnit.SECONDS)

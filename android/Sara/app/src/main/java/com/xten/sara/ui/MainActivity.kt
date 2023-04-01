@@ -8,10 +8,9 @@ import android.view.View.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.xten.sara.R
-import com.xten.sara.SaraApplication.Companion.dropdownSoftKeyboard
+import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.databinding.ActivityMainBinding
 import com.xten.sara.util.*
 import com.xten.sara.util.constants.*
@@ -65,11 +64,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun controlBottomNavVisibility(label: CharSequence?) = label?.let {
         binding.navBottom.visibility = when(label) {
-            LABEL_HOME_, LABEL_GALLERY_, LABEL_MY_ -> VISIBLE
-            else -> GONE
+            LABEL_HOME_, LABEL_GALLERY_, LABEL_MY_ -> VISIBLE.also { binding.shadow.visibility = VISIBLE }
+            else -> GONE.also { binding.shadow.visibility = GONE }
         }
     }
-
 
     @Inject
     lateinit var inputManager: InputMethodManager
@@ -78,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             currentFocus?.let {
                 val rect = Rect()
                 it.getGlobalVisibleRect(rect)
-                if (!rect.contains(x.toInt(), y.toInt())) dropdownSoftKeyboard(this@MainActivity, inputManager)
+                if (!rect.contains(x.toInt(), y.toInt())) dropDownSoftKeyboard(this@MainActivity, inputManager)
             }
         }
         return super.dispatchTouchEvent(ev)

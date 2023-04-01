@@ -11,7 +11,7 @@
     <dimen name="bottom_nav_height">88dp</dimen>
     <dimen name="bottom_nav_elevation">10dp</dimen>
 
-    <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="status_bar_height">28dp</dimen>
     <dimen name="top_bar_height">56dp</dimen>
 
     <dimen name="logo_width">135dp</dimen>

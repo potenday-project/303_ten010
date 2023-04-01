@@ -1,10 +1,8 @@
 package com.xten.sara.data
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.xten.sara.util.LoginUtils
 import com.xten.sara.util.constants.State
-import com.xten.sara.util.constants.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -31,7 +29,6 @@ class SaraServiceDataSource @Inject constructor(
         try {
             api.login(LoginRequestBody(email, nickname, profile)).body()?.token
         } catch (e: Exception) {
-            Log.e(TAG, "getToken: $e", )
             null
         }
     }
@@ -46,7 +43,6 @@ class SaraServiceDataSource @Inject constructor(
                 image = image
             ).body()
         } catch (e: Exception){
-            Log.e(TAG, "getImageUrl: $e", )
             null
         }
     }
@@ -71,7 +67,6 @@ class SaraServiceDataSource @Inject constructor(
                     return@withContext it
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "requestChatGPT: $e", )
                 null
             }
         }
@@ -90,7 +85,6 @@ class SaraServiceDataSource @Inject constructor(
             )
             State.SUCCESS.name
         } catch (e: Exception) {
-            Log.e(TAG, "saveContent: $e", )
             State.FAIL.name
         }
     }
@@ -102,7 +96,6 @@ class SaraServiceDataSource @Inject constructor(
                 header = auth
             ).body()?.result
         } catch (e: Exception) {
-            Log.e(TAG, "getCollection: $e", )
             null
         }
     }
@@ -116,7 +109,6 @@ class SaraServiceDataSource @Inject constructor(
             )
             State.SUCCESS.name
         } catch (e: Exception) {
-            Log.e(TAG, "deleteContent: $e", )
             State.FAIL.name
         }
     }
@@ -128,7 +120,6 @@ class SaraServiceDataSource @Inject constructor(
                 header = auth
             ).body()?.result
         } catch (e: Exception) {
-            Log.e(TAG, "getMyCollection: $e", )
             null
         }
     }

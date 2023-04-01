@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xten.sara.R
 import com.xten.sara.SaraApplication
+import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.data.Gallery
 import com.xten.sara.databinding.FragmentMyGalleryBinding
 import com.xten.sara.ui.gallery.GalleryFragmentDirections
@@ -100,7 +101,7 @@ class MyGalleryFragment : Fragment() {
     @Inject
     lateinit var inputManager: InputMethodManager
     private fun handleEnterKeyEvent(): Boolean = binding.editSearch.run {
-        SaraApplication.dropdownSoftKeyboard(requireActivity(), inputManager)
+        dropDownSoftKeyboard(requireActivity(), inputManager)
         galleryViewModel.apply {
             val input = getCurInput()
             if(input.isNotBlank()) {
@@ -136,13 +137,14 @@ class MyGalleryFragment : Fragment() {
     private fun setResetButtonAction() = binding.apply {
         editSearch.text?.clear()
         galleryViewModel.resetGallery()
-        SaraApplication.dropdownSoftKeyboard(requireActivity(), inputManager)
+        dropDownSoftKeyboard(requireActivity(), inputManager)
         recyclerView.smoothScrollToPosition(DEFAULT_POSITION)
     }
 
     private fun subscribeToObservers() = binding.apply {
         with(galleryViewModel) {
             galleryList.observe(viewLifecycleOwner) {
+                if(!saved) binding.recyclerView.scrollToPosition(DEFAULT_POSITION)
                 it?.let {
                     val list = it.sortedByDescending { image ->
                         image.createdAt
@@ -150,7 +152,6 @@ class MyGalleryFragment : Fragment() {
                     albumTypeItemAdapter.submitData(list)
                     listTypeItemAdapter.submitData(list)
 
-                    binding.recyclerView.smoothScrollToPosition(DEFAULT_POSITION)
                     if(getCurInput().isBlank()) return@let
                     if(list.isEmpty()) SaraApplication.showToast(
                         requireContext(),
@@ -161,11 +162,23 @@ class MyGalleryFragment : Fragment() {
         }
     }
 
+    private var saved = false
     private fun navigateToGalleryDetails(gallery: Gallery) {
+        saved = true
         val action = MyGalleryFragmentDirections.actionMyGalleryFragmentToGalleryDetailsFragment(
             gallery
         )
         findNavController().navigate(action)
+    }
+
+    override fun onStop() {
+        if(!saved) {
+            binding.apply {
+                editSearch.text?.clear()
+                btnAlbum.isChecked = true
+            }
+        }
+        super.onStop()
     }
 
 }

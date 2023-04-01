@@ -1,17 +1,14 @@
 package com.xten.sara.util
 
-import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.util.DisplayMetrics
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerInside
 import com.xten.sara.R
 import com.xten.sara.util.constants.*
 
@@ -71,6 +68,9 @@ object BindingAdapter {
             }
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView)
+        getScreenHeight(imageView.context)?.let { height ->
+            imageView.maxHeight = height
+        }
     }
 
     @JvmStatic
@@ -88,8 +88,8 @@ object BindingAdapter {
 
     private fun getScreenHeight(context: Context) = run {
         val display = context.resources?.displayMetrics
-        display?.heightPixels?.apply {
-            pxToDp(this, context)
+        display?.heightPixels?.run {
+            pxToDp(this, context).toInt()
         }
     }
     private fun pxToDp(px: Int, context: Context) = px / ((context.resources.displayMetrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
