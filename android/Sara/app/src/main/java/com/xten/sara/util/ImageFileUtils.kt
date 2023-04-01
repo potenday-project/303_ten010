@@ -2,12 +2,14 @@ package com.xten.sara.util
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.FileProvider
 import com.xten.sara.util.constants.TAG
+import java.io.ByteArrayOutputStream
 import java.io.File
 
 /**
@@ -77,7 +79,6 @@ object ImageFileUtils {
 
 }
 
-private const val DIRECTORY_TEMP = "Temp"
 private const val TEMP_FILE_PREFIX = "temp"
 private const val TEMP_FILE_SUFFIX = ".jpg"
 private const val CHOOSER_TITLE = "사진을 가져올 방법을 선택하세요."

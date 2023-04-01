@@ -15,8 +15,9 @@ class SaraServiceRepository @Inject constructor(
 
     suspend fun downloadToken(
         email: String,
-        nickName: String
-    ) = saraServiceDataSource.getToken(email, nickName)
+        nickName: String?,
+        profile: String?
+    ) = saraServiceDataSource.getToken(email, nickName, profile)
 
     suspend fun downloadImageUrl(file: File) = saraServiceDataSource.getImageUrl(file)
 

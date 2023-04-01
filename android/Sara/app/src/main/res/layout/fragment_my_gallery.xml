@@ -39,7 +39,7 @@
                 android:singleLine="true"
                 android:text="@string/text_menu_collection"
                 android:textSize="@dimen/text_top_title_size"
-                android:textStyle="bold" />
+                android:fontFamily="@font/pretendard_bold" />
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout

@@ -40,6 +40,8 @@ data class Gallery (
     val email: String?,
     @SerializedName("nickname")
     val nickname: String?,
+    @SerializedName("profile")
+    val profile: String?,
     @SerializedName("photoUrl")
     val photoUrl: String?,
     @SerializedName("title")

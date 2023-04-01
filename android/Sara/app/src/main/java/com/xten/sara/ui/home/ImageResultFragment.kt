@@ -1,5 +1,7 @@
 package com.xten.sara.ui.home
 
+import android.content.ClipboardManager
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -58,6 +60,11 @@ class ImageResultFragment : Fragment() {
         btnBack.setOnClickListener {
             setBackButtonAction()
         }
+
+        contentView.setOnClickListener {
+            setContentViewClickAction()
+        }
+
         btnSave.setOnClickListener {
             setSaveButtonAction()
         }
@@ -67,11 +74,24 @@ class ImageResultFragment : Fragment() {
         btnRecall.setOnClickListener {
             setRecallButtonAction()
         }
+
+        btnShare.setOnClickListener {
+            setShareButtonAction(content.text.toString())
+        }
+
     }
 
     private fun setBackButtonAction() {
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
         findNavController().navigate(R.id.action_imageResultFragment_to_homeFragment, null, options)
+    }
+
+    @Inject
+    lateinit var clipboardManager: ClipboardManager
+    private fun setContentViewClickAction() {
+        val text = binding.content.text.trim().toString()
+        if(text.isBlank()) return
+        SaraApplication.copyToClipboard(requireContext(), clipboardManager, text)
     }
 
     private fun setSaveButtonAction() {
@@ -110,8 +130,8 @@ class ImageResultFragment : Fragment() {
         textField.isHintEnabled = hasFocus
     }
     private fun setTextFieldError(input: Editable?) = input?.let {
-        if(input.length < MAX_TEXT_LENGTH) return@let
-        binding.textField.error = TEXT_FIELD_ERROR_MESSAGE
+        if(input.length < MAX_TEXT_TITLE_LENGTH) return@let
+        binding.textField.error = TEXT_FIELD_ERROR_MESSAGE_TITLE
     }
 
     private fun verifyRequestState() = binding.apply {
@@ -126,6 +146,17 @@ class ImageResultFragment : Fragment() {
         setState(State.ING)
         controlProgress(false)
         requestChatGPT()
+    }
+
+    private fun setShareButtonAction(text: String) = text?.let {
+        val share = Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/*"
+            putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_TITLE, SHARE_TITLE_TEXT)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }, null)
+        startActivity(share)
     }
 
     private fun subscribeToObserver() = imageUploadViewModel.apply {

@@ -27,10 +27,10 @@ class LoginViewModel @Inject constructor(
     private val _state = MutableLiveData(State.NONE)
     val state: LiveData<State> = _state
 
-    fun requestLogin(email: String?, nickName: String?) {
+    fun requestLogin(email: String?, nickName: String?, profile: String?) {
         email?.let {
             viewModelScope.launch {
-                val token = saraServiceRepository.downloadToken(email, nickName!!)
+                val token = saraServiceRepository.downloadToken(email, nickName, profile)
                 handleLoginResult(token)
             }
         }

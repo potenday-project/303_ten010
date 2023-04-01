@@ -7,6 +7,7 @@
         <variable
             name="gallery"
             type="com.xten.sara.data.Gallery" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +41,8 @@
                     android:backgroundTint="@color/sara_blue"
                     android:padding="@dimen/gap_margin"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:visibility="@{gallery.type != null ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/image" />
 
@@ -66,7 +68,7 @@
                     android:text="@{gallery.title}"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_title_big_size"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_bold"
                     app:layout_constraintBottom_toBottomOf="@+id/textView11"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView11"

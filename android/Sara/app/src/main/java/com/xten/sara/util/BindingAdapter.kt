@@ -1,18 +1,20 @@
 package com.xten.sara.util
 
+import android.app.Activity
+import android.content.Context
 import android.net.Uri
+import android.util.DisplayMetrics
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerInside
 import com.xten.sara.R
-import com.xten.sara.util.constants.QueryType
-import com.xten.sara.util.constants.TYPE_1
-import com.xten.sara.util.constants.TYPE_2
-import com.xten.sara.util.constants.TYPE_3
+import com.xten.sara.util.constants.*
+
 
 /**
  * @author SANDY
@@ -45,6 +47,9 @@ object BindingAdapter {
     fun setImage(imageView: ImageView, uri: Uri?) {
         uri?.let {
             imageView.setImageURI(it)
+            getScreenHeight(imageView.context)?.let { height ->
+                imageView.maxHeight = height
+            }
         }
     }
 
@@ -59,12 +64,13 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("ImageLoad")
     fun setImage(imageView: ImageView, url: String?) {
-        url?.let {
-            Glide.with(imageView)
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView)
-        }
+        Glide.with(imageView)
+            .load(url)
+            .error(R.drawable.ic_sara_normal).apply {
+                centerInside()
+            }
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView)
     }
 
     @JvmStatic
@@ -79,6 +85,15 @@ object BindingAdapter {
             }
         }
     }
+
+    private fun getScreenHeight(context: Context) = run {
+        val display = context.resources?.displayMetrics
+        display?.heightPixels?.apply {
+            pxToDp(this, context)
+        }
+    }
+    private fun pxToDp(px: Int, context: Context) = px / ((context.resources.displayMetrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
+
 
 
 }

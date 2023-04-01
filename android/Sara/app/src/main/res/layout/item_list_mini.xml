@@ -41,7 +41,7 @@
                     android:padding="4dp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_content_small_size"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_bold"
                     Type="@{gallery.type}"
                     app:layout_constraintBottom_toBottomOf="@+id/content"
                     app:layout_constraintStart_toStartOf="parent"

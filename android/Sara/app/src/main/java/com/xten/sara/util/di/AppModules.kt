@@ -1,9 +1,12 @@
 package com.xten.sara.util.di
 
+import android.app.Application
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
 import com.xten.sara.data.SaraServiceAPI
@@ -52,6 +55,11 @@ object AppModules {
     @Provides
     fun provideInputManager(@ApplicationContext app: Context) =
         app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    @Singleton
+    @Provides
+    fun provideClipboardManager(@ApplicationContext app: Context) =
+        app.getSystemService(Application.CLIPBOARD_SERVICE) as ClipboardManager
 
     @Singleton
     @Provides

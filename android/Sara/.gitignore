@@ -21,3 +21,7 @@ app/build/
 
 app/src/main/java/com/xten/sara/util/constants/API_KEY.kt
 app/client_secret.json
+app/src/main/res/font
+app/src/main/res/font/
+app/src/main/res/font/pretendard_bold.otf
+app/src/main/res/font/pretendard_medium.otf

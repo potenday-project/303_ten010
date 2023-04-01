@@ -23,7 +23,7 @@
             android:paddingEnd="@dimen/default_margin"
             android:text="@string/menu_gallery_name"
             android:textSize="@dimen/text_menu_title_size"
-            android:textStyle="bold" />
+            android:fontFamily="@font/pretendard_bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

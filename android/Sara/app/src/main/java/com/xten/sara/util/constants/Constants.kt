@@ -11,6 +11,8 @@ const val TAG = "[확인]"
 
 const val SARA_PREFS = "sara_prefs"
 
+const val APP_NAME = "Sara"
+
 const val TEMP_FILE_NAME = "temp.png"
 
 const val MESSAGE_PERMISSION_CAMERA = "카메라 권한을 허용해 주세요"
@@ -33,6 +35,8 @@ const val MESSAGE_RESULT_SEARCH_FAIL = "검색결과가 없습니다"
 
 const val MESSAGE_RESULT_LOGOUT_SUCCESS = "로그아웃 하였습니다."
 const val MESSAGE_RESULT_LOGOUT_FAIL = "로그아웃 할 수 없습니다."
+
+const val MESSAGE_TEXT_COPY = "텍스트가 복사되었습니다."
 
 const val DEFAULT_ = 0
 const val RANDOM_SIZE = 2
@@ -86,4 +90,8 @@ enum class QueryType {
 }
 
 const val TEXT_FIELD_ERROR_MESSAGE = "최대 30글자를 넘을 수 없습니다."
+const val TEXT_FIELD_ERROR_MESSAGE_TITLE = "최대 20글자를 넘을 수 없습니다."
 const val MAX_TEXT_LENGTH = 30
+const val MAX_TEXT_TITLE_LENGTH = 20
+
+const val SHARE_TITLE_TEXT = "친구에게 공유하기"

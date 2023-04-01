@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -39,6 +40,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        registerOnBackPressedDispatcher()
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
         return setBinding().root
     }
@@ -53,6 +55,13 @@ class LoginFragment : Fragment() {
         initView()
         subscribeToObserver()
     }
+
+    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
+        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
 
     private fun initView() = binding.apply {
         btnLogin.setOnClickListener {
@@ -76,11 +85,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleSignInOnClientTask(result: GoogleSignInAccount) {
-        loginViewModel.requestLogin(result.email, result.displayName)
+        loginViewModel.requestLogin(result.email, result.displayName, result.photoUrl.toString())
     }
 
     private fun subscribeToObserver() = loginViewModel.state.observe(viewLifecycleOwner) {
-        Log.e(TAG, "subscribeToObserver: $it", )
         when(it) {
             State.SUCCESS -> handleResultSuccess()
             State.FAIL -> handleResultFail()

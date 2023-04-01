@@ -67,7 +67,8 @@ interface SaraServiceAPI {
 
 data class LoginRequestBody(
     val email: String,
-    val nickname: String
+    val nickname: String?,
+    val profile: String?
 )
 
 data class ChatGPTRequestBody(

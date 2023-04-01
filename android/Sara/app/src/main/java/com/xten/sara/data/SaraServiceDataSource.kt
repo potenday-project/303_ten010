@@ -25,16 +25,15 @@ class SaraServiceDataSource @Inject constructor(
 ) {
     suspend fun getToken(
         email: String,
-        nickname: String
+        nickname: String?,
+        profile: String?
     ) = withContext(Dispatchers.IO) {
         try {
-            api.login(LoginRequestBody(email, nickname)).body()?.token
+            api.login(LoginRequestBody(email, nickname, profile)).body()?.token
         } catch (e: Exception) {
             Log.e(TAG, "getToken: $e", )
             null
         }
-    }.also {
-        Log.e(TAG, "getToken: email: $email, nickname: $nickname", )
     }
 
     suspend fun getImageUrl(file: File) = withContext(Dispatchers.IO) {

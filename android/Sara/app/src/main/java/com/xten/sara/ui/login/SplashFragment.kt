@@ -5,6 +5,7 @@ import android.os.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.app.FrameMetricsAggregator.DELAY_DURATION
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
@@ -25,6 +26,7 @@ class SplashFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        registerOnBackPressedDispatcher()
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
@@ -35,6 +37,13 @@ class SplashFragment : Fragment() {
             DELAY_DURATION
         )
     }
+
+    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
+        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
 
     private fun navigationToDestination() = findNavController().apply{
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
@@ -47,7 +56,7 @@ class SplashFragment : Fragment() {
     }
 
     companion object {
-        const val DELAY_DURATION = 1000L
+        const val DELAY_DURATION = 3000L
     }
 
 }

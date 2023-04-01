@@ -19,35 +19,6 @@
         android:orientation="vertical"
         tools:context=".ui.gallery.GalleryDetailsFragment">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/top_bar_height"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/default_margin"
-                android:src="@drawable/ic_arrow" />
-
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/gap_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:elevation="@dimen/top_elevation"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="@{gallery.title}"
-                android:textSize="@dimen/text_top_title_size"
-                android:textStyle="bold" />
-        </LinearLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -57,6 +28,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/btn_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:src="@drawable/ic_arrow" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/gap_margin"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:elevation="@dimen/top_elevation"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@{gallery.title}"
+                        android:textSize="@dimen/text_top_title_size"
+                        android:fontFamily="@font/pretendard_bold" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,6 +79,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:elevation="0dp"
+                            ImageLoad="@{gallery.profile}"
                             tools:src="@tools:sample/avatars" />
                     </androidx.cardview.widget.CardView>
 
@@ -95,7 +96,7 @@
                             android:layout_height="wrap_content"
                             android:singleLine="true"
                             android:text="@{gallery.nickname}"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/pretendard_bold" />
 
                         <TextView
                             android:id="@+id/textView13"
@@ -121,10 +122,11 @@
                     <ImageView
                         android:id="@+id/image"
                         ImageLoad="@{gallery.photoUrl}"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:background="?attr/selectableItemBackground"
-                        android:scaleType="centerCrop"
+                        android:scaleType="center"
                         tools:srcCompat="@drawable/ic_launcher_background" />
                 </androidx.cardview.widget.CardView>
 
@@ -139,22 +141,61 @@
                     app:cardElevation="0dp"
                     app:cardMaxElevation="0dp">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/content_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/content"
+                            android:id="@+id/content5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="@dimen/default_margin"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:maxLines="2"
+                            android:text="@{gallery.title}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_title_big_size"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/textView22"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            Type="@{gallery.type}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/default_margin"
-                            android:layout_marginTop="@dimen/content_margin"
+                            android:layout_marginTop="24dp"
+                            android:background="@drawable/bg_round_small_card"
+                            android:backgroundTint="@color/sara_blue"
+                            android:padding="@dimen/gap_margin"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:visibility="@{gallery.type != null ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/content"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/default_margin"
+                            android:layout_marginTop="@dimen/default_margin"
                             android:layout_marginEnd="@dimen/default_margin"
                             android:layout_marginBottom="@dimen/content_margin"
                             android:text="@{gallery.text}"
-                            android:textColor="@color/sara_gray" />
-                    </LinearLayout>
+                            android:textColor="@color/sara_gray"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/content5" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout

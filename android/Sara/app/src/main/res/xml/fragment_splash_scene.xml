@@ -3,17 +3,100 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
+    <ConstraintSet android:id="@+id/step1_start">
+        <Constraint
+            android:id="@+id/logo"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="@dimen/logo_width"
+            android:layout_height="@dimen/logo_height"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:alpha="0" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/step1_end">
+        <Constraint
+            android:id="@+id/character"
+            motion:layout_constraintStart_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/logo"
+            motion:layout_constraintTop_toTopOf="@+id/logo" />
+        <Constraint
+            android:id="@+id/logo"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="@dimen/logo_width"
+            android:layout_height="@dimen/logo_height"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:alpha="1.0"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+    <ConstraintSet
+        android:id="@+id/step2_start"
+        motion:deriveConstraintsFrom="@+id/step1_end" >
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="@+id/logo"
+            motion:layout_constraintBottom_toBottomOf="@+id/logo"
+            android:layout_width="wrap_content"
+            android:id="@+id/character"
+            motion:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:id="@+id/logo"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="@dimen/logo_width"
+            android:layout_height="@dimen/logo_height"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:alpha="1.0"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+
+
+    <ConstraintSet
+        android:id="@+id/step3_start"
+        motion:deriveConstraintsFrom="@+id/step2_start" >
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="@+id/logo"
+            motion:layout_constraintBottom_toBottomOf="@+id/logo"
+            android:layout_width="wrap_content"
+            android:id="@+id/character"
+            motion:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:layout_height="@dimen/logo_height"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="@dimen/logo_width"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/logo"
+            android:layout_marginStart="-200dp" />
+    </ConstraintSet>
+
     <Transition
-        motion:constraintSetEnd="@+id/end"
-        motion:constraintSetStart="@id/start"
+        android:id="@+id/step1"
+        motion:constraintSetStart="@id/step1_start"
+        motion:constraintSetEnd="@+id/step1_end"
+        motion:autoTransition="animateToEnd"
         motion:duration="1000">
-       <KeyFrameSet>
-       </KeyFrameSet>
+        <KeyFrameSet>
+        </KeyFrameSet>
     </Transition>
+    <Transition
+        android:id="@+id/step2"
+        motion:constraintSetStart="@+id/step1_end"
+        motion:constraintSetEnd="@+id/step2_start"
+        motion:autoTransition="animateToEnd"
+        motion:duration="1000" />
+    <Transition
+        android:id="@+id/step3"
+        motion:constraintSetStart="@+id/step2_start"
+        motion:constraintSetEnd="@+id/step3_start"
+        motion:autoTransition="animateToEnd"
+        motion:duration="1000"/>
 
-    <ConstraintSet android:id="@+id/start">
-    </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/end">
-    </ConstraintSet>
 </MotionScene>

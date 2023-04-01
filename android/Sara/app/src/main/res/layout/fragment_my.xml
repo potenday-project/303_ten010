@@ -26,7 +26,7 @@
             android:paddingStart="@dimen/default_margin"
             android:text="@string/menu_my_name_title"
             android:textSize="@dimen/text_menu_title_size"
-            android:textStyle="bold" />
+            android:fontFamily="@font/pretendard_bold" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                             android:singleLine="true"
                             android:text="@{account.displayName}"
                             android:textSize="@dimen/text_title_size"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/pretendard_bold" />
 
                         <TextView
                             android:id="@+id/textView13"
@@ -128,7 +128,7 @@
                         android:layout_weight="1"
                         android:text="@string/text_text_ver"
                         android:textSize="@dimen/text_button_medium_size"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/pretendard_bold" />
 
                     <TextView
                         android:id="@+id/textView16"
