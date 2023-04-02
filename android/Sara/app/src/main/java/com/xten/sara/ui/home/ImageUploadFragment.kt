@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,7 +77,6 @@ class ImageUploadFragment : Fragment() {
     }
 
     private fun initView() = binding.apply {
-
         imageUploadViewModel.initFreeText()
         radio1.isChecked = true
 
@@ -205,6 +205,10 @@ class ImageUploadFragment : Fragment() {
 
     private fun setCloseButtonAction() {
         findNavController().popBackStack()
+        imageUploadViewModel.apply {
+            initQueryType()
+            initFreeText()
+        }
     }
 
     override fun onDestroyView() {

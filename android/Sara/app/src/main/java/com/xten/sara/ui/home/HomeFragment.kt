@@ -7,21 +7,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentHomeBinding
-import com.xten.sara.util.*
+import com.xten.sara.util.ImageFileUtils
 import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -50,21 +47,38 @@ class HomeFragment() : Fragment() {
 
     private fun setBinding() = binding.apply {
         lifecycleOwner = viewLifecycleOwner
-        num = (DEFAULT_ until RANDOM_SIZE).random()
+        num = getRandomNum()
     }
+
+    private fun getRandomNum() = (DEFAULT_ until RANDOM_SIZE).random()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        binding.num = getRandomNum()
+    }
+
     private fun initView() = binding.apply {
+        saraLogo.setOnClickListener {
+            setSaraLogoClickAction()
+        }
         btnUpload.setOnClickListener {
             setUploadButtonAction()
         }
         btnSearch.setOnClickListener {
             setSearchButtonAction()
         }
+        btnSurvey.setOnClickListener {
+            setSurveyButtonAction()
+        }
+    }
+
+    private fun setSaraLogoClickAction() {
+        binding.num = getRandomNum()
     }
 
 
@@ -150,6 +164,11 @@ class HomeFragment() : Fragment() {
     private fun setSearchButtonAction() {
         Intent(Intent.ACTION_VIEW, Uri.parse(SEARCH_URL)).run(::startActivity)
     }
+
+    private fun setSurveyButtonAction() {
+        Intent(Intent.ACTION_VIEW, Uri.parse(SURVEY_URL)).run(::startActivity)
+    }
+
 
     companion object {
         private const val SEARCH_URL = "https://www.pinterest.co.kr"

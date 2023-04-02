@@ -196,6 +196,7 @@
                             android:imeOptions="actionGo"
                             android:inputType="textMultiLine"
                             android:maxLength="30"
+                            android:privateImeOptions="defaultInputmode=korean"
                             android:text="@={viewModel.freeText}"
                             android:textColor="@color/sara_gray" />
                     </com.google.android.material.textfield.TextInputLayout>

@@ -168,6 +168,7 @@
                         <TextView
                             android:id="@+id/textView22"
                             Type="@{gallery.type}"
+                            TypeTint="@{gallery.type}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/default_margin"
@@ -200,10 +201,11 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_margin"
                     android:layout_marginTop="@dimen/default_margin"
                     android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/default_margin"
                     android:orientation="horizontal">
 
                     <Button

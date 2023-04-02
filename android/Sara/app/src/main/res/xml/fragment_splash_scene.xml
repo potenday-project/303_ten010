@@ -90,7 +90,28 @@
         motion:constraintSetStart="@+id/step1_end"
         motion:constraintSetEnd="@+id/step2_start"
         motion:autoTransition="animateToEnd"
-        motion:duration="1000" />
+        motion:duration="1000" >
+        <KeyFrameSet >
+            <KeyAttribute
+                motion:motionTarget="@+id/character"
+                motion:framePosition="20"
+                android:rotation="0" />
+            <KeyFrameSet >
+                <KeyAttribute
+                    motion:motionTarget="@+id/character"
+                    motion:framePosition="0"
+                    android:rotation="0" />
+                <KeyAttribute
+                    motion:motionTarget="@+id/character"
+                    motion:framePosition="50"
+                    android:rotation="30" />
+                <KeyAttribute
+                    motion:motionTarget="@+id/character"
+                    motion:framePosition="100"
+                    android:rotation="0" />
+            </KeyFrameSet>
+        </KeyFrameSet>
+    </Transition>
     <Transition
         android:id="@+id/step3"
         motion:constraintSetStart="@+id/step2_start"

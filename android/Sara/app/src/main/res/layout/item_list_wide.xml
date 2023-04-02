@@ -33,6 +33,7 @@
                 <TextView
                     android:id="@+id/textView11"
                     Type="@{gallery.type}"
+                    TypeTint="@{gallery.type}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_margin"

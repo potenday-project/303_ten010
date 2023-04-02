@@ -7,18 +7,19 @@ package com.xten.sara.util.constants
  * @desc const val file
  */
 
-const val TAG = "[확인]"
 
 const val SARA_PREFS = "sara_prefs"
 
 const val APP_NAME = "Sara"
 
-const val TEMP_FILE_NAME = "temp.png"
+
+const val SURVEY_URL = "https://forms.gle/WoHSYcZk5LSDawHu5"
 
 const val MESSAGE_PERMISSION_CAMERA = "카메라 권한을 허용해 주세요"
 const val MESSAGE_PERMISSION_ACCESS_FILE = "파일 접근 권한을 허용해 주세요"
 
 const val MESSAGE_WARNING_EDIT = "텍스트를 입력해주세요."
+const val MESSAGE_LOGIN_SUCCESS = "Sara에 오신 걸 환영합니다!"
 const val MESSAGE_WARNING_ERROR = "로그인을 할 수 없습니다."
 
 const val MESSAGE_RESULT_UPLOAD_FAIL = "사진을 업로드 할 수 없습니다."
@@ -54,13 +55,8 @@ const val LABEL_HOME_ = "fragment_home"
 const val LABEL_GALLERY_ = "fragment_gallery"
 const val LABEL_MY_ = "fragment_my"
 const val LABEL_IMAGE_RESULT_ = "fragment_image_result"
-const val LABEL_IMAGE_UPLOAD_ = "fragment_image_upload"
 
 const val GRID_COL_TYPE_1 = 2
-
-const val GALLERY = "gallery"
-
-const val NO_OP = -1
 
 const val TYPE_ALBUM = 0
 const val TYPE_LIST = 1

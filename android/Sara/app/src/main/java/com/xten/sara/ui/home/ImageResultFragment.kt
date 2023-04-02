@@ -104,6 +104,11 @@ class ImageResultFragment : Fragment() {
 
     private fun setBackButtonAction() {
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
+        imageUploadViewModel.apply {
+            initQueryType()
+            initFreeText()
+            initViewModel()
+        }
         findNavController().navigate(R.id.action_imageResultFragment_to_homeFragment, null, options)
     }
 
@@ -145,9 +150,6 @@ class ImageResultFragment : Fragment() {
         }
     }
     private fun setFocusChangeAction(hasFocus: Boolean) = binding.apply {
-        if (hasFocus) {
-            imageUploadViewModel.setQueryType(TYPE_4)
-        }
         textField.isHintEnabled = hasFocus
     }
     private fun setTextFieldError(input: Editable?) = input?.let {

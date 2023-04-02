@@ -27,13 +27,13 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_bubble_type3" />
 
-        <ImageView
+        <include
             android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
+            layout="@layout/view_sara_animation"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/default_margin"
-            android:src="@drawable/ic_sara_study" />
+            android:layout_marginTop="@dimen/default_margin" />
 
         <ImageView
             android:id="@+id/imageView4"
@@ -62,17 +62,21 @@
             app:strokeColor="@color/sara_gray_copy"
             app:strokeWidth="1dp" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/btn_auto_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginStart="18dp"
             android:layout_marginTop="@dimen/gap_margin"
             android:layout_marginEnd="@dimen/default_margin"
+            android:button="@drawable/ic_radio_selector"
             android:buttonTint="@color/radio_btn_color"
             android:checked="@={viewModel.autoLogin}"
+            android:foregroundGravity="center_vertical"
+            android:includeFontPadding="false"
             android:minWidth="0dp"
             android:minHeight="0dp"
+            android:paddingStart="6dp"
             android:text="@string/auto_login_desc"
             android:textColor="@color/radio_btn_color" />
 

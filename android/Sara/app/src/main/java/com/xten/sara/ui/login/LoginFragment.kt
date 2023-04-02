@@ -19,6 +19,7 @@ import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentLoginBinding
 import com.xten.sara.util.LoginUtils
+import com.xten.sara.util.constants.MESSAGE_LOGIN_SUCCESS
 import com.xten.sara.util.constants.MESSAGE_WARNING_ERROR
 import com.xten.sara.util.constants.State
 import dagger.hilt.android.AndroidEntryPoint
@@ -95,6 +96,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleResultSuccess() {
+        showToast(requireContext(), MESSAGE_LOGIN_SUCCESS)
         navigateToHome()
     }
     private fun handleResultFail() {

@@ -1,12 +1,14 @@
 package com.xten.sara.ui.my
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -17,6 +19,7 @@ import com.xten.sara.databinding.FragmentMyBinding
 import com.xten.sara.util.LoginUtils
 import com.xten.sara.util.constants.MESSAGE_RESULT_LOGOUT_FAIL
 import com.xten.sara.util.constants.MESSAGE_RESULT_LOGOUT_SUCCESS
+import com.xten.sara.util.constants.SURVEY_URL
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -50,7 +53,7 @@ class MyFragment : Fragment() {
     }
 
     fun setSurveyButtonAction() {
-
+        Intent(Intent.ACTION_VIEW, Uri.parse(SURVEY_URL)).run(::startActivity)
     }
 
     @Inject

@@ -124,9 +124,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="4dp"
                     android:animateLayoutChanges="true"
-                    app:layout_constraintBottom_toTopOf="@+id/btn_save"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardView2">
@@ -158,6 +156,7 @@
                             android:inputType="textMultiLine"
                             android:maxEms="20"
                             android:maxLength="30"
+                            android:privateImeOptions="defaultInputmode=korean"
                             android:text="@={viewModel.freeText}"
                             android:textColor="@color/sara_gray" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -169,26 +168,27 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
                     android:height="@dimen/basic_button_height"
                     android:text="컬렉션에 저장하기"
                     app:icon="@drawable/ic_save"
                     app:iconGravity="textStart"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_save">
 
                     <Button
                         android:id="@+id/btn_recall"

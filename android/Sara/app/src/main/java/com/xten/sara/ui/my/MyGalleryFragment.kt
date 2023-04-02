@@ -1,14 +1,13 @@
 package com.xten.sara.ui.my
 
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -19,7 +18,6 @@ import com.xten.sara.SaraApplication
 import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.data.Gallery
 import com.xten.sara.databinding.FragmentMyGalleryBinding
-import com.xten.sara.ui.gallery.GalleryFragmentDirections
 import com.xten.sara.ui.gallery.GalleryItemAdapter
 import com.xten.sara.ui.gallery.GalleryViewModel
 import com.xten.sara.util.constants.*
@@ -65,7 +63,6 @@ class MyGalleryFragment : Fragment() {
     private val listTypeItemAdapter by lazy {
         GalleryItemAdapter(TYPE_LIST).apply {
             setOnItemClickListener {
-                Log.e(TAG, "$it: ", )
                 navigateToGalleryDetails(it)
             }
         }

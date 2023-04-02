@@ -72,13 +72,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/default_margin"
+                            RandomBubble="@{num}"
                             android:src="@drawable/ic_bubble_type2" />
 
                         <ImageView
-                            android:id="@+id/imageView6"
+                            android:id="@+id/sara_logo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/default_margin"
+                            RandomImage="@{num}"
                             android:src="@drawable/ic_sara_normal" />
 
                         <LinearLayout

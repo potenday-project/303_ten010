@@ -4,16 +4,13 @@ import android.app.Application
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.gson.GsonBuilder
 import com.xten.sara.data.SaraServiceAPI
 import com.xten.sara.data.SaraServiceDataSource
 import com.xten.sara.util.*
 import com.xten.sara.util.constants.SARA_PREFS
-import com.xten.sara.util.constants.TAG
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +18,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*

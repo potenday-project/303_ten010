@@ -1,7 +1,6 @@
 package com.xten.sara.ui.home
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.*
 import com.xten.sara.data.SaraServiceRepository
 import com.xten.sara.data.ChatGPT
@@ -43,7 +42,9 @@ class ImageUploadViewModel @Inject constructor(
         }
     }
 
-    private fun getCurQueryType() = queryType.value!!.type()
+    private fun getCurQueryType() : Int {
+        return queryType.value!!.type()
+    }
 
     private val _state = MutableLiveData(State.NONE)
     val state : LiveData<State> get() = _state
@@ -56,7 +57,6 @@ class ImageUploadViewModel @Inject constructor(
     private var requestGetImageUrlCoroutine: Job? = null
     fun requestImageAnalysis(path: String) {
         requestGetImageUrlCoroutine = viewModelScope.launch {
-            Log.e(TAG, "requestImageAnalysis: ", )
             setState(State.ING)
             val image = File(path)
             val result = saraServiceRepository.downloadImageUrl(image)
@@ -115,11 +115,14 @@ class ImageUploadViewModel @Inject constructor(
     fun initFreeText() {
         freeText.value = null
     }
+    fun initQueryType() {
+        _queryType.value = QueryType.ESSAY
+    }
 
     fun initViewModel() {
         _saveResult.value = null
         _imageUri.value = null
-        _queryType.value = QueryType.ESSAY
+       // _queryType.value = QueryType.ESSAY
         _state.value = State.NONE
         photoUrl = null
         _resultAnalysis.value = null

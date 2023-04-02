@@ -17,4 +17,11 @@
     <color name="sara_unable">#dadada</color>
     <color name="sara_black">#333333</color>
     <color name="sara_gray_copy">#CCCCCC</color>
+
+    <color name="sara_type_1">#3395f1</color>
+    <color name="sara_type_2">#007bed</color>
+    <color name="sara_type_3">#66b0f4</color>
+    <color name="sara_type_4">#1d72c3</color>
+
+
 </resources>

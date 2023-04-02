@@ -1,6 +1,8 @@
 package com.xten.sara.util
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.util.DisplayMetrics
 import android.widget.Button
@@ -39,14 +41,46 @@ object BindingAdapter {
         }
     }
 
+    private val logoImageResources = arrayOf(
+        R.drawable.ic_sara_normal, R.drawable.ic_sara_supadupa,
+        R.drawable.ic_sara_omg, R.drawable.ic_sara_study
+    )
+    @JvmStatic
+    @BindingAdapter("RandomImage")
+    fun setSuffixRandomImage(imageView: ImageView, num: Int?) {
+        num?.let {
+            val index = num + (DEFAULT_ until RANDOM_SIZE).random()
+            imageView.setImageResource(logoImageResources[index])
+        }
+    }
+
+    private val bubbleImageResources = arrayOf(
+        R.drawable.ic_bubble_type1, R.drawable.ic_bubble_type2,
+        R.drawable.ic_bubble_type3
+    )
+    @JvmStatic
+    @BindingAdapter("RandomBubble")
+    fun setSuffixRandomImageBubble(imageView: ImageView, num: Int?) {
+        num?.let {
+            val index = num + (DEFAULT_ until RANDOM_SIZE - 1).random()
+            imageView.setImageResource(bubbleImageResources[index])
+        }
+    }
+
     @JvmStatic
     @BindingAdapter("Image")
     fun setImage(imageView: ImageView, uri: Uri?) {
         uri?.let {
-            imageView.setImageURI(it)
             getScreenHeight(imageView.context)?.let { height ->
-                imageView.maxHeight = height
+                imageView.maxHeight = height - 200
             }
+            Glide.with(imageView)
+                .load(uri)
+                .error(R.drawable.ic_sara_normal).apply {
+                    centerInside()
+                }
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView)
         }
     }
 
@@ -61,6 +95,9 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("ImageLoad")
     fun setImage(imageView: ImageView, url: String?) {
+        getScreenHeight(imageView.context)?.let { height ->
+            imageView.maxHeight = height - 200
+        }
         Glide.with(imageView)
             .load(url)
             .error(R.drawable.ic_sara_normal).apply {
@@ -68,9 +105,6 @@ object BindingAdapter {
             }
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView)
-        getScreenHeight(imageView.context)?.let { height ->
-            imageView.maxHeight = height
-        }
     }
 
     @JvmStatic
@@ -89,11 +123,27 @@ object BindingAdapter {
     private fun getScreenHeight(context: Context) = run {
         val display = context.resources?.displayMetrics
         display?.heightPixels?.run {
-            pxToDp(this, context).toInt()
+            pxToDp(this, context).toInt() - 400
         }
     }
     private fun pxToDp(px: Int, context: Context) = px / ((context.resources.displayMetrics.densityDpi.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
 
 
+    private val type1 = ColorStateList.valueOf(Color.parseColor("#3395f1"))
+    private val type2 = ColorStateList.valueOf(Color.parseColor("#007bed"))
+    private val type3 = ColorStateList.valueOf(Color.parseColor("#66b0f4"))
+    private val type4 = ColorStateList.valueOf(Color.parseColor("#1d72c3"))
+    @JvmStatic
+    @BindingAdapter("TypeTint")
+    fun setTypeTextBackgroundTint(textView: TextView, type: Int?) {
+        type?.let {
+            textView.backgroundTintList = when(type) {
+                TYPE_1 -> type1
+                TYPE_2 -> type2
+                TYPE_3 -> type3
+                else -> type4
+            }
+        }
+    }
 
 }
