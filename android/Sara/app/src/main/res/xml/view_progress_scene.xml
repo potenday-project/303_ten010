@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        android:id="@+id/rotation"
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:autoTransition="animateToEnd"
+        motion:duration="2700">
+        <KeyFrameSet >
+            <KeyAttribute
+                motion:motionTarget="@+id/sara"
+                motion:framePosition="50"
+                android:rotation="360" />
+        </KeyFrameSet>
+    </Transition>
+
+    <Transition
+        android:id="@+id/rotation_reverse"
+        motion:constraintSetEnd="@+id/start"
+        motion:constraintSetStart="@id/end"
+        motion:autoTransition="animateToEnd"
+        motion:duration="2700">
+        <KeyFrameSet >
+            <KeyAttribute
+                motion:motionTarget="@+id/sara"
+                motion:framePosition="50"
+                android:rotation="360" />
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/tv_progress"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gap_wide_margin"
+            motion:layout_constraintBottom_toTopOf="@+id/imageView7"
+            motion:layout_constraintStart_toStartOf="parent">
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/sara"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.55"
+            android:rotation="180"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/tv_progress"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gap_wide_margin"
+            motion:layout_constraintBottom_toTopOf="@+id/imageView7"
+            motion:layout_constraintStart_toStartOf="parent">
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>

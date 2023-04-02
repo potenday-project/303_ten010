@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home_selector"
+        android:title="@string/menu_home_name"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/galleryFragment"
+        android:icon="@drawable/ic_gallery_selector"
+        android:title="@string/menu_gallery_name"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/myFragment"
+        android:icon="@drawable/ic_my_selector"
+        android:title="@string/menu_my_name"
+        app:showAsAction="always|withText" />
+</menu>

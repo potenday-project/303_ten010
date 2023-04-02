@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">Sara</string>
+
+    <string name="menu_home_name">홈</string>
+    <string name="menu_gallery_name">컬렉션</string>
+    <string name="menu_my_name">마이</string>
+    <string name="menu_my_name_title">프로필</string>
+
+    <string name="sara_copyright">Copyright 2023. X-Ten. All rights reserved.</string>
+
+    <!-- Login -->
+    <string name="google_login_desc">Google계정으로 3초만에 시작하기</string>
+    <string name="auto_login_desc">자동 로그인</string>
+
+    <!-- Home -->
+    <string name="text_button_upload">이미지 업로드</string>
+    <string name="text_button_search">소스 이미지 찾기</string>
+    <string name="text_survey_desc">사라 써보니 어떤가요?\n서비스 개선을 위한 피드백을 남겨주세요!</string>
+
+    <!-- image upload -->
+    <string name="text_title_upload">Sara에게 요청하기</string>
+    <string name="text_upload_desc">텍스트 입력, 글 종류 선택 둘중 하나만 가능해요</string>
+    <string name="text_upload_hint">텍스트로 직접 요청하기</string>
+    <string name="text_save_hint">제목을 입력해주세요</string>
+    <string name="title_chip1">작문</string>
+    <string name="title_chip2">시</string>
+    <string name="title_chip3">평가</string>
+    <string name="title_chip4">직접 요청</string>
+
+    <!-- image result -->
+    <string name="text_progress_warning">이 화면을 벗어나면 요청이 취소돼요! \n잠시만 기다려주세요.</string>
+    <string name="text_progress_desc">잠시만 기다려주세요.</string>
+    <string name="text_title_result">Sara가 보낸 답장</string>
+    <string name="text_button_save">컬렉션에 저장하기</string>
+    <string name="text_button_recall">다시 쓰기</string>
+    <string name="text_button_share">공유하기</string>
+
+    <!-- gallery -->
+    <string name="text_search_hint">키워드로 검색하기</string>
+    <string name="text_button_remove">삭제하기</string>
+
+    <!-- my -->
+    <string name="text_menu_collection">내가 만든 작품</string>
+    <string name="text_menu_survey">유저설문</string>
+    <string name="text_text_ver">앱 버전 1.0.1</string>
+    <string name="text_text_ver_desc">최신버전이에요!</string>
+    <string name="text_button_logout">로그아웃</string>
+
+
+</resources>

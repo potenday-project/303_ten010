@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.xten.sara.ui.gallery.GalleryViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.gallery.GalleryFragment">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/top_bar_height"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
+            android:text="@string/menu_gallery_name"
+            android:textSize="@dimen/text_menu_title_size"
+            android:fontFamily="@font/pretendard_bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/basic_button_height"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:boxBackgroundColor="@color/sara_lightGray"
+            app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
+            app:boxCornerRadiusBottomStart="@dimen/corner_radius"
+            app:boxCornerRadiusTopEnd="@dimen/corner_radius"
+            app:boxCornerRadiusTopStart="@dimen/corner_radius"
+            app:boxStrokeColor="@color/sara_lightGray"
+            app:boxStrokeWidth="0dp"
+            app:endIconMode="clear_text"
+            app:errorEnabled="false"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/ic_search"
+                android:drawablePadding="@dimen/gap_margin"
+                android:hint="@string/text_search_hint"
+                android:text="@={viewModel.input}"
+                android:imeOptions="actionSearch"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingEnd="@dimen/default_margin"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:singleLine="true"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="@dimen/default_margin"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/btn_album"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/ic_type_gallery"
+                    android:buttonTint="@color/chip_bg_color"
+                    android:checked="true"
+                    android:minWidth="0dp" />
+
+                <RadioButton
+                    android:id="@+id/btn_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/gap_margin"
+                    android:button="@drawable/ic_type_list"
+                    android:buttonTint="@color/chip_bg_color"
+                    android:minWidth="0dp" />
+
+            </RadioGroup>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/btn_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:padding="2dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="@color/sara_gray"
+                app:srcCompat="@drawable/ic_recall" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/gap_minus_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/gap_minus_margin" />
+
+    </LinearLayout>
+</layout>

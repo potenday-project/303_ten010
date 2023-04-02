@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="sara_blue">#007BED</color>
+    <color name="sara_blue_transparent">#1A007BED</color>
+    <color name="sara_gray">#999999</color>
+    <color name="sara_gray_transparent">#4D999999</color>
+    <color name="sara_lightGray">#F4F4F4</color>
+    <color name="sara_red">#FF334B</color>
+    <color name="sara_unable">#dadada</color>
+    <color name="sara_black">#333333</color>
+    <color name="sara_gray_copy">#CCCCCC</color>
+
+    <color name="sara_type_1">#3395f1</color>
+    <color name="sara_type_2">#007bed</color>
+    <color name="sara_type_3">#66b0f4</color>
+    <color name="sara_type_4">#1d72c3</color>
+
+
+</resources>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.xten.sara.ui.home.ImageUploadViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.home.ImageResultFragment">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/status_bar_height"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/btn_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:src="@drawable/ic_arrow" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/gap_margin"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:text="@string/text_title_result"
+                        android:textSize="@dimen/text_top_title_size" />
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:backgroundTint="@color/sara_lightGray"
+                    app:cardCornerRadius="@dimen/corner_radius_4"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        Image="@{viewModel.imageUri}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:scaleType="center"
+                        tools:srcCompat="@drawable/ic_launcher_background" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardBackgroundColor="@color/sara_lightGray"
+                    app:cardCornerRadius="@dimen/corner_radius_4"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+                    <LinearLayout
+                        android:id="@+id/content_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?attr/selectableItemBackground"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/default_margin"
+                            android:layout_marginTop="@dimen/content_margin"
+                            android:layout_marginEnd="@dimen/default_margin"
+                            android:layout_marginBottom="@dimen/content_margin"
+                            android:text="@{viewModel.resultAnalysis.text}"
+                            android:textColor="@color/sara_gray" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <FrameLayout
+                    android:id="@+id/frameLayout2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:animateLayoutChanges="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_field"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:boxBackgroundColor="@color/sara_lightGray"
+                        app:boxCornerRadiusBottomEnd="@dimen/default_margin"
+                        app:boxCornerRadiusBottomStart="@dimen/default_margin"
+                        app:boxCornerRadiusTopEnd="@dimen/default_margin"
+                        app:boxCornerRadiusTopStart="@dimen/default_margin"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:endIconMode="clear_text"
+                        app:errorEnabled="true"
+                        app:errorIconTint="@color/sara_red">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_request"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/text_save_hint"
+                            android:imeOptions="actionGo"
+                            android:inputType="textMultiLine"
+                            android:maxEms="20"
+                            android:maxLength="30"
+                            android:privateImeOptions="defaultInputmode=korean"
+                            android:text="@={viewModel.freeText}"
+                            android:textColor="@color/sara_gray" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/btn_save"
+                    style="@style/SaraButtonStylePrimary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:height="@dimen/basic_button_height"
+                    android:text="컬렉션에 저장하기"
+                    app:icon="@drawable/ic_save"
+                    app:iconGravity="textStart"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_save">
+
+                    <Button
+                        android:id="@+id/btn_recall"
+                        style="@style/SaraButtonStyleSecond"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/basic_button_height"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:layout_weight="1"
+                        android:text="@string/text_button_recall"
+                        app:icon="@drawable/ic_recall"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/black" />
+
+                    <Button
+                        android:id="@+id/btn_share"
+                        style="@style/SaraButtonStyleSecond"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/basic_button_height"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:layout_weight="1"
+                        android:text="@string/text_button_share"
+                        app:icon="@drawable/ic_share"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/black" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <include
+            android:id="@+id/progress_view"
+            layout="@layout/view_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            bind:viewModel="@{viewModel}" />
+
+    </FrameLayout>
+</layout>
