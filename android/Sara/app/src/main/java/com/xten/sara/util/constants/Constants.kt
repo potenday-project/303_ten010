@@ -7,6 +7,7 @@ package com.xten.sara.util.constants
  * @desc const val file
  */
 
+const val TAG = "[확인]"
 
 const val SARA_PREFS = "sara_prefs"
 

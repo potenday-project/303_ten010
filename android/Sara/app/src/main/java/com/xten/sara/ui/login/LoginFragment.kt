@@ -1,5 +1,7 @@
 package com.xten.sara.ui.login
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -40,19 +42,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         registerOnBackPressedDispatcher()
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
-        return setBinding().root
-    }
-
-    private fun setBinding() = binding.apply {
-        lifecycleOwner = viewLifecycleOwner
-        viewModel = loginViewModel
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        subscribeToObserver()
+        return getBinding(container).root
     }
 
     private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
@@ -62,36 +52,59 @@ class LoginFragment : Fragment() {
             }
         })
 
+    private fun getBinding(container: ViewGroup?) : FragmentLoginBinding {
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_login, container, false)
+        return binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = loginViewModel
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        subscribeToObserver()
+    }
+
     private fun initView() = binding.apply {
         btnLogin.setOnClickListener {
             setLoginButtonAction()
         }
     }
-
     private fun setLoginButtonAction() = binding.apply {
         googleSignInOnClientLauncher.launch(googleSignInClient.signInIntent)
     }
+
     private val googleSignInOnClientLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        val task= GoogleSignIn.getSignedInAccountFromIntent(it.data)
+        handleSignInOnClientTask(it.data)
+    }
+
+    private fun handleSignInOnClientTask(data: Intent?) {
         try {
+            val task= GoogleSignIn.getSignedInAccountFromIntent(data)
             val result = task.getResult(ApiException::class.java)
-            handleSignInOnClientTask(result)
+            handleSignInOnClientTaskSuccess(result)
         } catch (e: Exception) {
-            showToast(requireContext(), MESSAGE_WARNING_ERROR)
+            handleSignInOnClientTaskFail()
         }
     }
-
-    private fun handleSignInOnClientTask(result: GoogleSignInAccount) {
+    private fun handleSignInOnClientTaskSuccess(result: GoogleSignInAccount) {
         loginViewModel.requestLogin(result.email, result.displayName, result.photoUrl.toString())
     }
+    private fun handleSignInOnClientTaskFail() {
+        loginViewModel.setLoginState(State.FAIL)
+    }
 
-    private fun subscribeToObserver() = loginViewModel.state.observe(viewLifecycleOwner) {
-        when(it) {
-            State.SUCCESS -> handleResultSuccess()
-            State.FAIL -> handleResultFail()
-            else -> return@observe
+
+    private fun subscribeToObserver()  {
+        loginViewModel.loginState.observe(viewLifecycleOwner) {
+            when(it) {
+                State.SUCCESS -> handleResultSuccess()
+                State.FAIL -> handleResultFail()
+                else -> return@observe
+            }
         }
     }
 

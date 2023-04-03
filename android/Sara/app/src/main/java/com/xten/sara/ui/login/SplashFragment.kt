@@ -1,5 +1,6 @@
 package com.xten.sara.ui.login
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -31,6 +32,13 @@ class SplashFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
+    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
+        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Handler(Looper.getMainLooper()).postDelayed(
@@ -39,17 +47,10 @@ class SplashFragment : Fragment() {
         )
     }
 
-    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
-        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-        })
-
-    private fun navigationToDestination() = findNavController().apply{
+    private fun navigationToDestination() {
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
         val loginState = LoginUtils.getLoginState(prefs)
-        navigate(
+        findNavController().navigate(
             resId = if(loginState) R.id.action_splashFragment_to_homeFragment  else R.id.action_splashFragment_to_loginFragment,
             args = null,
             navOptions = options

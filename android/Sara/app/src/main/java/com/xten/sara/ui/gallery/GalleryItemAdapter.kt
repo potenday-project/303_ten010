@@ -35,13 +35,13 @@ class GalleryItemAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerV
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = differ.currentList[position]
         when(holder) {
-            is AlbumTypeViewHolder -> holder.binding.apply{
+            is AlbumTypeViewHolder -> holder.binding.apply {
                 gallery = item
                 view.setOnClickListener {
                     onItemClick?.let { it(item) }
                 }
             }
-            is ListTypeViewHolder -> holder.binding.apply{
+            is ListTypeViewHolder -> holder.binding.apply {
                 gallery = item
                 view.setOnClickListener {
                     onItemClick?.let { it(item) }

@@ -1,6 +1,6 @@
 package com.xten.sara.data
 
-import com.xten.sara.util.AUTHORIZATION
+import com.xten.sara.util.constants.AUTHORIZATION
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*

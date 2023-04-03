@@ -63,9 +63,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun controlBottomNavVisibility(label: CharSequence?) = label?.let {
-        binding.navBottom.visibility = when(label) {
-            LABEL_HOME_, LABEL_GALLERY_, LABEL_MY_ -> VISIBLE.also { binding.shadow.visibility = VISIBLE }
-            else -> GONE.also { binding.shadow.visibility = GONE }
+        with(binding.navBottom) {
+            visibility = when(label) {
+                LABEL_HOME_, LABEL_GALLERY_, LABEL_MY_ -> VISIBLE.also { binding.shadow.visibility = VISIBLE }
+                else -> GONE.also { binding.shadow.visibility = GONE }
+            }
         }
     }
 

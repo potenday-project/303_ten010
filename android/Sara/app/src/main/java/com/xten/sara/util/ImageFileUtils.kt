@@ -18,12 +18,12 @@ import java.io.File
 
 object ImageFileUtils {
 
-    fun createTempFile(context: Context) = File.createTempFile (
+    fun createCacheTempFile(context: Context) = File.createTempFile (
         TEMP_FILE_PREFIX,
         TEMP_FILE_SUFFIX,
         context.cacheDir
     )
-    fun getTempFileUri(context: Context, file: File): Uri = FileProvider.getUriForFile(
+    fun getCacheTempFileUri(context: Context, file: File): Uri = FileProvider.getUriForFile(
         context,
         context.packageName,
         file

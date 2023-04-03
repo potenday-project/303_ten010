@@ -49,7 +49,6 @@
                 android:drawableLeft="@drawable/ic_search"
                 android:drawablePadding="@dimen/gap_margin"
                 android:hint="@string/text_search_hint"
-                android:text="@={viewModel.input}"
                 android:imeOptions="actionSearch"
                 android:paddingLeft="0dp"
                 android:paddingTop="0dp"

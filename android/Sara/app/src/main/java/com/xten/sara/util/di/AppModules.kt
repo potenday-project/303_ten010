@@ -10,7 +10,10 @@ import com.google.gson.GsonBuilder
 import com.xten.sara.data.SaraServiceAPI
 import com.xten.sara.data.SaraServiceDataSource
 import com.xten.sara.util.*
+import com.xten.sara.util.constants.CONTENT_TYPE
+import com.xten.sara.util.constants.SARA_BASE_URL
 import com.xten.sara.util.constants.SARA_PREFS
+import com.xten.sara.util.constants.TIME_OUT
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

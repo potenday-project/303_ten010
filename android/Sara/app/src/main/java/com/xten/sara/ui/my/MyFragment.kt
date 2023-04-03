@@ -36,15 +36,16 @@ class MyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_my, container, false)
-        setBinding()
-        return binding.root
+        return getBinding(container).root
     }
 
-    private fun setBinding() = binding.apply {
-        lifecycleOwner = viewLifecycleOwner
-        fragent = this@MyFragment
-        account = GoogleSignIn.getLastSignedInAccount(requireContext())!!
+    private fun getBinding(container: ViewGroup?) : FragmentMyBinding {
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_my, container, false)
+        return binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            fragent = this@MyFragment
+            account = GoogleSignIn.getLastSignedInAccount(requireContext())!!
+        }
     }
 
     fun setCollectionButtonAction(email: String) {
@@ -56,8 +57,6 @@ class MyFragment : Fragment() {
         Intent(Intent.ACTION_VIEW, Uri.parse(SURVEY_URL)).run(::startActivity)
     }
 
-    @Inject
-    lateinit var prefs : SharedPreferences
     fun setLogoutButtonAction() = googleSignInClient.signOut()
         .addOnSuccessListener {
             handleLogoutSuccess()
@@ -66,6 +65,8 @@ class MyFragment : Fragment() {
             handleLogoutFail()
         }
 
+    @Inject
+    lateinit var prefs : SharedPreferences
     private fun handleLogoutSuccess() {
         LoginUtils.setLoginState(prefs, false)
         LoginUtils.clearToken(prefs)
@@ -77,6 +78,7 @@ class MyFragment : Fragment() {
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
         findNavController().navigate(R.id.action_myFragment_to_loginFragment, null, options)
     }
+
     private fun handleLogoutFail() {
         showToast(requireContext(), MESSAGE_RESULT_LOGOUT_FAIL)
     }

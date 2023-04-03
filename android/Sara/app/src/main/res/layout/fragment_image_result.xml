@@ -78,8 +78,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
-                        android:scaleType="center"
-                        tools:srcCompat="@drawable/ic_launcher_background" />
+                        android:scaleType="center" />
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
