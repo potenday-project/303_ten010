@@ -3,9 +3,7 @@ package com.xten.sara.ui.gallery
 import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -43,15 +41,15 @@ class GalleryDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_gallery_details, container, false)
         account = GoogleSignIn.getLastSignedInAccount(requireContext())!!
-        setBinding()
-        return binding.root
+        return getBinding(container).root
     }
-
-    private fun setBinding() = binding.apply {
-        lifecycleOwner = viewLifecycleOwner
-        gallery = this@GalleryDetailsFragment.gallery
+    private fun getBinding(container: ViewGroup?) : FragmentGalleryDetailsBinding {
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_gallery_details, container, false)
+        return binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            gallery = this@GalleryDetailsFragment.gallery
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,27 +59,26 @@ class GalleryDetailsFragment : Fragment() {
     }
 
     private fun initView() = binding.apply {
-        btnBack.setOnClickListener {
-            setBackButtonAction()
-        }
-        contentView.setOnClickListener {
-            setContentViewClickAction()
-        }
-        btnShare.setOnClickListener {
-            setShareButtonAction()
-        }
-        with(btnRemove) {
-            visibility = if(args.gallery!!.email == account.email) View.VISIBLE else View.GONE
-            setOnClickListener {
-                setRemoveButtonAction()
-            }
-        }
+        initBackButton()
+        initContentView()
+        initShareButton()
+        initButtonRemove()
     }
 
+    private fun initBackButton() = binding.btnBack.apply {
+        setOnClickListener {
+            setBackButtonAction()
+        }
+    }
     private fun setBackButtonAction() {
         findNavController().popBackStack()
     }
 
+    private fun initContentView() = binding.contentView.apply {
+        setOnClickListener {
+            setContentViewClickAction()
+        }
+    }
     @Inject
     lateinit var clipboardManager: ClipboardManager
     private fun setContentViewClickAction() = gallery?.let {
@@ -90,37 +87,47 @@ class GalleryDetailsFragment : Fragment() {
         copyToClipboard(requireContext(), clipboardManager, text)
     }
 
+    private fun initShareButton() = binding.btnShare.apply {
+        setOnClickListener {
+            setShareButtonAction()
+        }
+    }
     private fun setShareButtonAction() = gallery?.let {
         val share = Intent.createChooser(Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/*"
-            putExtra(Intent.EXTRA_TEXT, it.text)
-            putExtra(Intent.EXTRA_TITLE, SHARE_TITLE_TEXT)
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            putExtra(Intent.EXTRA_TITLE, SHARE_TITLE_TEXT)
+            putExtra(Intent.EXTRA_TEXT, it.text)
         }, null)
         startActivity(share)
     }
 
-    private fun setRemoveButtonAction() {
-        galleryViewModel.deleteContent(args.gallery!!._id!!)
+    private fun initButtonRemove() = binding.btnRemove.apply {
+        visibility = if(gallery?.email == account.email) View.VISIBLE else View.GONE
+        setOnClickListener {
+            setRemoveButtonAction()
+        }
     }
+    private fun setRemoveButtonAction() = gallery?.let {
+        galleryViewModel.deleteContent(it._id!!)
+    }
+
 
     private fun subscribeToObserver() = galleryViewModel.deleteResult.observe(viewLifecycleOwner) {
         it?.let {
             when (it) {
-                State.SUCCESS.name -> executeAfterSuccess()
-                State.FAIL.name -> executeAfterFail()
+                State.SUCCESS.name -> handleResultSuccess()
+                State.FAIL.name -> handleResultFail()
                 else -> return@observe
             }
         }
     }
-
-    private fun executeAfterSuccess() {
+    private fun handleResultSuccess() {
         showToast(requireContext(), MESSAGE_RESULT_DELETE_SUCCESS)
         setBackButtonAction()
     }
-
-    private fun executeAfterFail() {
+    private fun handleResultFail() {
         showToast(requireContext(), MESSAGE_RESULT_DELETE_FAIL)
     }
 

@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:visibility="@{viewModel.state == State.SUCCESS? View.GONE : View.VISIBLE}"
+        android:visibility="@{viewModel.loadingState == State.SUCCESS? View.GONE : View.VISIBLE}"
         app:layoutDescription="@xml/view_progress_scene">
 
         <View

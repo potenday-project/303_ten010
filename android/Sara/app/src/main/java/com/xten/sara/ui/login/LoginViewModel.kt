@@ -26,8 +26,11 @@ class LoginViewModel @Inject constructor(
 
     val autoLogin = MutableLiveData(false)
 
-    private val _state = MutableLiveData(State.NONE)
-    val state: LiveData<State> = _state
+    private val _loginState = MutableLiveData(State.NONE)
+    val loginState: LiveData<State> = _loginState
+    fun setLoginState(state: State) {
+        _loginState.postValue(state)
+    }
 
     fun requestLogin(email: String?, nickName: String?, profile: String?) {
         email?.let {
@@ -40,12 +43,13 @@ class LoginViewModel @Inject constructor(
 
     private fun handleLoginResult(token: String?) {
         if(token == null) {
-            _state.postValue(State.FAIL)
+            setLoginState(State.FAIL)
             return
         }
+
         LoginUtils.setLoginState(prefs, autoLogin.value!!)
         LoginUtils.saveToken(prefs, token)
-        _state.postValue(State.SUCCESS)
+        setLoginState(State.SUCCESS)
     }
 
 }

@@ -4,12 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.os.Environment
+import android.os.*
 import android.provider.MediaStore
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
@@ -33,11 +30,9 @@ class HomeFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         registerOnBackPressedDispatcher()
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_home, container, false)
-        return setBinding().root
+        return getBinding(container).root
     }
 
-    //!-- register back press : 현재 화면에서 백버튼 동작시 앱 종료
     private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
         .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -45,11 +40,13 @@ class HomeFragment() : Fragment() {
             }
         })
 
-    private fun setBinding() = binding.apply {
-        lifecycleOwner = viewLifecycleOwner
-        num = getRandomNum()
+    private fun getBinding(container: ViewGroup?) : FragmentHomeBinding {
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_home, container, false)
+        return binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            num = getRandomNum()
+        }
     }
-
     private fun getRandomNum() = (DEFAULT_ until RANDOM_SIZE).random()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,118 +54,145 @@ class HomeFragment() : Fragment() {
         initView()
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        binding.num = getRandomNum()
+    private fun initView()  {
+        initSaraLogo()
+        initUploadButton()
+        initSearchButton()
+        initSurveyButton()
     }
 
-    private fun initView() = binding.apply {
-        saraLogo.setOnClickListener {
+    private fun initSaraLogo() = binding.saraLogo.apply {
+        setOnClickListener {
             setSaraLogoClickAction()
         }
-        btnUpload.setOnClickListener {
-            setUploadButtonAction()
-        }
-        btnSearch.setOnClickListener {
-            setSearchButtonAction()
-        }
-        btnSurvey.setOnClickListener {
-            setSurveyButtonAction()
-        }
     }
-
     private fun setSaraLogoClickAction() {
         binding.num = getRandomNum()
     }
 
+    private fun initUploadButton() = binding.btnUpload.apply{
+        setOnClickListener {
+            setUploadButtonAction()
+        }
+    }
+    private fun setUploadButtonAction() {
+        checkPermissionToUpload()
+    }
 
     // !-- request permission
-    private fun setUploadButtonAction() {
-        val fileAccessPermissionGranted = Environment.isExternalStorageManager()
-        requestPermissions(fileAccessPermissionGranted)
+    private fun checkPermissionToUpload() {
+        val isGrantedFileAccessPermission = Environment.isExternalStorageManager()
+        when {
+            isGrantedFileAccessPermission -> hasGrantedFileAccessPermission()
+            else -> isNotGrantedFileAccessPermission()
+        }
     }
-    private fun requestPermissions(isGranted: Boolean) {
-        if(isGranted) asGrantedFileAccessPermission()
-        else asNotGrantedFileAccessPermission()
+    private fun hasGrantedFileAccessPermission() {
+        requestCameraPermission()
     }
-    private fun asGrantedFileAccessPermission() {
+
+    private fun requestCameraPermission() {
         requestCameraPermission.launch(Manifest.permission.CAMERA)
-    }
-    private fun asNotGrantedFileAccessPermission() {
-        showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
-        requestFileAccessStoragePermission.launch(ImageFileUtils.createFileAccessSettingsIntent(requireContext()))
-    }
-    private val requestFileAccessStoragePermission = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if(Environment.isExternalStorageManager()) asGrantedFileAccessPermission()
-        else asAgainNotGrantedFileAccessPermission()
     }
     private val requestCameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isGranted -> when {
-            isGranted -> asGrantedCameraPermission()
-            else -> asNotGrantedCameraPermission()
+    ) { isGranted ->
+        when {
+            isGranted -> hasGrantedCameraPermission()
+            else -> hasNotGrantedCameraPermission()
         }
     }
-    private fun asAgainNotGrantedFileAccessPermission() {
-        showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
+
+    private fun hasGrantedCameraPermission() {
+        startChooserIntent()
     }
-    private fun asNotGrantedCameraPermission() {
+
+    private fun startChooserIntent() {
+        val chooserIntent = ImageFileUtils.createChooserIntent(getCameraIntent())
+        chooserIntentLauncher.launch(chooserIntent)
+    }
+
+    private lateinit var imageUri: Uri
+    private lateinit var cache: File
+    private fun getCameraIntent() = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+        resolveActivity(requireContext().packageManager)?.let {
+            cache = ImageFileUtils.createCacheTempFile(requireContext())
+            imageUri = ImageFileUtils.getCacheTempFileUri(requireContext(), cache)
+            putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        }
+    }
+
+    private val chooserIntentLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        when(it.resultCode) {
+            Activity.RESULT_OK -> {
+                checkData(it.data?.data)
+                navigateToImageUpload()
+            }
+            else -> isResultCancel()
+        }
+    }
+    private fun checkData(data: Uri?) = data?.let {
+        imageUri = data
+        ImageFileUtils.deleteTempFile(cache)
+    }
+    private fun navigateToImageUpload() {
+        val action = HomeFragmentDirections.actionHomeFragmentToImageUploadFragment(
+            imageUri = this.imageUri
+        )
+        findNavController().navigate(action)
+    }
+    private fun isResultCancel() {
+        ImageFileUtils.deleteTempFile(cache)
+    }
+
+    private fun hasNotGrantedCameraPermission() {
         showToast(requireContext(), MESSAGE_PERMISSION_CAMERA)
     }
 
-    // !-- request image uri
-    private var imageUri: Uri? = null
-    private lateinit var cache: File
-    private fun asGrantedCameraPermission() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            resolveActivity(requireContext().packageManager)?.let {
-                createCacheFile()
-                putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-            }
-        }
-        requestBringImageUriLauncher.launch(ImageFileUtils.createChooserIntent(cameraIntent))
+    private fun isNotGrantedFileAccessPermission() {
+        showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
+        requestFileAccessPermission()
     }
-
-    private fun createCacheFile() {
-        cache = ImageFileUtils.createTempFile(requireContext())
-        imageUri = ImageFileUtils.getTempFileUri(requireContext(), cache)
+    private fun requestFileAccessPermission() {
+        requestAgainFileAccessPermission.launch(ImageFileUtils.createFileAccessSettingsIntent(requireContext()))
     }
-
-    // !-- send image uri
-    private val requestBringImageUriLauncher = registerForActivityResult(
+    private val requestAgainFileAccessPermission = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        if(it.resultCode != Activity.RESULT_OK) {
-            ImageFileUtils.deleteTempFile(cache)
-            return@registerForActivityResult
+        when {
+            Environment.isExternalStorageManager() -> hasGrantedFileAccessPermission()
+            else -> notGrantedFileAccessPermission()
         }
+    }
 
-        val uri = it.data?.data
-        uri?.let { uri->
-            imageUri = uri
-            ImageFileUtils.deleteTempFile(cache)
+    private fun notGrantedFileAccessPermission() {
+        showToast(requireContext(), MESSAGE_PERMISSION_ACCESS_FILE)
+    }
+
+    private fun initSearchButton() = binding.btnSearch.apply {
+        setOnClickListener {
+            setSearchButtonAction()
         }
-
-        navigateToImageUpload()
     }
+    private fun setSearchButtonAction() =
+        Intent(Intent.ACTION_VIEW, Uri.parse(SEARCH_URL))
+            .run(::startActivity)
 
-    private fun navigateToImageUpload() = imageUri?.let {
-        val action = HomeFragmentDirections.actionHomeFragmentToImageUploadFragment(
-            imageUri = it
-        )
-        findNavController().navigate(action)
-    } ?: showToast(requireContext(), MESSAGE_RESULT_UPLOAD_FAIL)
-
-    private fun setSearchButtonAction() {
-        Intent(Intent.ACTION_VIEW, Uri.parse(SEARCH_URL)).run(::startActivity)
+    private fun initSurveyButton()  = binding.btnSurvey.apply {
+        setOnClickListener {
+            setSurveyButtonAction()
+        }
     }
+    private fun setSurveyButtonAction() =
+        Intent(Intent.ACTION_VIEW, Uri.parse(SURVEY_URL))
+            .run(::startActivity)
 
-    private fun setSurveyButtonAction() {
-        Intent(Intent.ACTION_VIEW, Uri.parse(SURVEY_URL)).run(::startActivity)
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        binding.num = getRandomNum()
     }
-
 
     companion object {
         private const val SEARCH_URL = "https://www.pinterest.co.kr"

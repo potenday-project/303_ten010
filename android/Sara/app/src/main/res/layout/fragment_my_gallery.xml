@@ -73,7 +73,6 @@
                 android:paddingRight="0dp"
                 android:paddingBottom="0dp"
                 android:singleLine="true"
-                android:text="@={viewModel.input}"
                 android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>

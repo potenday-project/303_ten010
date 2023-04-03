@@ -1,16 +1,13 @@
 package com.xten.sara.ui.gallery
 
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.*
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.*
+import com.xten.sara.R
 import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.data.Gallery
@@ -29,13 +26,18 @@ class GalleryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentGalleryBinding.inflate(layoutInflater)
-        return setBinding().root
+        requestUpdateGallery()
+        return getBinding(container).root
     }
-
-    private fun setBinding() = binding.apply {
-        viewModel = galleryViewModel
+    private fun requestUpdateGallery() {
         galleryViewModel.updateGallery()
+    }
+    private fun getBinding(container: ViewGroup?) : FragmentGalleryBinding {
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_gallery, container, false)
+        return binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = galleryViewModel
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,6 +46,30 @@ class GalleryFragment : Fragment() {
         subscribeToObservers()
     }
 
+    private fun initView() = binding.apply {
+        initRecyclerView()
+        initTypeChangeButtons()
+        initSearchEditText()
+        initResetButton()
+    }
+
+    private fun initRecyclerView() {
+        setRecyclerViewItemType(TYPE_ALBUM)
+    }
+    private fun setRecyclerViewItemType(type: Int) = binding.recyclerView.apply {
+        when(type) {
+            TYPE_ALBUM -> {
+                val gridLayoutManager = GridLayoutManager(requireContext(), GRID_COL_TYPE_1)
+                layoutManager = gridLayoutManager
+                adapter = albumTypeItemAdapter
+            }
+            else -> {
+                val linearLayoutManager = LinearLayoutManager(requireContext())
+                layoutManager = linearLayoutManager
+                adapter = listTypeItemAdapter
+            }
+        }
+    }
     private val albumTypeItemAdapter by lazy {
         GalleryItemAdapter(TYPE_ALBUM).apply {
             setOnItemClickListener {
@@ -59,83 +85,93 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    private fun initView() = binding.apply {
-        setRecyclerViewItemType(TYPE_ALBUM)
-
+    private fun initTypeChangeButtons() = binding.apply {
         btnAlbum.setOnCheckedChangeListener { _, isChecked ->
             setTypeButtonAction(isChecked)
         }
+    }
+    private fun setTypeButtonAction(isChecked: Boolean) {
+        when {
+            isChecked -> setRecyclerViewItemType(TYPE_ALBUM)
+            else -> setRecyclerViewItemType(TYPE_LIST)
+        }
+    }
 
-        editSearch.setOnKeyListener { _, keyCode, _ ->
-            when (keyCode) {
+    private fun initSearchEditText() = binding.editSearch.apply {
+        editableText.clear()
+        setOnKeyListener { _, keyCode, _ ->
+            when(keyCode) {
                 KeyEvent.KEYCODE_ENTER -> handleEnterKeyEvent()
                 else -> return@setOnKeyListener false
             }
         }
-
-        btnReset.setOnClickListener {
-            setResetButtonAction()
-        }
-
     }
-
     @Inject
     lateinit var inputManager: InputMethodManager
-    private fun handleEnterKeyEvent(): Boolean = binding.editSearch.run {
+    private fun handleEnterKeyEvent(): Boolean {
         dropDownSoftKeyboard(requireActivity(), inputManager)
-        galleryViewModel.apply {
-            val input = getCurInput()
-            if (input.isNotBlank()) {
-                requestSearch()
-                binding.recyclerView.scrollToPosition(DEFAULT_POSITION)
-            } else showToast(requireContext(), MESSAGE_WARNING_EDIT)
-        }
+        requestSearch()
 
-        true
+        return true
     }
 
-    private fun setRecyclerViewItemType(type: Int) = binding.recyclerView.apply {
-        when (type) {
-            TYPE_ALBUM -> {
-                val gridLayoutManager = GridLayoutManager(requireContext(), GRID_COL_TYPE_1)
-                layoutManager = gridLayoutManager
-                adapter = albumTypeItemAdapter
-            }
-            else -> {
-                val linearLayoutManager = LinearLayoutManager(requireContext())
-                layoutManager = linearLayoutManager
-                adapter = listTypeItemAdapter
-            }
+    private var param = ""
+    private fun requestSearch() {
+        param = binding.editSearch.text.toString().trim()
+        if(param.isBlank()) {
+            showToast(requireContext(), MESSAGE_WARNING_EDIT)
+            return
+        }
+        galleryViewModel.requestSearch(param)
+        recyclerViewSmoothTopScroll(false)
+    }
+
+    private fun recyclerViewSmoothTopScroll(isSmooth: Boolean) = binding.recyclerView.apply {
+        when {
+            isSmooth -> smoothScrollToPosition(DEFAULT_POSITION)
+            else -> scrollToPosition(DEFAULT_POSITION)
         }
     }
 
-    private fun setTypeButtonAction(isChecked: Boolean) = when {
-        isChecked -> setRecyclerViewItemType(TYPE_ALBUM)
-        else -> setRecyclerViewItemType(TYPE_LIST)
+    private fun initResetButton() = binding.btnReset.apply {
+        setOnClickListener {
+            setResetButtonAction()
+        }
     }
-
     private fun setResetButtonAction() = binding.apply {
         editSearch.text?.clear()
         galleryViewModel.resetGallery()
+        recyclerViewSmoothTopScroll(true)
         dropDownSoftKeyboard(requireActivity(), inputManager)
-        recyclerView.smoothScrollToPosition(DEFAULT_POSITION)
     }
+
 
     private fun subscribeToObservers() = binding.apply {
         with(galleryViewModel) {
             galleryList.observe(viewLifecycleOwner) {
-                if(!saved) binding.recyclerView.scrollToPosition(DEFAULT_POSITION)
                 it?.let {
-                    val list = it.sortedByDescending { image ->
-                        image.createdAt
-                    }
-                    albumTypeItemAdapter.submitData(list)
-                    listTypeItemAdapter.submitData(list)
-
-                    if (getCurInput().isBlank()) return@let
-                    if (list.isEmpty()) showToast(requireContext(), MESSAGE_RESULT_SEARCH_FAIL)
+                    submitDataToAdapters(it)
+                    recyclerViewSmoothTopScroll(!saved)
                 }
             }
+        }
+    }
+    private fun submitDataToAdapters(data: List<Gallery>) {
+        val submitList = data.sortedByDescending { image ->
+            image.createdAt
+        }
+        albumTypeItemAdapter.submitData(submitList)
+        listTypeItemAdapter.submitData(submitList)
+
+        checkDataEmpty(data.isEmpty())
+    }
+    private fun checkDataEmpty(isEmpty: Boolean) {
+        if(isEmpty) {
+            if (param.isBlank()) return
+            showToast(
+                requireContext(),
+                MESSAGE_RESULT_SEARCH_FAIL
+            )
         }
     }
 

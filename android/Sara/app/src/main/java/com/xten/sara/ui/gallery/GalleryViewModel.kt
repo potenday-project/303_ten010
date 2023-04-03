@@ -42,10 +42,7 @@ class GalleryViewModel @Inject constructor(
     private val _deleteResult = MutableLiveData<String>()
     val deleteResult: LiveData<String> = _deleteResult
 
-    val input = MutableLiveData<String?>()
-    fun getCurInput() = input.value ?: ""
-    fun requestSearch() = defaultList?.let {
-        val param = input.value!!.trim()
+    fun requestSearch(param: String) = defaultList?.let {
         _galleryList.value = it.filter { gallery ->
             gallery.title?.let { title ->
                 if(title.contains(param)) return@filter true

@@ -41,23 +41,21 @@ class ImageUploadViewModel @Inject constructor(
             else -> QueryType.FREE
         }
     }
-
     private fun getCurQueryType() : Int {
         return queryType.value!!.type()
     }
 
-    private val _state = MutableLiveData(State.NONE)
-    val state : LiveData<State> get() = _state
-
-    fun setState(state: State) {
-        _state.postValue(state)
+    private val _loadingState = MutableLiveData(State.NONE)
+    val loadingState : LiveData<State> get() = _loadingState
+    fun setLoadingState(state: State) {
+        _loadingState.postValue(state)
     }
-    fun getCurState() = state.value!!
+    fun getCurLoadingState() = loadingState.value!!
     
     private var requestGetImageUrlCoroutine: Job? = null
     fun requestImageAnalysis(path: String) {
         requestGetImageUrlCoroutine = viewModelScope.launch {
-            setState(State.ING)
+            setLoadingState(State.ING)
             val image = File(path)
             val result = saraServiceRepository.downloadImageUrl(image)
             handleRequestGetImageUrlResult(result)
@@ -68,7 +66,7 @@ class ImageUploadViewModel @Inject constructor(
     private fun handleRequestGetImageUrlResult(result: Image?) = result?.let {
         photoUrl = it.photoUrl
         requestChatGPT()
-    } ?: setState(State.FAIL)
+    } ?: setLoadingState(State.FAIL)
 
     private var requestChatGPTCoroutine: Job? = null
     fun requestChatGPT() = photoUrl?.let {
@@ -85,17 +83,15 @@ class ImageUploadViewModel @Inject constructor(
     private val _resultAnalysis = MutableLiveData<ChatGPT?>()
     val resultAnalysis: LiveData<ChatGPT?> = _resultAnalysis
 
-    private var text: String? = null
     private fun handleRequestChatGPTResult(result: ChatGPT?) = result?.let {
-        setState(State.SUCCESS)
-        text = result.text
-        _resultAnalysis.value = it
-    } ?: setState(State.FAIL)
+        _resultAnalysis.postValue(it)
+        setLoadingState(State.SUCCESS)
+    } ?: setLoadingState(State.FAIL)
 
 
     private val _saveResult = MutableLiveData<String?>()
     val saveResult: LiveData<String?> = _saveResult
-    fun saveContent() = viewModelScope.launch {
+    fun requestSaveContent(text: String) = viewModelScope.launch {
         resultAnalysis.value?.run {
             val result = saraServiceRepository.requestSaveContent(
                 photoUrl = photoUrl!!,
@@ -103,7 +99,7 @@ class ImageUploadViewModel @Inject constructor(
                 text = text,
                 type = getCurQueryType()
             )
-            _saveResult.value = result
+            _saveResult.postValue(result)
         }
     }
 
@@ -122,11 +118,9 @@ class ImageUploadViewModel @Inject constructor(
     fun initViewModel() {
         _saveResult.value = null
         _imageUri.value = null
-       // _queryType.value = QueryType.ESSAY
-        _state.value = State.NONE
+        _loadingState.value = State.NONE
         photoUrl = null
         _resultAnalysis.value = null
-        text = null
         _saveResult.value = null
         initFreeText()
     }
