@@ -7,6 +7,9 @@
         <variable
             name="num"
             type="int" />
+        <variable
+            name="home"
+            type="com.xten.sara.ui.home.HomeFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,6 +84,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/default_margin"
                             RandomImage="@{num}"
+                            android:onClick="@{()->home.changeSaraLogo()}"
                             android:src="@drawable/ic_sara_normal" />
 
                         <LinearLayout
@@ -100,6 +104,7 @@
                                 android:text="@string/text_button_upload"
                                 android:textSize="@dimen/text_button_size"
                                 android:fontFamily="@font/pretendard_bold"
+                                android:onClick="@{()->home.checkPermissionsToImageUpload()}"
                                 app:cornerRadius="@dimen/corner_radius_2"
                                 app:icon="@drawable/ic_upload"
                                 app:iconGravity="textStart" />
@@ -116,6 +121,7 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_button_size"
                                 android:fontFamily="@font/pretendard_bold"
+                                android:onClick="@{() -> home.navigateToSearchUrl()}"
                                 app:cornerRadius="@dimen/corner_radius_2"
                                 app:icon="@drawable/ic_search"
                                 app:iconGravity="textStart"
@@ -124,7 +130,7 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_weight="1" />
 
                         <Button
@@ -132,8 +138,7 @@
                             style="@style/SaraButtonStyleSecond"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/default_margin"
-                            android:layout_marginEnd="@dimen/default_margin"
+                            android:layout_marginHorizontal="@dimen/default_margin"
                             android:layout_marginBottom="@dimen/default_margin"
                             android:drawableLeft="@drawable/ic_survey"
                             android:padding="@dimen/default_margin"
@@ -141,6 +146,7 @@
                             android:textAlignment="textStart"
                             android:textColor="@color/sara_gray"
                             android:textSize="14sp"
+                            android:onClick="@{()->home.navigateToSurveyUrl()}"
                             app:iconPadding="@dimen/default_margin" />
                     </LinearLayout>
             </LinearLayout>

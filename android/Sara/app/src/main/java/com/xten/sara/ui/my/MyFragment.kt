@@ -1,76 +1,55 @@
 package com.xten.sara.ui.my
 
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.*
 import com.xten.sara.R
-import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.databinding.FragmentMyBinding
+import com.xten.sara.ui.base.BaseFragment
 import com.xten.sara.util.LoginUtils
-import com.xten.sara.util.constants.MESSAGE_RESULT_LOGOUT_FAIL
-import com.xten.sara.util.constants.MESSAGE_RESULT_LOGOUT_SUCCESS
-import com.xten.sara.util.constants.SURVEY_URL
+import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MyFragment : Fragment() {
+class MyFragment : BaseFragment<FragmentMyBinding>(R.layout.fragment_my) {
 
-    private lateinit var binding: FragmentMyBinding
-
-    @Inject
-    lateinit var gso: GoogleSignInOptions
-    private val googleSignInClient by lazy { GoogleSignIn.getClient(requireActivity(), gso) }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return getBinding(container).root
-    }
-
-    private fun getBinding(container: ViewGroup?) : FragmentMyBinding {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_my, container, false)
+    override fun setupBinding(binding: FragmentMyBinding): FragmentMyBinding {
         return binding.apply {
             lifecycleOwner = viewLifecycleOwner
             fragent = this@MyFragment
-            account = GoogleSignIn.getLastSignedInAccount(requireContext())!!
+            account = GoogleSignIn.getLastSignedInAccount(requireContext())
         }
     }
 
-    fun setCollectionButtonAction(email: String) {
+    @Inject
+    lateinit var gso: GoogleSignInOptions
+    private var googleSignInClient: GoogleSignInClient? = null
+    override fun initGlobalVariables() {
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+    }
+
+    override fun initView() = Unit
+
+    fun navigateToCollection(email: String) {
         val action = MyFragmentDirections.actionMyFragmentToMyGalleryFragment(email)
         findNavController().navigate(action)
     }
 
-    fun setSurveyButtonAction() {
-        Intent(Intent.ACTION_VIEW, Uri.parse(SURVEY_URL)).run(::startActivity)
-    }
+    fun navigateToSurveyUrl() = navigateToBrowser(SURVEY_URL)
 
-    fun setLogoutButtonAction() = googleSignInClient.signOut()
-        .addOnSuccessListener {
-            handleLogoutSuccess()
-        }
-        .addOnFailureListener {
-            handleLogoutFail()
-        }
+    fun logout() = googleSignInClient?.let {
+        it.signOut().addOnSuccessListener { handleLogoutSuccess() }
+            .addOnFailureListener { handleLogoutFail() }
+    }
 
     @Inject
     lateinit var prefs : SharedPreferences
     private fun handleLogoutSuccess() {
         LoginUtils.setLoginState(prefs, false)
         LoginUtils.clearToken(prefs)
-        showToast(requireContext(), MESSAGE_RESULT_LOGOUT_SUCCESS)
+        showToastMessage(MESSAGE_RESULT_LOGOUT_SUCCESS)
         navigateToLogin()
     }
 
@@ -80,7 +59,12 @@ class MyFragment : Fragment() {
     }
 
     private fun handleLogoutFail() {
-        showToast(requireContext(), MESSAGE_RESULT_LOGOUT_FAIL)
+        showToastMessage(MESSAGE_RESULT_LOGOUT_FAIL)
+    }
+
+    override fun destroyGlobalVariables() {
+        super.destroyGlobalVariables()
+        googleSignInClient = null
     }
 
 }

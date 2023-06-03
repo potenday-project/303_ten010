@@ -7,6 +7,9 @@
         <variable
             name="viewModel"
             type="com.xten.sara.ui.login.LoginViewModel" />
+        <variable
+            name="fragment"
+            type="com.xten.sara.ui.login.LoginFragment" />
     </data>
 
     <LinearLayout
@@ -48,15 +51,15 @@
             style="@style/SaraButtonStyleSecond"
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
-            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginHorizontal="@dimen/default_margin"
             android:layout_marginTop="@dimen/wide_margin"
-            android:layout_marginEnd="@dimen/default_margin"
             android:backgroundTint="@color/white"
             android:drawableLeft="@drawable/ic_google"
             android:text="@string/google_login_desc"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
             android:textSize="@dimen/text_button_medium_size"
+            android:onClick="@{()->fragment.login()}"
             app:cornerRadius="@dimen/corner_radius_2"
             app:iconPadding="@dimen/default_margin"
             app:strokeColor="@color/sara_gray_copy"

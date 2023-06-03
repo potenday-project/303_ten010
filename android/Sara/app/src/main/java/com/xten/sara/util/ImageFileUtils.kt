@@ -18,16 +18,18 @@ import java.io.File
 
 object ImageFileUtils {
 
-    fun createCacheTempFile(context: Context) = File.createTempFile (
+    fun createCacheTempFile(context: Context): File? = File.createTempFile (
         TEMP_FILE_PREFIX,
         TEMP_FILE_SUFFIX,
         context.cacheDir
     )
-    fun getCacheTempFileUri(context: Context, file: File): Uri = FileProvider.getUriForFile(
-        context,
-        context.packageName,
-        file
-    )
+    fun getCacheTempFileUri(context: Context, file: File?) = file?.run {
+        FileProvider.getUriForFile(
+            context,
+            context.packageName,
+            file
+        )
+    }
 
     fun createFileAccessSettingsIntent (context: Context) : Intent =
         Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
@@ -63,10 +65,6 @@ object ImageFileUtils {
     private fun getTempFileAbsolutePath(context: Context, uri: String): String {
         val split = uri.replace("content://${context.packageName}/images/", "")
         return "/data/data/${context.packageName}/cache/$split"
-    }
-
-    fun deleteTempFile(file: File) {
-        file.delete()
     }
 
 

@@ -24,9 +24,7 @@ class GalleryItemAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerV
         }
     }
     override fun getItemCount(): Int = differ.currentList.size
-    override fun getItemViewType(position: Int): Int {
-        return type
-    }
+    override fun getItemViewType(position: Int) = type
 
     private var onItemClick: ((Gallery) -> Unit)? = null
     fun setOnItemClickListener(onItemClick: (Gallery) -> Unit) {
@@ -54,9 +52,8 @@ class GalleryItemAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerV
     inner class ListTypeViewHolder(val binding: ItemListWideBinding) : RecyclerView.ViewHolder(binding.root)
 
     private val differ = AsyncListDiffer(this, DIFF_UTIL)
-    fun submitData(list: List<Gallery>) {
-        differ.submitList(list)
-    }
+    fun submitData(list: List<Gallery>) = differ.submitList(list)
+
     companion object {
         val DIFF_UTIL = object : DiffUtil.ItemCallback<Gallery>() {
             override fun areItemsTheSame(oldItem: Gallery, newItem: Gallery)= oldItem._id == newItem._id

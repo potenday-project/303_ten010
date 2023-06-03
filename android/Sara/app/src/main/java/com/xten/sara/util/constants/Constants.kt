@@ -89,8 +89,6 @@ enum class QueryType {
     abstract fun str(): String
 }
 
-const val TEXT_FIELD_ERROR_MESSAGE = "최대 30글자를 넘을 수 없습니다."
-const val TEXT_FIELD_ERROR_MESSAGE_TITLE = "최대 20글자를 넘을 수 없습니다."
 const val MAX_TEXT_LENGTH = 30
 const val MAX_TEXT_TITLE_LENGTH = 20
 

@@ -8,6 +8,9 @@
         <variable
             name="viewModel"
             type="com.xten.sara.ui.home.ImageUploadViewModel" />
+        <variable
+            name="fragment"
+            type="com.xten.sara.ui.home.ImageResultFragment" />
     </data>
 
     <FrameLayout
@@ -43,6 +46,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/default_margin"
+                        android:onClick="@{()->fragment.onPopUpToBackStack()}"
                         android:src="@drawable/ic_arrow" />
 
                     <TextView
@@ -85,9 +89,8 @@
                     android:id="@+id/cardView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     app:cardBackgroundColor="@color/sara_lightGray"
                     app:cardCornerRadius="@dimen/corner_radius_4"
                     app:cardElevation="0dp"
@@ -101,16 +104,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="?attr/selectableItemBackground"
+                        android:onClick="@{()->fragment.copyToClipboard(fragment.clipboardManager, content.text.toString())}"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/content"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/default_margin"
-                            android:layout_marginTop="@dimen/content_margin"
-                            android:layout_marginEnd="@dimen/default_margin"
-                            android:layout_marginBottom="@dimen/content_margin"
+                            android:layout_marginHorizontal="@dimen/default_margin"
+                            android:layout_marginVertical="@dimen/content_margin"
                             android:text="@{viewModel.resultAnalysis.text}"
                             android:textColor="@color/sara_gray" />
                     </LinearLayout>
@@ -120,9 +122,8 @@
                     android:id="@+id/frameLayout2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:animateLayoutChanges="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -171,6 +172,7 @@
                     android:layout_marginEnd="16dp"
                     android:height="@dimen/basic_button_height"
                     android:text="컬렉션에 저장하기"
+                    android:onClick="@{()->fragment.onSaveButtonClick(textField.visibility)}"
                     app:icon="@drawable/ic_save"
                     app:iconGravity="textStart"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -181,9 +183,8 @@
                     android:id="@+id/linearLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -198,6 +199,7 @@
                         android:layout_marginBottom="@dimen/default_margin"
                         android:layout_weight="1"
                         android:text="@string/text_button_recall"
+                        android:onClick="@{()->fragment.retryRequestImageAnalysis()}"
                         app:icon="@drawable/ic_recall"
                         app:iconGravity="textStart"
                         app:iconTint="@color/black" />
@@ -211,6 +213,7 @@
                         android:layout_marginBottom="@dimen/default_margin"
                         android:layout_weight="1"
                         android:text="@string/text_button_share"
+                        android:onClick="@{()->fragment.startShareChooserIntent(content.text.toString())}"
                         app:icon="@drawable/ic_share"
                         app:iconGravity="textStart"
                         app:iconTint="@color/black" />

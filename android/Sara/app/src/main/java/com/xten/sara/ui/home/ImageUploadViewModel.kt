@@ -70,6 +70,7 @@ class ImageUploadViewModel @Inject constructor(
 
     private var requestChatGPTCoroutine: Job? = null
     fun requestChatGPT() = photoUrl?.let {
+        setLoadingState(State.ING)
         requestChatGPTCoroutine = viewModelScope.launch {
             val result = saraServiceRepository.downloadResultChatGPT(
                 it,

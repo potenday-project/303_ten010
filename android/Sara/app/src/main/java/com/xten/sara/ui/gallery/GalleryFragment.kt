@@ -1,197 +1,127 @@
 package com.xten.sara.ui.gallery
 
-import android.os.Bundle
-import android.view.*
 import android.view.inputmethod.InputMethodManager
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.*
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import com.xten.sara.R
-import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
-import com.xten.sara.SaraApplication.Companion.showToast
 import com.xten.sara.data.Gallery
 import com.xten.sara.databinding.FragmentGalleryBinding
+import com.xten.sara.ui.base.BaseFragment
 import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class GalleryFragment : Fragment() {
+class GalleryFragment : BaseFragment<FragmentGalleryBinding>(R.layout.fragment_gallery) {
 
-    private lateinit var binding: FragmentGalleryBinding
     private val galleryViewModel: GalleryViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        requestUpdateGallery()
-        return getBinding(container).root
-    }
-    private fun requestUpdateGallery() {
-        galleryViewModel.updateGallery()
-    }
-    private fun getBinding(container: ViewGroup?) : FragmentGalleryBinding {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_gallery, container, false)
+    override fun setupBinding(binding: FragmentGalleryBinding): FragmentGalleryBinding {
         return binding.apply {
             lifecycleOwner = viewLifecycleOwner
+            fragment = this@GalleryFragment
             viewModel = galleryViewModel
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        subscribeToObservers()
+    override fun setData() {
+        galleryViewModel.updateGallery()
     }
 
-    private fun initView() = binding.apply {
-        initRecyclerView()
-        initTypeChangeButtons()
-        initSearchEditText()
-        initResetButton()
+    private var albumTypeItemAdapter: GalleryItemAdapter? = null
+    private var listTypeItemAdapter: GalleryItemAdapter? = null
+    override fun initGlobalVariables() {
+        albumTypeItemAdapter = GalleryItemAdapter(TYPE_ALBUM).apply {
+            addOnItemClickListener()
+        }
+        listTypeItemAdapter = GalleryItemAdapter(TYPE_LIST).apply {
+            addOnItemClickListener()
+        }
+    }
+    override fun GalleryItemAdapter.addOnItemClickListener() = setOnItemClickListener {
+        navigateToGalleryDetails(it)
     }
 
-    private fun initRecyclerView() {
-        setRecyclerViewItemType(TYPE_ALBUM)
-    }
-    private fun setRecyclerViewItemType(type: Int) = binding.recyclerView.apply {
-        when(type) {
-            TYPE_ALBUM -> {
-                val gridLayoutManager = GridLayoutManager(requireContext(), GRID_COL_TYPE_1)
-                layoutManager = gridLayoutManager
-                adapter = albumTypeItemAdapter
-            }
-            else -> {
-                val linearLayoutManager = LinearLayoutManager(requireContext())
-                layoutManager = linearLayoutManager
-                adapter = listTypeItemAdapter
-            }
-        }
-    }
-    private val albumTypeItemAdapter by lazy {
-        GalleryItemAdapter(TYPE_ALBUM).apply {
-            setOnItemClickListener {
-                navigateToGalleryDetails(it)
-            }
-        }
-    }
-    private val listTypeItemAdapter by lazy {
-        GalleryItemAdapter(TYPE_LIST).apply {
-            setOnItemClickListener {
-                navigateToGalleryDetails(it)
-            }
-        }
-    }
-
-    private fun initTypeChangeButtons() = binding.apply {
-        btnAlbum.setOnCheckedChangeListener { _, isChecked ->
-            setTypeButtonAction(isChecked)
-        }
-    }
-    private fun setTypeButtonAction(isChecked: Boolean) {
-        when {
-            isChecked -> setRecyclerViewItemType(TYPE_ALBUM)
-            else -> setRecyclerViewItemType(TYPE_LIST)
-        }
-    }
-
-    private fun initSearchEditText() = binding.editSearch.apply {
-        editableText.clear()
-        setOnKeyListener { _, keyCode, _ ->
-            when(keyCode) {
-                KeyEvent.KEYCODE_ENTER -> handleEnterKeyEvent()
-                else -> return@setOnKeyListener false
-            }
-        }
-    }
     @Inject
     lateinit var inputManager: InputMethodManager
-    private fun handleEnterKeyEvent(): Boolean {
-        dropDownSoftKeyboard(requireActivity(), inputManager)
-        requestSearch()
-
-        return true
+    override fun initView() = binding.run {
+        recyclerView.setViewType(TYPE_ALBUM)
+        editSearch.setup(inputManager)
     }
+
+    private fun RecyclerView.setViewType(type: Int) = when(type) {
+        TYPE_ALBUM -> {
+            val gridLayoutManager = GridLayoutManager(requireContext(), GRID_COL_TYPE_1)
+            layoutManager = gridLayoutManager
+            adapter = albumTypeItemAdapter
+        }
+        else -> {
+            val linearLayoutManager = LinearLayoutManager(requireContext())
+            layoutManager = linearLayoutManager
+            adapter = listTypeItemAdapter
+        }
+    }
+
+    fun changeType(isChecked: Boolean) = binding.recyclerView.setViewType(if(isChecked) TYPE_ALBUM else TYPE_LIST)
 
     private var param = ""
-    private fun requestSearch() {
+    override fun handleEnterKeyEvent(inputManager: InputMethodManager): Boolean {
         param = binding.editSearch.text.toString().trim()
-        if(param.isBlank()) {
-            showToast(requireContext(), MESSAGE_WARNING_EDIT)
-            return
-        }
+        verifyInputState(inputManager, param.isBlank(), param)
+        return super.handleEnterKeyEvent(inputManager)
+    }
+
+    override fun hasVerifiedInputState(param: String) {
         galleryViewModel.requestSearch(param)
-        recyclerViewSmoothTopScroll(false)
+        binding.recyclerView.scrollTop(false)
+    }
+    private fun RecyclerView.scrollTop(isSmooth: Boolean) = when {
+        isSmooth -> smoothScrollToPosition(DEFAULT_POSITION)
+        else -> scrollToPosition(DEFAULT_POSITION)
     }
 
-    private fun recyclerViewSmoothTopScroll(isSmooth: Boolean) = binding.recyclerView.apply {
-        when {
-            isSmooth -> smoothScrollToPosition(DEFAULT_POSITION)
-            else -> scrollToPosition(DEFAULT_POSITION)
-        }
-    }
-
-    private fun initResetButton() = binding.btnReset.apply {
-        setOnClickListener {
-            setResetButtonAction()
-        }
-    }
-    private fun setResetButtonAction() = binding.apply {
+    fun resetData() = binding.run {
         editSearch.text?.clear()
         galleryViewModel.resetGallery()
-        recyclerViewSmoothTopScroll(true)
-        dropDownSoftKeyboard(requireActivity(), inputManager)
+        recyclerView.scrollTop(true)
+        dropDownSoftKeyboard(inputManager)
     }
 
+    override fun subscribeToObservers() {
+        galleryViewModel.galleryList.observe(viewLifecycleOwner) {
+            handleGalleryListData(it)
+        }
+    }
 
-    private fun subscribeToObservers() = binding.apply {
-        with(galleryViewModel) {
-            galleryList.observe(viewLifecycleOwner) {
-                it?.let {
-                    submitDataToAdapters(it)
-                    recyclerViewSmoothTopScroll(!saved)
-                }
-            }
-        }
-    }
-    private fun submitDataToAdapters(data: List<Gallery>) {
-        val submitList = data.sortedByDescending { image ->
-            image.createdAt
-        }
-        albumTypeItemAdapter.submitData(submitList)
-        listTypeItemAdapter.submitData(submitList)
+    private fun handleGalleryListData(data: List<Gallery>?) = data?.let {
+        binding.recyclerView.scrollTop(!saved)
+        if(it.isEmpty() && param.isNotBlank()) showToastMessage(MESSAGE_RESULT_SEARCH_FAIL)
 
-        checkDataEmpty(data.isEmpty())
+        val submitList = it.sortedByDescending { image -> image.createdAt }
+        albumTypeItemAdapter?.submitData(submitList)
+        listTypeItemAdapter?.submitData(submitList)
     }
-    private fun checkDataEmpty(isEmpty: Boolean) {
-        if(isEmpty) {
-            if (param.isBlank()) return
-            showToast(
-                requireContext(),
-                MESSAGE_RESULT_SEARCH_FAIL
-            )
-        }
-    }
+
 
     private var saved = false
     private fun navigateToGalleryDetails(gallery: Gallery) {
         saved = true
-        val action = GalleryFragmentDirections.actionGalleryFragmentToGalleryDetailsFragment(
-            gallery
-        )
-        findNavController().navigate(action)
+        val action = GalleryFragmentDirections.actionGalleryFragmentToGalleryDetailsFragment(gallery)
+        navigateToDirections(action)
     }
 
     override fun onStop() {
         if(!saved) {
-            binding.apply {
-                editSearch.text?.clear()
-                btnAlbum.isChecked = true
-            }
+            binding.editSearch.text?.clear()
+            binding.btnAlbum.isChecked = true
         }
         super.onStop()
+    }
+
+    override fun destroyGlobalVariables() {
+        super.destroyGlobalVariables()
+        albumTypeItemAdapter = null
+        listTypeItemAdapter = null
     }
 
 }

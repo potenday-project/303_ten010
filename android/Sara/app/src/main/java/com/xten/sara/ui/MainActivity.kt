@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.xten.sara.R
-import com.xten.sara.SaraApplication.Companion.dropDownSoftKeyboard
 import com.xten.sara.databinding.ActivityMainBinding
 import com.xten.sara.util.*
 import com.xten.sara.util.constants.*
@@ -71,14 +70,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Inject
-    lateinit var inputManager: InputMethodManager
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         ev?.run {
             currentFocus?.let {
                 val rect = Rect()
                 it.getGlobalVisibleRect(rect)
-                if (!rect.contains(x.toInt(), y.toInt())) dropDownSoftKeyboard(this@MainActivity, inputManager)
+                if(!rect.contains(x.toInt(), y.toInt())) it.clearFocus()
             }
         }
         return super.dispatchTouchEvent(ev)

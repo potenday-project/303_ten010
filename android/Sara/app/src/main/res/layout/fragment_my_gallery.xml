@@ -6,6 +6,9 @@
         <variable
             name="viewModel"
             type="com.xten.sara.ui.gallery.GalleryViewModel" />
+        <variable
+            name="fragment"
+            type="com.xten.sara.ui.my.MyGalleryFragment" />
     </data>
 
     <LinearLayout
@@ -25,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/default_margin"
+                android:onClick="@{()->fragment.setOnBackPressedListener()}"
                 android:src="@drawable/ic_arrow" />
 
             <TextView
@@ -96,7 +100,8 @@
                     android:button="@drawable/ic_type_gallery"
                     android:buttonTint="@color/chip_bg_color"
                     android:checked="true"
-                    android:minWidth="0dp" />
+                    android:minWidth="0dp"
+                    android:onCheckedChanged="@{(v, checked)->fragment.changeType(checked)}"/>
 
                 <RadioButton
                     android:id="@+id/btn_list"
@@ -122,7 +127,8 @@
                 android:layout_marginEnd="@dimen/default_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="2dp"
-                android:tint="@color/sara_gray"
+                android:onClick="@{()->fragment.resetData()}"
+                app:tint="@color/sara_gray"
                 app:srcCompat="@drawable/ic_recall" />
 
         </LinearLayout>
@@ -131,9 +137,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/gap_minus_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/gap_minus_margin" />
+            android:layout_marginHorizontal="@dimen/gap_minus_margin"
+            android:layout_marginTop="@dimen/default_margin" />
 
     </LinearLayout>
 </layout>

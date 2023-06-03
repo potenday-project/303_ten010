@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
             android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin"
+            android:paddingHorizontal="@dimen/default_margin"
             android:text="@string/menu_my_name_title"
             android:textSize="@dimen/text_menu_title_size"
             android:fontFamily="@font/pretendard_bold" />
@@ -41,9 +41,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginHorizontal="@dimen/default_margin"
                     android:layout_marginTop="@dimen/gap_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
@@ -92,10 +91,9 @@
                     style="@style/SaraButtonStyleSecond"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_button_height"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginHorizontal="@dimen/default_margin"
                     android:layout_marginTop="@dimen/gap_wide_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:onClick="@{()->fragent.setCollectionButtonAction(account.email)}"
+                    android:onClick="@{()->fragent.navigateToCollection(account.email)}"
                     android:text="@string/text_menu_collection"
                     android:textAlignment="viewStart"
                     android:textSize="@dimen/text_button_medium_size"
@@ -105,9 +103,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_button_height"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginHorizontal="@dimen/default_margin"
                     android:layout_marginTop="@dimen/gap_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
                     android:background="@drawable/bg_round_card"
                     android:orientation="horizontal">
 
@@ -121,7 +118,7 @@
 
                     <TextView
                         android:id="@+id/textView15"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/gap_margin"
@@ -136,9 +133,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/default_margin"
-                        android:layout_weight="1"
                         android:text="@string/text_text_ver_desc"
-                        android:textAlignment="viewEnd"
                         android:textColor="@color/sara_gray" />
                 </LinearLayout>
 
@@ -147,14 +142,13 @@
                     style="@style/SaraButtonStyleSecond"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_button_height"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginHorizontal="@dimen/default_margin"
                     android:layout_marginTop="@dimen/gap_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
                     android:text="@string/text_menu_survey"
                     android:textAlignment="viewStart"
                     android:textSize="@dimen/text_button_medium_size"
-                    android:onClick="@{()->fragent.setSurveyButtonAction()}"
-                    app:icon="@drawable/ic_survay_menu"
+                    android:onClick="@{()->fragent.navigateToSurveyUrl()}"
+                    app:icon="@drawable/ic_survey_menu"
                     app:iconTint="@color/black" />
 
                 <Button
@@ -162,20 +156,19 @@
                     style="@style/SaraButtonStyleSecond"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_button_height"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginHorizontal="@dimen/default_margin"
                     android:layout_marginTop="@dimen/gap_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
                     android:text="@string/text_button_logout"
                     android:textAlignment="viewStart"
                     android:textSize="@dimen/text_button_medium_size"
                     app:icon="@drawable/ic_logout"
-                    android:onClick="@{()->fragent.setLogoutButtonAction()}"
+                    android:onClick="@{()->fragent.logout()}"
                     app:iconTint="@color/black" />
 
                 <TextView
                     android:id="@+id/textView14"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginBottom="@dimen/default_margin"
                     android:layout_weight="1"
                     android:gravity="bottom|center"

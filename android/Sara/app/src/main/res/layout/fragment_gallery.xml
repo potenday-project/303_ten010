@@ -7,6 +7,9 @@
         <variable
             name="viewModel"
             type="com.xten.sara.ui.gallery.GalleryViewModel" />
+        <variable
+            name="fragment"
+            type="com.xten.sara.ui.gallery.GalleryFragment" />
     </data>
 
     <LinearLayout
@@ -19,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
             android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin"
-            android:paddingEnd="@dimen/default_margin"
+            android:paddingHorizontal="@dimen/default_margin"
             android:text="@string/menu_gallery_name"
             android:textSize="@dimen/text_menu_title_size"
             android:fontFamily="@font/pretendard_bold" />
@@ -29,8 +31,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="@dimen/basic_button_height"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginHorizontal="@dimen/default_margin"
             app:boxBackgroundColor="@color/sara_lightGray"
             app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
             app:boxCornerRadiusBottomStart="@dimen/corner_radius"
@@ -50,11 +51,8 @@
                 android:drawablePadding="@dimen/gap_margin"
                 android:hint="@string/text_search_hint"
                 android:imeOptions="actionSearch"
-                android:paddingLeft="0dp"
-                android:paddingTop="0dp"
+                android:paddingVertical="0dp"
                 android:paddingEnd="@dimen/default_margin"
-                android:paddingRight="0dp"
-                android:paddingBottom="0dp"
                 android:singleLine="true"
                 android:textColor="@color/black" />
 
@@ -79,6 +77,7 @@
                     android:button="@drawable/ic_type_gallery"
                     android:buttonTint="@color/chip_bg_color"
                     android:checked="true"
+                    android:onCheckedChanged="@{(v, checked)->fragment.changeType(checked)}"
                     android:minWidth="0dp" />
 
                 <RadioButton
@@ -105,7 +104,8 @@
                 android:layout_marginEnd="@dimen/default_margin"
                 android:padding="2dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:tint="@color/sara_gray"
+                android:onClick="@{()->fragment.resetData()}"
+                app:tint="@color/sara_gray"
                 app:srcCompat="@drawable/ic_recall" />
 
         </LinearLayout>
@@ -114,9 +114,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/gap_minus_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/gap_minus_margin" />
+            android:layout_marginHorizontal="@dimen/gap_minus_margin"
+            android:layout_marginTop="@dimen/default_margin" />
 
     </LinearLayout>
 </layout>

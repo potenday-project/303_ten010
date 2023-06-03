@@ -1,52 +1,31 @@
 package com.xten.sara.ui.login
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
+import android.os.*
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.xten.sara.R
+import com.xten.sara.databinding.FragmentSplashBinding
+import com.xten.sara.ui.base.BaseFragment
 import com.xten.sara.util.LoginUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SplashFragment : Fragment() {
+class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_splash) {
 
-    @Inject
-    lateinit var prefs: SharedPreferences
+    override fun setupBinding(binding: FragmentSplashBinding): FragmentSplashBinding = binding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        registerOnBackPressedDispatcher()
-        return inflater.inflate(R.layout.fragment_splash, container, false)
-    }
-
-    private fun registerOnBackPressedDispatcher() = requireActivity().onBackPressedDispatcher
-        .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-        })
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initView() {
         Handler(Looper.getMainLooper()).postDelayed(
             { navigationToDestination() },
             DELAY_DURATION
         )
     }
 
+    @Inject
+    lateinit var prefs: SharedPreferences
     private fun navigationToDestination() {
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
         val loginState = LoginUtils.getLoginState(prefs)
@@ -56,6 +35,8 @@ class SplashFragment : Fragment() {
             navOptions = options
         )
     }
+
+    override fun setOnBackPressedListener() = requireActivity().finish()
 
     companion object {
         const val DELAY_DURATION = 3000L
