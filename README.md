@@ -18,7 +18,7 @@
 <img src="https://img.shields.io/badge/Android-34A853?style=flat&logo=android&logoColor=white"/> <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=Kotlin&logoColor=white"/> <img src="https://img.shields.io/badge/MVVM-000000?style=flat&logo=&logoColor=white"/> <img src="https://img.shields.io/badge/RESTful API-000000?style=flat&logo=&logoColor=000000"/> 
 + AAC(Android Architecture Component) : Lifecycles, LiveData, ViewModel, DataBinding, Navigation
 + Dagger-Hilt
-+ Restrofit2
++ Retrofit2
 + Coroutine
 + Google OAuth2.0
 + MotionLayout을 이용하여 캐릭터 애니메이션 구현
