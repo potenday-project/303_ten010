@@ -1,13 +1,13 @@
 package com.xten.sara.ui.gallery
 
 import androidx.lifecycle.*
-import com.xten.sara.data.Gallery
+import com.example.common.*
 import com.xten.sara.data.SaraServiceRepository
-import com.xten.sara.util.constants.QueryType
-import com.xten.sara.util.constants.TYPE_1
-import com.xten.sara.util.constants.TYPE_2
-import com.xten.sara.util.constants.TYPE_3
+import com.xten.sara.data.model.Gallery
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,20 +27,19 @@ class GalleryViewModel @Inject constructor(
 
     private var defaultList: List<Gallery>? = listOf()
 
-    fun updateGallery(email: String? = null) = viewModelScope.launch {
-        saraServiceRepository.run {
-            email?.let {
-                defaultList = downloadMyCollection()
-                _galleryList.postValue(defaultList)
-            } ?: let {
-                defaultList = downloadCollection()
-                _galleryList.postValue(defaultList)
-            }
+    fun updateGallery(email: String? = null) {
+        email?.let {
+            saraServiceRepository.downloadMyCollection().onEach { result ->
+                if(result is Resource.Success) {
+                    defaultList = result.data
+                    _galleryList.postValue(defaultList)
+                }
+            }.launchIn(viewModelScope)
         }
     }
 
-    private val _deleteResult = MutableLiveData<String>()
-    val deleteResult: LiveData<String> = _deleteResult
+    private val _deleteResult = MutableLiveData<State>()
+    val deleteResult: LiveData<State> = _deleteResult
 
     fun requestSearch(param: String) = defaultList?.let {
         _galleryList.value = it.filter { gallery ->
@@ -67,9 +66,10 @@ class GalleryViewModel @Inject constructor(
         _galleryList.value = defaultList
     }
 
-    fun deleteContent(id: String) = viewModelScope.launch {
-        val result = saraServiceRepository.requestDeleteContent(id)
-        _deleteResult.postValue(result)
+    fun deleteContent(id: String) {
+        saraServiceRepository.requestDeleteContent(id).onEach { result ->
+            _deleteResult.postValue(result.state)
+        }.launchIn(viewModelScope)
     }
 
 }

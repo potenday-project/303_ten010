@@ -5,10 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.Resource
+import com.example.common.State
 import com.xten.sara.data.SaraServiceRepository
 import com.xten.sara.util.LoginUtils
-import com.xten.sara.util.constants.State
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,28 +32,25 @@ class LoginViewModel @Inject constructor(
 
     private val _loginState = MutableLiveData(State.NONE)
     val loginState: LiveData<State> = _loginState
+
     fun setLoginState(state: State) {
         _loginState.postValue(state)
     }
 
     fun requestLogin(email: String?, nickName: String?, profile: String?) {
         email?.let {
-            viewModelScope.launch {
-                val token = saraServiceRepository.downloadToken(email, nickName, profile)
-                handleLoginResult(token)
-            }
+            saraServiceRepository.downloadToken(email, nickName, profile).onEach { result ->
+                setLoginState(result.state)
+                if(result is Resource.Success) {
+                    val token = result.data?.token
+                    token?.let {
+                        LoginUtils.setLoginState(prefs, autoLogin.value!!)
+                        LoginUtils.saveToken(prefs, token)
+                        setLoginState(result.state)
+                    }
+                }
+            }.launchIn(viewModelScope)
         }
-    }
-
-    private fun handleLoginResult(token: String?) {
-        if(token == null) {
-            setLoginState(State.FAIL)
-            return
-        }
-
-        LoginUtils.setLoginState(prefs, autoLogin.value!!)
-        LoginUtils.saveToken(prefs, token)
-        setLoginState(State.SUCCESS)
     }
 
 }
