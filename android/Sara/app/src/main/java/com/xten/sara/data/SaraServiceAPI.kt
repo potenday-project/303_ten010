@@ -1,6 +1,10 @@
 package com.xten.sara.data
 
-import com.xten.sara.util.constants.AUTHORIZATION
+import com.example.common.AUTHORIZATION
+import com.xten.sara.data.model.ChatGPT
+import com.xten.sara.data.model.GalleryResponse
+import com.xten.sara.data.model.Image
+import com.xten.sara.data.model.Login
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*

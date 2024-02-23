@@ -1,10 +1,14 @@
 package com.xten.sara.data
 
 import android.content.SharedPreferences
+import com.example.common.Resource
+import com.xten.sara.data.model.ChatGPT
+import com.xten.sara.data.model.Gallery
+import com.xten.sara.data.model.Image
 import com.xten.sara.util.LoginUtils
-import com.xten.sara.util.constants.State
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.xten.sara.data.model.Login
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -21,106 +25,114 @@ class SaraServiceDataSource @Inject constructor(
     private val api: SaraServiceAPI,
     private val prefs: SharedPreferences
 ) {
-    suspend fun getToken(
+    fun getToken(
         email: String,
         nickname: String?,
         profile: String?
-    ) = withContext(Dispatchers.IO) {
+    ): Flow<Resource<Login>> = flow {
+        emit(Resource.Loading())
         try {
-            api.login(LoginRequestBody(email, nickname, profile)).body()?.token
+            val data = api.login(LoginRequestBody(email, nickname, profile)).body()
+            emit(Resource.Success(data))
         } catch (e: Exception) {
-            null
+            emit(Resource.Error(e.toString()))
         }
     }
 
-    suspend fun getImageUrl(file: File) = withContext(Dispatchers.IO) {
+    fun getImageUrl(file: File): Flow<Resource<Image>> = flow {
+        emit(Resource.Loading())
         try {
             val auth = LoginUtils.getToken(prefs)
-            val image = createMutipartBody(file)
-
-            api.getImageUrl(
+            val image = createMultipartBody(file)
+            val data = api.getImageUrl(
                 header = auth!!,
                 image = image
             ).body()
+            emit(Resource.Success(data))
         } catch (e: Exception){
-            null
+            emit(Resource.Error(e.toString()))
         }
     }
-    private fun createMutipartBody(file: File) = MultipartBody.Part.createFormData(
+    private fun createMultipartBody(file: File) = MultipartBody.Part.createFormData(
         PARAM_PHOTO,
         file.name,
         file.asRequestBody(CONTENT_TYPE_IMAGE.toMediaTypeOrNull())
     )
 
-    suspend fun requestChatGPT(
+    fun requestChatGPT(
         url: String,
         type: Int,
-        text: String?=null
-    ) = withContext(Dispatchers.IO) {
-            val auth = LoginUtils.getToken(prefs)!!
-            try {
-                val result = api.requestChatGPT(
-                    header = auth,
-                    requestBody = ChatGPTRequestBody(url, type, text)
-                ).body()
-                result?.let {
-                    return@withContext it
-                }
-            } catch (e: Exception) {
-                null
-            }
+        text: String? = null
+    ): Flow<Resource<ChatGPT>> = flow {
+        emit(Resource.Loading())
+        val auth = LoginUtils.getToken(prefs)!!
+        try {
+            val result = api.requestChatGPT(
+                header = auth,
+                requestBody = ChatGPTRequestBody(url, type, text)
+            ).body()
+            emit(Resource.Success(result))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.toString()))
         }
+    }
 
-    suspend fun saveContent(
+    fun saveContent(
         photoUrl: String,
         title: String,
         text: String,
         type: Int
-    ) = withContext(Dispatchers.IO) {
+    ): Flow<Resource<String>> = flow {
+        emit(Resource.Loading())
         try {
             val auth = LoginUtils.getToken(prefs)!!
             api.saveContent(
                 header = auth,
                 requestBody = SaveRequestBody(photoUrl, title, text, type)
             )
-            State.SUCCESS.name
+            emit(Resource.Success(null))
         } catch (e: Exception) {
-            State.FAIL.name
+            emit(Resource.Error(e.toString()))
         }
     }
 
-    suspend fun getCollection() = withContext(Dispatchers.IO) {
+    fun getCollection(): Flow<Resource<List<Gallery>>> = flow {
+        emit(Resource.Loading())
         try {
             val auth = LoginUtils.getToken(prefs)!!
-            api.getCollection(
+            val data = api.getCollection(
                 header = auth
             ).body()?.result
+            emit(Resource.Success(data))
         } catch (e: Exception) {
-            null
+            emit(Resource.Error(e.toString()))
         }
     }
 
-    suspend fun deleteContent(id: String) = withContext(Dispatchers.IO) {
+    fun deleteContent(id: String): Flow<Resource<String>> = flow {
+        emit(Resource.Loading())
         try {
             val auth = LoginUtils.getToken(prefs)!!
             api.deleteContent(
                 header = auth,
                 id = id
             )
-            State.SUCCESS.name
+            emit(Resource.Success(null))
         } catch (e: Exception) {
-            State.FAIL.name
+            emit(Resource.Error(e.toString()))
         }
     }
 
-    suspend fun getMyCollection() = withContext(Dispatchers.IO) {
+    fun getMyCollection(): Flow<Resource<List<Gallery>>> = flow {
+        emit(Resource.Loading())
         try {
             val auth = LoginUtils.getToken(prefs)!!
-            api.getMyCollection(
+            val data = api.getMyCollection(
                 header = auth
             ).body()?.result
+            emit(Resource.Success(data))
         } catch (e: Exception) {
-            null
+            emit(Resource.Error(e.toString()))
         }
     }
 

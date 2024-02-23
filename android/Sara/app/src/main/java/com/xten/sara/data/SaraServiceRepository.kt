@@ -1,44 +1,40 @@
 package com.xten.sara.data
 
+import com.example.common.Resource
+import com.xten.sara.data.model.ChatGPT
+import com.xten.sara.data.model.Gallery
+import com.xten.sara.data.model.Image
+import com.xten.sara.data.model.Login
+import kotlinx.coroutines.flow.Flow
 import java.io.File
-import javax.inject.Inject
 
-/**
- * @author SANDY
- * @email nnal0256@naver.com
- * @created 2023-03-30
- * @desc
- */
-class SaraServiceRepository @Inject constructor(
-    private val saraServiceDataSource: SaraServiceDataSource
-) {
+interface SaraServiceRepository {
 
-    suspend fun downloadToken(
+    fun downloadToken(
         email: String,
         nickName: String?,
         profile: String?
-    ) = saraServiceDataSource.getToken(email, nickName, profile)
+    ) : Flow<Resource<Login>>
 
-    suspend fun downloadImageUrl(file: File) = saraServiceDataSource.getImageUrl(file)
+    fun downloadImageUrl(file: File) : Flow<Resource<Image>>
 
-    suspend fun downloadResultChatGPT(
+    fun downloadResultChatGPT(
         url: String,
         type: Int,
         text: String? = null
-    ) = saraServiceDataSource.requestChatGPT(url, type, text)
+    ) : Flow<Resource<ChatGPT>>
 
-    suspend fun requestSaveContent(
+    fun requestSaveContent(
         photoUrl: String,
         title: String,
         text: String,
         type: Int
-    ) = saraServiceDataSource.saveContent(photoUrl, title, text, type)
+    ) : Flow<Resource<String>>
 
-    suspend fun downloadCollection() = saraServiceDataSource.getCollection()
+    fun downloadCollection() : Flow<Resource<List<Gallery>>>
 
-    suspend fun requestDeleteContent(id: String) = saraServiceDataSource.deleteContent(id)
+    fun requestDeleteContent(id: String) : Flow<Resource<String>>
 
-    suspend fun downloadMyCollection() = saraServiceDataSource.getMyCollection()
+    fun downloadMyCollection() : Flow<Resource<List<Gallery>>>
 
 }
-

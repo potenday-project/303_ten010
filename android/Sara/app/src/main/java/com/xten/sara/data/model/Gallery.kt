@@ -1,30 +1,8 @@
-package com.xten.sara.data
+package com.xten.sara.data.model
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
-import java.util.*
-
-/**
- * @author SANDY
- * @email nnal0256@naver.com
- * @created 2023-03-30
- * @desc
- */
-
-data class Login(
-    @SerializedName("token")
-    val token: String
-)
-
-data class Image(
-    @SerializedName("photoUrl")
-    val photoUrl: String
-)
-
-data class ChatGPT(
-    @SerializedName("text")
-    val text: String
-)
+import java.util.Date
 
 data class GalleryResponse(
     @SerializedName("result")
@@ -53,4 +31,3 @@ data class Gallery (
     @SerializedName("createdAt")
     val createdAt: Date?
 ) : Serializable
-

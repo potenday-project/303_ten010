@@ -10,10 +10,9 @@ import com.google.gson.GsonBuilder
 import com.xten.sara.data.SaraServiceAPI
 import com.xten.sara.data.SaraServiceDataSource
 import com.xten.sara.util.*
-import com.xten.sara.util.constants.CONTENT_TYPE
-import com.xten.sara.util.constants.SARA_BASE_URL
-import com.xten.sara.util.constants.SARA_PREFS
-import com.xten.sara.util.constants.TIME_OUT
+import com.example.common.*
+import com.xten.sara.data.SaraServiceRepository
+import com.xten.sara.data.SaraServiceRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +40,7 @@ object AppModules {
     @Singleton
     @Provides
     fun provideAppPreferences(@ApplicationContext app: Context) = app.getSharedPreferences(
-        SARA_PREFS, Context.MODE_PRIVATE
+        com.example.common.SARA_PREFS, Context.MODE_PRIVATE
     )
 
     @Singleton
@@ -88,7 +87,7 @@ object AppModules {
         Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(SARA_BASE_URL)
+            .baseUrl(com.example.common.SARA_BASE_URL)
             .build()
             .create(SaraServiceAPI::class.java)
     }
@@ -97,5 +96,10 @@ object AppModules {
     @Provides
     fun provideSaraServiceDataSource(api: SaraServiceAPI, pref: SharedPreferences) =
         SaraServiceDataSource(api, pref)
+
+    @Singleton
+    @Provides
+    fun provideSaraServiceRepository(saraServiceDataSource: SaraServiceDataSource): SaraServiceRepository =
+        SaraServiceRepositoryImpl(saraServiceDataSource)
 
 }
