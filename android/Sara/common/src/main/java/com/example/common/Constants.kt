@@ -1,4 +1,4 @@
-package com.xten.sara.util.constants
+package com.example.common
 
 /**
  * @author SANDY
@@ -47,10 +47,6 @@ const val TYPE_1 = 1
 const val TYPE_2 = 2
 const val TYPE_3 = 3
 const val TYPE_4 = 4
-
-enum class State {
-    NONE, SUCCESS, FAIL, ING
-}
 
 const val LABEL_HOME_ = "fragment_home"
 const val LABEL_GALLERY_ = "fragment_gallery"
