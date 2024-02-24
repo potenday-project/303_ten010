@@ -6,7 +6,6 @@ import com.example.common.QueryType
 import com.example.common.*
 import com.xten.sara.data.SaraServiceRepository
 import com.xten.sara.data.model.ChatGPT
-import com.xten.sara.data.model.Image
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn

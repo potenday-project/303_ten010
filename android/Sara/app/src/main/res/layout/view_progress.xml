@@ -8,7 +8,7 @@
             name="viewModel"
             type="com.xten.sara.ui.home.ImageUploadViewModel" />
         <import type="android.view.View"/>
-        <import type="com.xten.sara.util.constants.State"/>
+        <import type="com.example.common.State"/>
     </data>
 
     <androidx.constraintlayout.motion.widget.MotionLayout

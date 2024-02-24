@@ -13,9 +13,7 @@ import com.xten.sara.R
 import com.xten.sara.databinding.FragmentLoginBinding
 import com.xten.sara.ui.base.BaseFragment
 import com.xten.sara.util.LoginUtils
-import com.xten.sara.util.constants.MESSAGE_LOGIN_SUCCESS
-import com.xten.sara.util.constants.MESSAGE_WARNING_ERROR
-import com.xten.sara.util.constants.State
+import com.example.common.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -65,15 +63,25 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun handleLoginState(state: State) {
-        if(state == State.SUCCESS) showToastMessage(MESSAGE_LOGIN_SUCCESS).also { navigateToHome() }
-        if(state == State.FAIL) showToastMessage(MESSAGE_WARNING_ERROR)
+        when(state) {
+            State.SUCCESS -> {
+                showToastMessage(MESSAGE_LOGIN_SUCCESS)
+                saveAutoLogin()
+                navigateToHome()
+            }
+            State.FAIL -> showToastMessage(MESSAGE_WARNING_ERROR)
+            else -> Unit
+        }
     }
 
     @Inject
     lateinit var prefs : SharedPreferences
-    private fun navigateToHome() {
+    private fun saveAutoLogin() {
         val isChecked = binding.btnAutoLogin.isChecked
         LoginUtils.setLoginState(prefs, isChecked)
+    }
+
+    private fun navigateToHome() {
         findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
     }
 

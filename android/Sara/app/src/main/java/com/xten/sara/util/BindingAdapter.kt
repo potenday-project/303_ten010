@@ -49,7 +49,7 @@ object BindingAdapter {
     @BindingAdapter("RandomImage")
     fun setSuffixRandomImage(imageView: ImageView, num: Int?) {
         num?.let {
-            val index = num + (DEFAULT_ until RANDOM_SIZE).random()
+            val index = num + (com.example.common.DEFAULT_ until com.example.common.RANDOM_SIZE).random()
             imageView.setImageResource(logoImageResources[index])
         }
     }
@@ -62,7 +62,7 @@ object BindingAdapter {
     @BindingAdapter("RandomBubble")
     fun setSuffixRandomImageBubble(imageView: ImageView, num: Int?) {
         num?.let {
-            val index = num + (DEFAULT_ until RANDOM_SIZE - 1).random()
+            val index = num + (com.example.common.DEFAULT_ until com.example.common.RANDOM_SIZE - 1).random()
             imageView.setImageResource(bubbleImageResources[index])
         }
     }
@@ -86,7 +86,7 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter("QueryText")
-    fun setQueryText(button: Button, type: QueryType?) {
+    fun setQueryText(button: Button, type: com.example.common.QueryType?) {
         type?.let {
             button.text = "${type.desc()}"
         }
@@ -112,10 +112,10 @@ object BindingAdapter {
     fun convertType(textView: TextView, type: Int?) {
         type?.let {
             textView.text = when(type) {
-                TYPE_1 -> QueryType.ESSAY.str()
-                TYPE_2 -> QueryType.POEM.str()
-                TYPE_3 -> QueryType.EVALUATION.str()
-                else -> QueryType.FREE.str()
+                com.example.common.TYPE_1 -> com.example.common.QueryType.ESSAY.str()
+                com.example.common.TYPE_2 -> com.example.common.QueryType.POEM.str()
+                com.example.common.TYPE_3 -> com.example.common.QueryType.EVALUATION.str()
+                else -> com.example.common.QueryType.FREE.str()
             }
         }
     }
@@ -138,9 +138,9 @@ object BindingAdapter {
     fun setTypeTextBackgroundTint(textView: TextView, type: Int?) {
         type?.let {
             textView.backgroundTintList = when(type) {
-                TYPE_1 -> type1
-                TYPE_2 -> type2
-                TYPE_3 -> type3
+                com.example.common.TYPE_1 -> type1
+                com.example.common.TYPE_2 -> type2
+                com.example.common.TYPE_3 -> type3
                 else -> type4
             }
         }

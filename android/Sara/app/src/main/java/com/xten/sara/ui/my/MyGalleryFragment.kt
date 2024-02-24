@@ -3,20 +3,24 @@ package com.xten.sara.ui.my
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.*
+import com.example.common.MESSAGE_WARNING_EDIT
 import com.xten.sara.R
-import com.xten.sara.data.Gallery
+import com.xten.sara.data.model.Gallery
 import com.xten.sara.databinding.FragmentMyGalleryBinding
-import com.xten.sara.ui.base.BaseFragment
-import com.xten.sara.ui.gallery.GalleryItemAdapter
+import com.xten.sara.extensions.dropDownSoftKeyboard
+import com.xten.sara.extensions.scrollTop
+import com.xten.sara.extensions.setEnterKeyEvent
+import com.xten.sara.extensions.setViewType
+import com.xten.sara.ui.base.GalleryBaseFragment
+import com.xten.sara.ui.gallery.GalleryItemAdapter.Companion.TYPE_ALBUM
+import com.xten.sara.ui.gallery.GalleryItemAdapter.Companion.TYPE_LIST
 import com.xten.sara.ui.gallery.GalleryViewModel
-import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MyGalleryFragment : BaseFragment<FragmentMyGalleryBinding>(R.layout.fragment_my_gallery) {
+class MyGalleryFragment : GalleryBaseFragment<FragmentMyGalleryBinding>(R.layout.fragment_my_gallery) {
 
     private val galleryViewModel: GalleryViewModel by viewModels()
     private val args: MyGalleryFragmentArgs by navArgs()
@@ -32,59 +36,47 @@ class MyGalleryFragment : BaseFragment<FragmentMyGalleryBinding>(R.layout.fragme
         galleryViewModel.updateGallery(args.email)
     }
 
-    private var albumTypeItemAdapter: GalleryItemAdapter? = null
-    private var listTypeItemAdapter: GalleryItemAdapter? = null
-    override fun initGlobalVariables() {
-        albumTypeItemAdapter = GalleryItemAdapter(TYPE_ALBUM).apply {
-            addOnItemClickListener()
-        }
-        listTypeItemAdapter = GalleryItemAdapter(TYPE_LIST).apply {
-            addOnItemClickListener()
-        }
-    }
-
-    override fun GalleryItemAdapter.addOnItemClickListener() {
-        setOnItemClickListener { navigateToGalleryDetails(it) }
-    }
-
     @Inject lateinit var inputManager: InputMethodManager
     override fun initView() = binding.run {
-        recyclerView.setViewType(TYPE_ALBUM)
-        editSearch.setup(inputManager)
-    }
-
-    private fun RecyclerView.setViewType(type: Int) = when(type) {
-        TYPE_ALBUM -> {
-            val gridLayoutManager = GridLayoutManager(requireContext(), GRID_COL_TYPE_1)
-            layoutManager = gridLayoutManager
-            adapter = albumTypeItemAdapter
-        }
-        else -> {
-            val linearLayoutManager = LinearLayoutManager(requireContext())
-            layoutManager = linearLayoutManager
-            adapter = listTypeItemAdapter
+        recyclerView.setViewType(
+            context = requireContext(),
+            type = TYPE_ALBUM,
+            albumTypeItemAdapter = albumTypeItemAdapter!!,
+            listTypeItemAdapter = listTypeItemAdapter!!
+        )
+        editSearch.setEnterKeyEvent {
+            onEnterKeyPressed()
         }
     }
 
-    fun changeType(isChecked: Boolean) = binding.recyclerView.setViewType(if(isChecked) TYPE_ALBUM else TYPE_LIST)
+    fun changeType(isChecked: Boolean) {
+        val type = if(isChecked) TYPE_ALBUM else TYPE_LIST
+        binding.recyclerView.setViewType(
+            context = requireContext(),
+            type = type,
+            albumTypeItemAdapter = albumTypeItemAdapter!!,
+            listTypeItemAdapter = listTypeItemAdapter!!
+        )
+    }
 
     private var param = ""
-    override fun handleEnterKeyEvent(inputManager: InputMethodManager): Boolean {
+    private fun onEnterKeyPressed() {
         param = binding.editSearch.text.toString().trim()
-        verifyInputState(inputManager, param.isBlank(), param)
-        return super.handleEnterKeyEvent(inputManager)
-    }
-
-    override fun hasVerifiedInputState(param: String) {
-        galleryViewModel.requestSearch(param)
-        binding.recyclerView.scrollToPosition(DEFAULT_POSITION)
+        param = binding.editSearch.text.toString().trim()
+        when {
+            param.isNotBlank() -> {
+                binding.recyclerView.scrollTop(isSmooth = false)
+                galleryViewModel.requestSearch(param)
+            }
+            else -> showToastMessage(MESSAGE_WARNING_EDIT)
+        }
     }
 
     fun resetData() = binding.run {
+        inputManager.dropDownSoftKeyboard(requireActivity())
         editSearch.text?.clear()
         galleryViewModel.resetGallery()
-        recyclerView.smoothScrollToPosition(DEFAULT_POSITION)
-        dropDownSoftKeyboard(inputManager)
+        recyclerView.scrollTop(isSmooth = true)
     }
 
     override fun subscribeToObservers() {
@@ -94,22 +86,16 @@ class MyGalleryFragment : BaseFragment<FragmentMyGalleryBinding>(R.layout.fragme
     }
 
     private fun handleGalleryListData(data: List<Gallery>?) = data?.let {
-        if(it.isEmpty() && param.isNotBlank()) showToastMessage(MESSAGE_RESULT_SEARCH_FAIL)
+        if(it.isEmpty() && param.isNotBlank()) showToastMessage(com.example.common.MESSAGE_RESULT_SEARCH_FAIL)
 
         val submitList = it.sortedByDescending { image -> image.createdAt }
         albumTypeItemAdapter?.submitData(submitList)
         listTypeItemAdapter?.submitData(submitList)
     }
 
-    private fun navigateToGalleryDetails(gallery: Gallery) {
+    override fun navigateToGalleryDetails(gallery: Gallery) {
         val action = MyGalleryFragmentDirections.actionMyGalleryFragmentToGalleryDetailsFragment(gallery)
         navigateToDirections(action)
-    }
-
-    override fun destroyGlobalVariables() {
-        super.destroyGlobalVariables()
-        albumTypeItemAdapter = null
-        listTypeItemAdapter = null
     }
 
 }

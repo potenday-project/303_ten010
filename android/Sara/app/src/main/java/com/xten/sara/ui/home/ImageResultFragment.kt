@@ -1,18 +1,21 @@
 package com.xten.sara.ui.home
 
+import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Intent
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.*
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieAnimationView
+import com.example.common.*
+import com.example.common.State
 import com.xten.sara.R
 import com.xten.sara.databinding.FragmentImageResultBinding
 import com.xten.sara.databinding.ViewProgressBinding
+import com.xten.sara.extensions.connectWithTextField
+import com.xten.sara.extensions.dropDownSoftKeyboard
 import com.xten.sara.ui.base.BaseFragment
-import com.xten.sara.util.constants.*
 import com.xten.sara.util.view.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -35,30 +38,30 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
     }
 
     override fun initView() = binding.run {
-        editRequest.setup(textField, MAX_TEXT_TITLE_LENGTH)
+        editRequest.connectWithTextField(textField)
     }
-
-    @Inject
-    lateinit var clipboardManager: ClipboardManager
 
     @Inject
     lateinit var inputManager: InputMethodManager
     fun onSaveButtonClick(textFieldVisibility: Int) = when(textFieldVisibility) {
-        View.VISIBLE -> verifyInputState(inputManager)
+        View.VISIBLE -> {
+            inputManager.dropDownSoftKeyboard(requireActivity())
+            val param = binding.editRequest.text.toString().trim()
+            isValidInput(param)
+        }
         else -> with(binding.textField) {
             requestFocus()
             visibility = View.VISIBLE
         }
     }
 
-    override fun verifyInputState(inputManager: InputMethodManager, isBlank: Boolean, input: String) {
-        val param = binding.editRequest.text.toString().trim()
-        super.verifyInputState(inputManager, param.isBlank(), param)
+    private fun isValidInput(param: String) {
+        when {
+            param.isNotBlank() -> imageUploadViewModel.requestSaveContent(param)
+            else -> showToastMessage(MESSAGE_WARNING_EDIT)
+        }
     }
 
-    override fun hasVerifiedInputState(param: String) {
-        imageUploadViewModel.requestSaveContent(param)
-    }
 
     private var retry = false
     fun retryRequestImageAnalysis()  {
@@ -82,7 +85,9 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
     private var keyboardVisibilityUtils: KeyboardVisibilityUtils? = null
     override fun initGlobalVariables() {
         softInputAssist = SoftInputAssist(requireActivity())
-        keyboardVisibilityUtils = getKeyboardVisibilityUtils(binding.scrollView)
+        keyboardVisibilityUtils = KeyboardVisibilityUtils(requireActivity().window,
+            onShowKeyboard = { keyboardHeight -> binding.scrollView.run { smoothScrollTo(scrollX, scrollY + keyboardHeight) } }
+        )
     }
 
     override fun subscribeToObservers() = imageUploadViewModel.run {
@@ -108,9 +113,9 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
         setOnBackPressedListener()
     }
 
-    private fun handleSaveResult(state: String?) {
-        if(state == State.SUCCESS.name) handleSaveResultSuccess()
-        if(state == State.FAIL.name) handleSaveResultFail()
+    private fun handleSaveResult(state: State) {
+        if(state == State.SUCCESS) handleSaveResultSuccess()
+        if(state == State.FAIL) handleSaveResultFail()
     }
 
     private fun handleSaveResultSuccess() {
@@ -137,6 +142,16 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
     override fun setOnBackPressedListener() = when(binding.progressView.motionLayout.visibility) {
         View.VISIBLE -> cancelRequest()
         else -> onPopUpToBackStack()
+    }
+
+    @Inject
+    lateinit var clipboardManager: ClipboardManager
+    fun copyToClipboard(clipboardManager: ClipboardManager, text: String) {
+        if(text.isNotBlank()) {
+            val clipData = ClipData.newPlainText(APP_NAME, text)
+            clipboardManager.setPrimaryClip(clipData)
+            showToastMessage(MESSAGE_TEXT_COPY)
+        }
     }
 
     private fun cancelRequest() {

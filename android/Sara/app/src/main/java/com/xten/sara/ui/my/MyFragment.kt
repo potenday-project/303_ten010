@@ -3,12 +3,13 @@ package com.xten.sara.ui.my
 import android.content.SharedPreferences
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.example.common.MESSAGE_RESULT_LOGOUT_FAIL
+import com.example.common.MESSAGE_RESULT_LOGOUT_SUCCESS
 import com.google.android.gms.auth.api.signin.*
 import com.xten.sara.R
 import com.xten.sara.databinding.FragmentMyBinding
 import com.xten.sara.ui.base.BaseFragment
 import com.xten.sara.util.LoginUtils
-import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,7 +38,7 @@ class MyFragment : BaseFragment<FragmentMyBinding>(R.layout.fragment_my) {
         findNavController().navigate(action)
     }
 
-    fun navigateToSurveyUrl() = navigateToBrowser(SURVEY_URL)
+    fun navigateToSurveyUrl() = navigateToBrowser(com.example.common.SURVEY_URL)
 
     fun logout() = googleSignInClient?.let {
         it.signOut().addOnSuccessListener { handleLogoutSuccess() }

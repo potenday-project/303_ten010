@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.xten.sara.data.Gallery
+import com.xten.sara.data.model.Gallery
 import com.xten.sara.databinding.ItemListMiniBinding
 import com.xten.sara.databinding.ItemListWideBinding
 
@@ -59,5 +59,8 @@ class GalleryItemAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerV
             override fun areItemsTheSame(oldItem: Gallery, newItem: Gallery)= oldItem._id == newItem._id
             override fun areContentsTheSame(oldItem: Gallery, newItem: Gallery) = oldItem == newItem
         }
+        const val TYPE_ALBUM = 0
+        const val TYPE_LIST = 1
+        const val GRID_COL_TYPE_1 = 2
     }
 }

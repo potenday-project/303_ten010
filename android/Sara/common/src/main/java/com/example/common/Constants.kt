@@ -13,7 +13,6 @@ const val SARA_PREFS = "sara_prefs"
 
 const val APP_NAME = "Sara"
 
-
 const val SURVEY_URL = "https://forms.gle/WoHSYcZk5LSDawHu5"
 
 const val MESSAGE_PERMISSION_CAMERA = "카메라 권한을 허용해 주세요"
@@ -53,39 +52,4 @@ const val LABEL_GALLERY_ = "fragment_gallery"
 const val LABEL_MY_ = "fragment_my"
 const val LABEL_IMAGE_RESULT_ = "fragment_image_result"
 
-const val GRID_COL_TYPE_1 = 2
-
-const val TYPE_ALBUM = 0
-const val TYPE_LIST = 1
 const val DEFAULT_POSITION = 0
-
-enum class QueryType {
-    ESSAY {
-        override fun desc(): String ="이 사진으로 줄글 생성하기"
-        override fun type(): Int = TYPE_1
-        override fun str(): String ="작문"
-    },
-    POEM {
-        override fun desc(): String ="이 사진으로 시 생성하기"
-        override fun type(): Int = TYPE_2
-        override fun str(): String ="시"
-    },
-    EVALUATION {
-        override fun desc(): String ="이 사진으로 평가받기"
-        override fun type(): Int = TYPE_3
-        override fun str(): String ="평가"
-    },
-    FREE {
-        override fun desc(): String ="텍스트 요청이 포함된 글 생성하기"
-        override fun type(): Int = TYPE_4
-        override fun str(): String ="자유글"
-    };
-    abstract fun desc(): String
-    abstract fun type(): Int
-    abstract fun str(): String
-}
-
-const val MAX_TEXT_LENGTH = 30
-const val MAX_TEXT_TITLE_LENGTH = 20
-
-const val SHARE_TITLE_TEXT = "친구에게 공유하기"

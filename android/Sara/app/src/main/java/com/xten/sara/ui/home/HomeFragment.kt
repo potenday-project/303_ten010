@@ -5,15 +5,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.*
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.common.*
 import com.xten.sara.R
 import com.xten.sara.databinding.FragmentHomeBinding
-import com.xten.sara.ui.base.BaseFragment
+import com.xten.sara.ui.base.ImagePickupBaseFragment
 import com.xten.sara.util.ImageFileUtils
-import com.xten.sara.util.constants.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
+class HomeFragment : ImagePickupBaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun setupBinding(binding: FragmentHomeBinding): FragmentHomeBinding {
         return binding.apply {
@@ -22,7 +22,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             num = getRandomNum()
         }
     }
-    private fun getRandomNum() = (DEFAULT_ until RANDOM_SIZE).random()
+    private fun getRandomNum() = (com.example.common.DEFAULT_ until com.example.common.RANDOM_SIZE).random()
 
     override fun initView() = Unit
 
@@ -32,14 +32,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         else -> requestStorageAccessPermission()
     }
 
-    private fun requestCameraPermission() = cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted -> handleCameraPermissionResult(isGranted) }
+
     private fun handleCameraPermissionResult(isGranted: Boolean) = when {
         isGranted -> startGalleryChooserIntent()
         else -> showToastMessage(MESSAGE_PERMISSION_CAMERA)
     }
+
+    private fun requestCameraPermission() = cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
 
     private var imageUri: Uri? = null
     override fun updateImageUri(uri: Uri?) {
@@ -65,6 +67,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val storageAccessPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { handleStoragePermissionResult() }
+
     private fun handleStoragePermissionResult() = when {
         Environment.isExternalStorageManager() -> requestCameraPermission()
         else -> showToastMessage(MESSAGE_PERMISSION_ACCESS_FILE)
@@ -73,7 +76,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     fun changeSaraLogo() {
         binding.num = getRandomNum()
     }
+
     fun navigateToSearchUrl() = navigateToBrowser(SEARCH_URL)
+
     fun navigateToSurveyUrl() = navigateToBrowser(SURVEY_URL)
 
     override fun setOnBackPressedListener() = requireActivity().finishAffinity()

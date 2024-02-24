@@ -7,9 +7,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.xten.sara.R
 import com.xten.sara.databinding.FragmentGalleryDetailsBinding
 import com.xten.sara.ui.base.BaseFragment
-import com.xten.sara.util.constants.MESSAGE_RESULT_DELETE_FAIL
-import com.xten.sara.util.constants.MESSAGE_RESULT_DELETE_SUCCESS
-import com.xten.sara.util.constants.State
+import com.example.common.MESSAGE_RESULT_DELETE_FAIL
+import com.example.common.MESSAGE_RESULT_DELETE_SUCCESS
+import com.example.common.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,9 +39,9 @@ class GalleryDetailsFragment : BaseFragment<FragmentGalleryDetailsBinding>(R.lay
         }
     }
 
-    private fun handleDeleteResult(result: String?) {
-        if(result == State.SUCCESS.name) handleResultSuccess()
-        if(result == State.FAIL.name) handleResultFail()
+    private fun handleDeleteResult(result: State) {
+        if(result == State.SUCCESS) handleResultSuccess()
+        if(result == State.FAIL) handleResultFail()
     }
 
     private fun handleResultSuccess() {
