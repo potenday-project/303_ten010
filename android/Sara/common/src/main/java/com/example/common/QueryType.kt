@@ -24,4 +24,10 @@ enum class QueryType {
     abstract fun desc(): String
     abstract fun type(): Int
     abstract fun str(): String
+
 }
+
+const val TYPE_1 = 1
+const val TYPE_2 = 2
+const val TYPE_3 = 3
+const val TYPE_4 = 4

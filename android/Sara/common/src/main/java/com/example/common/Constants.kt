@@ -42,11 +42,6 @@ const val MESSAGE_TEXT_COPY = "텍스트가 복사되었습니다."
 const val DEFAULT_ = 0
 const val RANDOM_SIZE = 2
 
-const val TYPE_1 = 1
-const val TYPE_2 = 2
-const val TYPE_3 = 3
-const val TYPE_4 = 4
-
 const val LABEL_HOME_ = "fragment_home"
 const val LABEL_GALLERY_ = "fragment_gallery"
 const val LABEL_MY_ = "fragment_my"

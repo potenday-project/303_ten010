@@ -7,15 +7,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.*
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.airbnb.lottie.LottieAnimationView
+import androidx.navigation.fragment.navArgs
 import com.example.common.*
 import com.example.common.State
 import com.xten.sara.R
 import com.xten.sara.databinding.FragmentImageResultBinding
-import com.xten.sara.databinding.ViewProgressBinding
 import com.xten.sara.extensions.connectWithTextField
 import com.xten.sara.extensions.dropDownSoftKeyboard
 import com.xten.sara.ui.base.BaseFragment
+import com.xten.sara.util.ImageFileUtils
 import com.xten.sara.util.view.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -23,21 +23,26 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fragment_image_result) {
 
-    private val imageUploadViewModel : ImageUploadViewModel by activityViewModels()
+    private val viewModel : ImageResultViewModel by viewModels()
+    private val args: ImageResultFragmentArgs by navArgs()
 
     override fun setupBinding(binding: FragmentImageResultBinding): FragmentImageResultBinding {
         return binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            viewModel = imageUploadViewModel
+            viewModel = this@ImageResultFragment.viewModel
             fragment = this@ImageResultFragment
         }
     }
 
     override fun setData() {
-        imageUploadViewModel.initFreeText()
+        args.uri?.let {
+            val path = ImageFileUtils.getAbsolutePath(requireContext(), it)
+            viewModel.requestImageAnalysis(path, args.type)
+        }
     }
 
     override fun initView() = binding.run {
+        image.setImageURI(args.uri)
         editRequest.connectWithTextField(textField)
     }
 
@@ -55,9 +60,10 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
         }
     }
 
+    // 입력검사
     private fun isValidInput(param: String) {
         when {
-            param.isNotBlank() -> imageUploadViewModel.requestSaveContent(param)
+            param.isNotBlank() -> viewModel.requestSaveContent(param, args.type)
             else -> showToastMessage(MESSAGE_WARNING_EDIT)
         }
     }
@@ -66,31 +72,32 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
     private var retry = false
     fun retryRequestImageAnalysis()  {
         retry = true
-        binding.progressView.setProgressState(true)
-        imageUploadViewModel.requestChatGPT()
+        showProgress(show = true)
+        viewModel.requestChatGPT(args.type)
     }
 
-    private fun ViewProgressBinding.setProgressState(play: Boolean) {
-        animationView.changeAnimation(play)
+    private fun showProgress(show: Boolean) = binding.progressView.run {
+        animationView.run {
+            if(show) playAnimation() else pauseAnimation()
+        }
         with(motionLayout) {
             setTransition(NO_OP, NO_OP)
-            if(play) setTransition(R.id.rotation).also { transitionToEnd() }
+            if(show) setTransition(R.id.rotation).also { transitionToEnd() }
         }
     }
-    private fun LottieAnimationView.changeAnimation(play: Boolean) {
-        if(play) playAnimation() else pauseAnimation()
-    }
+
 
     private var softInputAssist: SoftInputAssist? = null
     private var keyboardVisibilityUtils: KeyboardVisibilityUtils? = null
     override fun initGlobalVariables() {
         softInputAssist = SoftInputAssist(requireActivity())
-        keyboardVisibilityUtils = KeyboardVisibilityUtils(requireActivity().window,
+        keyboardVisibilityUtils = KeyboardVisibilityUtils(
+            requireActivity().window,
             onShowKeyboard = { keyboardHeight -> binding.scrollView.run { smoothScrollTo(scrollX, scrollY + keyboardHeight) } }
         )
     }
 
-    override fun subscribeToObservers() = imageUploadViewModel.run {
+    override fun subscribeToObservers() = viewModel.run {
         loadingState.observe(viewLifecycleOwner) {
             handleLoadingState(it)
         }
@@ -105,7 +112,7 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
     }
 
     private fun handleAnalysisResultSuccess() {
-        binding.progressView.setProgressState(true)
+        showProgress(show = true)
     }
 
     private fun handleAnalysisResultFail() {
@@ -131,10 +138,6 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
     }
 
     fun onPopUpToBackStack() {
-        with(imageUploadViewModel) {
-            initQueryType()
-            initViewModel()
-        }
         val options = NavOptions.Builder().setPopUpTo(R.id.nav_graph_main, false).build()
         findNavController().navigate(R.id.action_imageResultFragment_to_homeFragment, null, options)
     }
@@ -155,10 +158,10 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
     }
 
     private fun cancelRequest() {
-        imageUploadViewModel.cancelRequest()
+        viewModel.cancelRequest()
         showToastMessage(MESSAGE_CANCEL)
 
-        if(retry) binding.progressView.setProgressState(true)
+        if(retry) showProgress(show = true)
         else super.setOnBackPressedListener()
     }
 
@@ -172,9 +175,13 @@ class ImageResultFragment : BaseFragment<FragmentImageResultBinding>(R.layout.fr
         super.onPause()
     }
 
+    override fun onDestroyView() {
+        viewModel.cancelRequest()
+        super.onDestroyView()
+    }
+
     override fun destroyGlobalVariables() {
         super.destroyGlobalVariables()
-        if(imageUploadViewModel.getCurLoadingState() != State.ING) imageUploadViewModel.initViewModel()
         softInputAssist?.onDestroy()
         softInputAssist = null
         keyboardVisibilityUtils?.detachKeyboardListeners()

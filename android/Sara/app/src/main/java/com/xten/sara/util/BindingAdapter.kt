@@ -11,8 +11,13 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.common.DEFAULT_
+import com.example.common.QueryType
+import com.example.common.RANDOM_SIZE
+import com.example.common.TYPE_1
+import com.example.common.TYPE_2
+import com.example.common.TYPE_3
 import com.xten.sara.R
-import com.xten.sara.util.constants.*
 
 
 /**
@@ -41,7 +46,7 @@ object BindingAdapter {
         }
     }
 
-    private val logoImageResources = arrayOf(
+    private val logoImageResources = intArrayOf(
         R.drawable.ic_sara_normal, R.drawable.ic_sara_supadupa,
         R.drawable.ic_sara_omg, R.drawable.ic_sara_study
     )
@@ -49,7 +54,7 @@ object BindingAdapter {
     @BindingAdapter("RandomImage")
     fun setSuffixRandomImage(imageView: ImageView, num: Int?) {
         num?.let {
-            val index = num + (com.example.common.DEFAULT_ until com.example.common.RANDOM_SIZE).random()
+            val index = num + (DEFAULT_ until RANDOM_SIZE).random()
             imageView.setImageResource(logoImageResources[index])
         }
     }
@@ -62,7 +67,7 @@ object BindingAdapter {
     @BindingAdapter("RandomBubble")
     fun setSuffixRandomImageBubble(imageView: ImageView, num: Int?) {
         num?.let {
-            val index = num + (com.example.common.DEFAULT_ until com.example.common.RANDOM_SIZE - 1).random()
+            val index = num + (DEFAULT_ until RANDOM_SIZE - 1).random()
             imageView.setImageResource(bubbleImageResources[index])
         }
     }
@@ -112,10 +117,10 @@ object BindingAdapter {
     fun convertType(textView: TextView, type: Int?) {
         type?.let {
             textView.text = when(type) {
-                com.example.common.TYPE_1 -> com.example.common.QueryType.ESSAY.str()
-                com.example.common.TYPE_2 -> com.example.common.QueryType.POEM.str()
-                com.example.common.TYPE_3 -> com.example.common.QueryType.EVALUATION.str()
-                else -> com.example.common.QueryType.FREE.str()
+                TYPE_1 -> QueryType.ESSAY.str()
+                TYPE_2 -> QueryType.POEM.str()
+                TYPE_3 -> QueryType.EVALUATION.str()
+                else -> QueryType.FREE.str()
             }
         }
     }
@@ -138,9 +143,9 @@ object BindingAdapter {
     fun setTypeTextBackgroundTint(textView: TextView, type: Int?) {
         type?.let {
             textView.backgroundTintList = when(type) {
-                com.example.common.TYPE_1 -> type1
-                com.example.common.TYPE_2 -> type2
-                com.example.common.TYPE_3 -> type3
+                TYPE_1 -> type1
+                TYPE_2 -> type2
+                TYPE_3 -> type3
                 else -> type4
             }
         }
