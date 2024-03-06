@@ -16,18 +16,29 @@
 
 ## Skills
 <img src="https://img.shields.io/badge/Android-34A853?style=flat&logo=android&logoColor=white"/> <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=Kotlin&logoColor=white"/> <img src="https://img.shields.io/badge/MVVM-000000?style=flat&logo=&logoColor=white"/> <img src="https://img.shields.io/badge/RESTful API-000000?style=flat&logo=&logoColor=000000"/> 
-+ AAC(Android Architecture Component) : Lifecycles, LiveData, ViewModel, DataBinding, Navigation
-+ Dagger-Hilt
-+ Retrofit2
-+ Coroutine
-+ Google OAuth2.0
-+ MotionLayout을 이용하여 캐릭터 애니메이션 구현
-+ Glide
-+ UI: ConstaintLayout, MotionLayout, RecyclerView, Lottie
+- **MVVM 디자인 패턴 : Flow, LiveData**</br>
+  비동기 데이터 스트림을 수신하기 위해 LiveData를 Flow로 마이그레이션</br>
+  → ViewModel은 remote에서 Flow를 통해 데이터를 얻어오고 View가 LiveData를 관찰하도록 리팩토링
+- **의존성 주입 : Dagger-Hilt**</br>
+  코드의 중복과 객체간 결합도 줄이기 위해 앱의 여러 컴포넌트에서 공통적으로 사용되는 객체를 한 곳에서 관리하는 SaraAppModule을 만들고, Hilt annotation을 사용해서 각각의 컴포넌트에서 의존성 주입하여 사용</br>
+- **Jetpack** : Lifecycles, LiveData, ViewModel, DataBinding, Navigation
+- **네트워크 통신 : Retrofit2, Okhttp3, Gson**</br>
+  Json 방식을 활용하여 Sara 서버와 REST API 통신</br>
+- **비동기 처리 : Coroutine, Flow**</br>
+  Flow를 사용해 비동기 데이터 흐름 수신</br>
+- **etc.**
+  Google OAuth2.0</br>
+  MotionLayout을 이용하여 캐릭터 애니메이션 구현</br>
+  Glide</br>
+  UI: ConstaintLayout, MotionLayout, RecyclerView, Lottie
 
 </br>
 
 ## History
+<details><summary>2023.2.23</summary>
+코드 리팩토링 : LiveData → Flow로 마이그레이션</br>
+패키지 구조 리팩토링
+</details>
 <details><summary>2023.6.4</summary>
 코드 리팩토링 : 프래그먼트 메모리 누수 개선
 </details>   
