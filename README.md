@@ -35,6 +35,9 @@
 </br>
 
 ## History
+<details><summary>2023.2.26</summary>
+코드 리팩토링 : ImageUploadViewModel 라이프사이클 문제 해결 
+</details>
 <details><summary>2023.2.23</summary>
 코드 리팩토링 : LiveData → Flow로 마이그레이션</br>
 패키지 구조 리팩토링
@@ -45,6 +48,15 @@
 <details><summary>2023.4.3</summary>
 Sara 앱 완성
 </details>   
+</br>
+
+## Note
+[ImageResultViewModel 리팩토링](https://github.com/potenday-project/Sara/pull/4)</br>
+[LiveData를 Flow로 마이그레이션 한 이유](https://github.com/potenday-project/Sara/pull/3)</br>
+[패키지 구조 개선 후 느낀 효과](https://github.com/potenday-project/Sara/pull/2)</br>
+[BaseFragment 리팩토링을 한번 더 한 이유](https://github.com/potenday-project/Sara/pull/1)</br>
+
+
 
 </br>
 
