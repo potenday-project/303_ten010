@@ -51,10 +51,10 @@ Sara 앱 완성
 </br>
 
 ## Note
-[ImageResultViewModel 리팩토링](https://github.com/potenday-project/Sara/pull/4)</br>
-[LiveData를 Flow로 마이그레이션 한 이유](https://github.com/potenday-project/Sara/pull/3)</br>
-[패키지 구조 개선 후 느낀 효과](https://github.com/potenday-project/Sara/pull/2)</br>
-[BaseFragment 리팩토링을 한번 더 한 이유](https://github.com/potenday-project/Sara/pull/1)</br>
+- [ImageResultViewModel 리팩토링](https://github.com/SANDY-9/Project_Sara/wiki/%5B2024.02.26%5D-ImageResultViewModel-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81)</br>
+- [LiveData를 Flow로 마이그레이션 한 이유](https://github.com/SANDY-9/Project_Sara/wiki/%5B2024.02.23%5D-LiveData%EB%A5%BC-Flow%EB%A1%9C-%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98)</br>
+- [패키지 구조 개선 후 느낀 효과](https://github.com/SANDY-9/Project_Sara/wiki/%5B2024.02.24%5D-%ED%8C%A8%ED%82%A4%EC%A7%80%EA%B5%AC%EC%A1%B0-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81)</br>
+- [기존 BaseFragment의 문제점과 리팩토링을 하게 된 이유](https://github.com/SANDY-9/Project_Sara/wiki/%5B2024.02.24%5D-BaseFragment-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81)</br>
 
 
 
